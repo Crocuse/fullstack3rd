@@ -8,6 +8,7 @@ const session = require('express-session');
 const cors = require('cors');
 
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 app.use(compression());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
