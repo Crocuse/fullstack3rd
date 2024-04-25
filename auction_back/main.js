@@ -67,5 +67,6 @@ app.get('/node', (req, res) => {
 
 // 라우터 설정
 app.use('/member', require('./routes/memberRouter'));
+app.use('/admin', require('./routes/adminRouter'));
 
 app.listen(3001);
