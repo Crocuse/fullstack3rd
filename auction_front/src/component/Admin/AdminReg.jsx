@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import $ from "jquery";
 import { SERVER_URL } from "../../config/server_url";
-
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -137,7 +136,6 @@ function SignUpForm() {
                 $('#id_check_false').text('');  
                 $('#id_check_true').text(`사용 가능한 아이디입니다.`);
                 setIDCehck(true);
-
             }
 
         } catch (error) {
