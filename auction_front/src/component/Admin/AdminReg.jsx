@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import $ from "jquery"
 import { SERVER_URL } from "../../config/server_url";
 
 function AdminReg() {
