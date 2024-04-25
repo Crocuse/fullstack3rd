@@ -3,19 +3,8 @@ import React, { useState } from "react"
 function SignUpForm() {
 
     // Hook -----------------------------------------------------------------------------------------------------------
-    const [mId, setMId] = useState('');
-    const [mPw, setMPw] = useState('');
-    const [mPwCheck, setMPwCheck] = useState('');
-    const [mMail, setMMail] = useState('');
-    const [mPhone, setMPhone] = useState('');
-    const [postcode, setPostcode] = useState('');
-    const [roadAddress, setRoadAddress] = useState('');
-    const [jibunAddress, setJibunAddress] = useState('');
-    const [detailAddress, setDetailAddress] = useState('');
-    const [extraAddress, setExtraAddress] = useState('');
 
     // Handler -----------------------------------------------------------------------------------------------------------
-    
 
     // Function -----------------------------------------------------------------------------------------------------------
     function execDaumPostcode() {
@@ -73,7 +62,7 @@ function SignUpForm() {
 
                 <div className="input_wrap">
                     <p>아이디</p>
-                    <input type="text" name="m_id" placeholder="아이디를 입력해주세요."/>
+                    <input type="text" name="m_id" placeholder="아이디를 입력해주세요." />
                     <input type="button" value={"아이디 중복 검사"} />
                 </div>
 
@@ -97,7 +86,7 @@ function SignUpForm() {
                 
                 <div className="input_wrap">
                     <p>연락처</p>
-                    <select name="phone_first">
+                    <select name="phone1">
                         <option value="010">010</option>
                         <option value="011">011</option>
                         <option value="011">012</option>
@@ -107,9 +96,9 @@ function SignUpForm() {
                         <option value="019">019</option>
                     </select>
                     -
-                    <input type="number" name="phone_middle"/>
+                    <input type="number" name="phone2"/>
                     -
-                    <input type="number" name="phone_end"/>
+                    <input type="number" name="phone3"/>
                 </div>
 
                 <div className="input_wrap">
