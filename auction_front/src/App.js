@@ -10,10 +10,10 @@ import Home from './component/Home';
 import CstCT from './component/customer_center';
 import CurList from './component/Auction/current_list';
 import RegForm from './component/Auction/regist_form';
-import PointAdd from './component/member/point_add_form';
-import MyPage from './component/member/mypage'
-import SignUp from './component/member/signup_form'
-import Login from './component/member/login_form'
+import PointAdd from './component/member/PointAddForm';
+import MyPage from './component/member/MyPage'
+import SignUp from './component/member/SignUpForm'
+import Login from './component/member/LoginForm'
 
 
 function App() {

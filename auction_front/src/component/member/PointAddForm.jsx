@@ -1,6 +1,6 @@
 import React from "react"
 
-function point_add_form() {
+function PointAddForm() {
     return (
         
         <article>
@@ -8,4 +8,4 @@ function point_add_form() {
         </article>
     );
 }
-export default point_add_form;
+export default PointAddForm;
