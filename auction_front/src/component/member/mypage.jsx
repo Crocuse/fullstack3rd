@@ -1,10 +1,11 @@
 import React from "react"
 
-function Home() {
+function mypage() {
     return (
+        
         <article>
-            <div>Home</div>    
+            <div>mypage</div>    
         </article>
     );
 }
-export default Home;
+export default mypage;
