@@ -13,7 +13,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // CORS START
 app.use(cors({
-    origin: 'http://3.24.176.186:3000',
+    origin: 'http://localhost:3000',
     credentials: true,
 }));
 // CORS END
@@ -59,6 +59,11 @@ app.get('/login_fail', (req, res) => {
 
 });
 // passport END
+
+
+app.get('/node', (req, res) => {
+    res.send('노드 연결 성공 ^0^');
+})
 
 // 라우터 설정
 app.use('/member', require('./routes/memberRouter'));
