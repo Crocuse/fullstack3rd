@@ -3,9 +3,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import React from 'react';
 
 import './App.css';
-import Nav from './includ/nav';
-import Footer from './includ/footer';
-import Header from './includ/header';
+import Nav from './component/includ/nav';
+import Footer from './component/includ/footer';
+import Header from './component/includ/header';
 
 function App() {
   return (
