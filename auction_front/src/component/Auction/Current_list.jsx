@@ -5,8 +5,6 @@ function current_list() {
         <article>
             <div>current_list</div>    
         </article>
-        
-
     );
 }
 export default current_list;
