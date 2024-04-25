@@ -1,3 +1,11 @@
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style-type: none;
+}
+
 body {
     font-family: 'Noto Sans KR', sans-serif;
     margin: 0;
@@ -17,6 +25,10 @@ header {
     align-items: center;
 }
 
+header img {
+    width: 30px;
+}
+
 header h1 {
     margin: 0;
     font-size: 2rem;
@@ -25,11 +37,19 @@ header h1 {
 
 header a {
     text-decoration: none;
+    color: #ece6e6;
 }
 
 header a:active {
     outline: none;
     background-color: initial;
+}
+
+#bell_img {
+    width: 50px;
+    margin-top: 5px;
+    vertical-align: middle;
+    margin-bottom: 10px;
 }
 
 nav {
@@ -45,16 +65,19 @@ nav ul {
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    text-align: center;
 }
 
 nav ul li {
     margin-left: 20px;
+
 }
 
-nav ul li a {
+nav ul li span a {
     color: #242424;
     text-decoration: none;
     font-size: 1.1rem;
+    font-weight: bold;
     padding: 10px 15px;
     border-radius: 5px;
     transition: background-color 0.3s ease;
@@ -71,6 +94,14 @@ main {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 30px;
+}
+
+.main_menu {
+    margin-left: 450px;
+}
+
+.m_menu {
+    margin-left: 500px;
 }
 
 section {
