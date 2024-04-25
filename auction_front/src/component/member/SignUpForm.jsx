@@ -1,7 +1,5 @@
 import React, { useState } from "react"
 
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-
 function SignUpForm() {
 
     // Hook -----------------------------------------------------------------------------------------------------------
@@ -10,19 +8,65 @@ function SignUpForm() {
     const [mPwCheck, setMPwCheck] = useState('');
     const [mMail, setMMail] = useState('');
     const [mPhone, setMPhone] = useState('');
+    const [postcode, setPostcode] = useState('');
+    const [roadAddress, setRoadAddress] = useState('');
+    const [jibunAddress, setJibunAddress] = useState('');
+    const [detailAddress, setDetailAddress] = useState('');
+    const [extraAddress, setExtraAddress] = useState('');
 
     // Handler -----------------------------------------------------------------------------------------------------------
     
 
     // Function -----------------------------------------------------------------------------------------------------------
+    function execDaumPostcode() {
+        new window.daum.Postcode({
+            oncomplete: function(data) {
+                let roadAddr = data.roadAddress; 
+                let extraRoadAddr = ''; 
 
+                if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                    extraRoadAddr += data.bname;
+                }
+                if(data.buildingName !== '' && data.apartment === 'Y'){
+                   extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                if(extraRoadAddr !== ''){
+                    extraRoadAddr = ' (' + extraRoadAddr + ')';
+                }
+
+                document.getElementById('postcode').value = data.zonecode;
+                document.getElementById("roadAddress").value = roadAddr;
+                document.getElementById("jibunAddress").value = data.jibunAddress;
+                
+                if(roadAddr !== ''){
+                    document.getElementById("extraAddress").value = extraRoadAddr;
+                } else {
+                    document.getElementById("extraAddress").value = '';
+                }
+
+                let guideTextBox = document.getElementById("guide");
+                if(data.autoRoadAddress) {
+                    let expRoadAddr = data.autoRoadAddress + extraRoadAddr;
+                    guideTextBox.innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+                    guideTextBox.style.display = 'block';
+
+                } else if(data.autoJibunAddress) {
+                    let expJibunAddr = data.autoJibunAddress;
+                    guideTextBox.innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
+                    guideTextBox.style.display = 'block';
+                } else {
+                    guideTextBox.innerHTML = '';
+                    guideTextBox.style.display = 'none';
+                }
+            }
+        }).open();
+    }
 
     // ajax
 
-
     // view
     return(
-        <div className="sginup_wrap">
+        <div className="signup_wrap">
             <h2>회원가입</h2>
 
             <form action="http://localhost:3001/member/signup_confirm" method="post" name="signup_form">
@@ -45,18 +89,39 @@ function SignUpForm() {
 
                 <div className="input_wrap">
                     <p>이메일</p>
-                    <input type="email" name="m_mail" placeholder="메일주소를 입력해주세요." />
+                    <input type="text" name="mail1"/>
+                    @
+                    <input type="text" name="mail2"/>
                     <input type="button" value={"메일 중복 검사"} />
                 </div>
                 
                 <div className="input_wrap">
                     <p>연락처</p>
-                    <input type="phone" name="m_phone" placeholder="연락처를 입력해주세요." />
+                    <select name="phone_first">
+                        <option value="010">010</option>
+                        <option value="011">011</option>
+                        <option value="011">012</option>
+                        <option value="016">016</option>
+                        <option value="017">017</option>
+                        <option value="018">018</option>
+                        <option value="019">019</option>
+                    </select>
+                    -
+                    <input type="number" name="phone_middle"/>
+                    -
+                    <input type="number" name="phone_end"/>
                 </div>
 
                 <div className="input_wrap">
                     <p>주소</p>
-                    <input type="button" id="find_zip_code" onclick={execDaumPostcode()} value="주소 찾기"></input>
+                    <input type="text" id="postcode" placeholder="우편번호" />
+                    <input type="button" onClick={execDaumPostcode} value="우편번호 찾기" />
+                    <br />
+                    <input type="text" id="roadAddress" placeholder="도로명주소" />
+                    <input type="text" id="jibunAddress" placeholder="지번주소" />
+                    <span id="guide" style={{ color: "#999", display: "none" }}></span>
+                    <input type="text" id="detailAddress" placeholder="상세주소" />
+                    <input type="text" id="extraAddress" placeholder="참고항목" />
                 </div>
 
                 <div className="btns">
