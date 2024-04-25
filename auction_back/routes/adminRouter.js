@@ -6,7 +6,6 @@ const router = express.Router();
 router.post('/admin_regist_confirm', (req, res) => {
     console.log('/admin_regist_confirm');
     adminService.adminRegistConfirm(req, res);
-
 });
 
 module.exports = router;
