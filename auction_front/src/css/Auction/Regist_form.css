@@ -1,0 +1,63 @@
+.gr_img {
+    display: none;
+}
+  
+.gr_img::file-selector-button {
+    font-size: 14px;
+    background: #fff;
+    border: 1px solid #111;
+    border-radius: 12px;
+    padding: 4px 32px;
+    cursor: pointer;
+}
+
+.upload_area {
+    width: 500px;
+    height: 350px;
+    margin: auto;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 3px dashed #eee;
+    text-align: center;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* 수직 가운데 정렬 */
+    cursor: pointer;
+    overflow-x: auto; /* 가로 스크롤 추가 */
+    overflow-y: hidden; /* 세로 스크롤 숨김 */
+}
+
+.upload_area.active {
+    background-color: #efeef3;
+    border-color: #111;
+}
+
+.upload_area:hover {
+    border-color: #111;
+}
+
+.img_angle {
+    display: flex;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    width: 100px;
+    height: 100px;
+    background-color: #808080;
+    margin: 0 10px;
+    scroll-snap-align: start; /* 왼쪽 끝으로 정렬 */
+}
+
+.add_img {
+    max-width: 100px;
+    max-height: 100px;
+    margin: auto auto;
+    display: block;
+}
+
+.img_text {
+    min-width: 500px;
+    max-width: 500px;
+    text-align: center;
+    flex-direction: column;
+}
