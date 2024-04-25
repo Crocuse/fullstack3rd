@@ -3,7 +3,7 @@ import React from "react"
 function Header() {
     return (
         <header>
-            <h1><a href="#">Bid Bird</a></h1>
+            <h1><a href="/"><img src="/img/bid_bird_img.png" />Bid Bird</a></h1>
 
         </header>
 

@@ -30,30 +30,30 @@ function App() {
         <Header />
         <Nav />
         <Routes>
-          <Route path='/' element={<Home/>}></Route>
-          <Route path='/auction/Current_list' element={<CurList/>}></Route>
-          <Route path='/action/Regist_form' element={<RegForm/>}></Route>
-          <Route path='/member/Point_add_form' element={<PointAdd/>}></Route>
-          <Route path='/member/Mypage' element={<MyPage/>}></Route>
-          <Route path='/Customer_center' element={<CstCT/>}></Route>
-          <Route path='/member/Signup_form' element={<SignUp/>}></Route>
-          <Route path='/member/Login_form' element={<Login/>}></Route>
-          <Route path='/admin/home' element={<AdminHome/>}></Route>
-          <Route path='/admin/AdminReg' element={<AdminReg/>}></Route>
-          <Route path='/admin/auction_goods_mgt' element={<AuctionGoodsMgt/>}></Route>
-          <Route path='/admin/auction_goods_reg' element={<AuctionGoodsReg/>}></Route>
-          <Route path='/admin/auction_result' element={<AuctionResult/>}></Route>
-          <Route path='/admin/recive_goods_mgt' element={<ReciveGoodsMgt/>}></Route>
-          <Route path='/admin/sales_mgt' element={<SalesMgt/>}></Route>
-          <Route path='/admin/user_mgt' element={<UserMgt/>}></Route>
+          <Route path='/' element={<Home />}></Route>
+          <Route path='/auction/Current_list' element={<CurList />}></Route>
+          <Route path='/action/Regist_form' element={<RegForm />}></Route>
+          <Route path='/member/Point_add_form' element={<PointAdd />}></Route>
+          <Route path='/member/Mypage' element={<MyPage />}></Route>
+          <Route path='/Customer_center' element={<CstCT />}></Route>
+          <Route path='/member/Signup_form' element={<SignUp />}></Route>
+          <Route path='/member/Login_form' element={<Login />}></Route>
+          <Route path='/admin/home' element={<AdminHome />}></Route>
+          <Route path='/admin/AdminReg' element={<AdminReg />}></Route>
+          <Route path='/admin/auction_goods_mgt' element={<AuctionGoodsMgt />}></Route>
+          <Route path='/admin/auction_goods_reg' element={<AuctionGoodsReg />}></Route>
+          <Route path='/admin/auction_result' element={<AuctionResult />}></Route>
+          <Route path='/admin/recive_goods_mgt' element={<ReciveGoodsMgt />}></Route>
+          <Route path='/admin/sales_mgt' element={<SalesMgt />}></Route>
+          <Route path='/admin/user_mgt' element={<UserMgt />}></Route>
 
         </Routes>
         <Footer />
       </BrowserRouter>
 
 
-      HOME~~
-      <a href='http://localhost:3001/node'>go node</a>
+
+      <a href='http://localhost:3001/node'></a>
     </>
 
   );
