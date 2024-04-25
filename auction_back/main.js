@@ -18,9 +18,6 @@ app.use(cors({
 }));
 // CORS END
 
-app.set('view engine', 'ejs');
-app.set('views', './views/');
-
 const maxAge = 1000 * 60 * 30;
 const sessionObj = {                
     secret: 'Dhyonee',
@@ -63,17 +60,7 @@ app.get('/login_fail', (req, res) => {
 });
 // passport END
 
-
-// 라우팅
-app.get('/', (req, res) => {
-    console.log('/');
-
-    res.redirect('/home');
-
-});
-
 // 라우터 설정
-app.use('/home', require('./routes/home'));
-app.use('/member', require('./routes/member'));
+app.use('/member', require('./routes/memberRouter'));
 
 app.listen(3001);
