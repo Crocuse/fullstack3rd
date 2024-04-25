@@ -6,7 +6,7 @@ import { SERVER_URL } from "../../config/server_url";
 function AdminReg() {
 
     const adminRegSubmitBtnClickHandler = () => {
-        let form = document.admin_regist_form;
+        
         let aId = $('input[name="a_id"]').val();
         let aPw = $('input[name="a_pw"]').val();
         let aPwCheck = $('input[name="a_pw_check"]').val();
@@ -43,21 +43,24 @@ function AdminReg() {
 
 
 const axios_admin_regist = () => {
-        let formData = new FormData();
-        formData.append("a_id", $('input[name="a_id"]').val());
-        formData.append("a_pw", $('input[name="a_pw"]').val());
-        formData.append("a_name", $('input[name="a_name"]').val());
-        formData.append("a_mail", $('input[name="a_mail"]').val());
-        formData.append("a_phone", $('input[name="a_phone"]').val());
 
-        axios.post(`${SERVER_URL.SERVER_URL()}/admin/admin_regist_confirm`, formData)
+        const body = {
+                "a_id" : $('input[name="a_id"]').val(),
+                "a_pw" : $('input[name="a_pw"]').val(),
+                "a_name" : $('input[name="a_name"]').val(),
+                "a_mail" : $('input[name="a_mail"]').val(),
+                "a_phone" : $('input[name="a_phone"]').val(),
+            }
+
+        axios.post(`${SERVER_URL.SERVER_URL()}/admin/admin_regist_confirm`, body)
             .then(response => {
+
                 if (response.data !== null && response.data > 0) {
                     alert('ADMIN REGIST PROCESS SUCCESS!!');
-                    // TODO: 관리자 등록 성공 후 처리할 로직 추가
+
                 } else {
                     alert('ADMIN REGIST PROCESS FAIL!!');
-                    $('form[name="admin_regist_form"]').remove();
+                    $('form[name="admin_regist_form"]')[0].reset();
                 }
             })
             .catch(error => {
@@ -96,14 +99,29 @@ const axios_admin_regist = () => {
                     </div>
 
                     <div className="input_wrap">
-                        <p>이메일</p>
-                        <input type="email" name="a_mail" placeholder="관리자 메일주소를 입력해주세요." />
-                    </div>
+                    <p>관리자 이메일</p>
+                    <input type="text" name="a_mail"/>
+                    @
+                    <input type="text" name="mail2"/>
+                    <input type="button" value={"메일 중복 검사"} />
+                </div>
 
                     <div className="input_wrap">
-                        <p>연락처</p>
-                        <input type="text" name="a_phone" placeholder="관리자 연락처를 입력해주세요." />
-                    </div>
+                        <p>관리자 연락처</p>
+                    <select name="phone1">
+                        <option value="010">010</option>
+                        <option value="011">011</option>
+                        <option value="016">016</option>
+                        <option value="017">017</option>
+                        <option value="018">018</option>
+                        <option value="019">019</option>
+                    </select>
+                    -
+                    <input type="number" name="a_phone"/>
+                    -
+                    <input type="number" name="phone3"/>
+                </div>
+
 
                     <div className="btns">
                         <input type="button" value="관리자 등록" onClick={adminRegSubmitBtnClickHandler} />
