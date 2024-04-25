@@ -54,6 +54,11 @@ function SignUpForm() {
                     <input type="phone" name="m_phone" placeholder="연락처를 입력해주세요." />
                 </div>
 
+                <div className="input_wrap">
+                    <p>주소</p>
+                    <input type="button" id="find_zip_code" onclick={execDaumPostcode()} value="주소 찾기"></input>
+                </div>
+
                 <div className="btns">
                     <input type="button" value="회원가입" />
                     <input type="reset" value="초기화" />
