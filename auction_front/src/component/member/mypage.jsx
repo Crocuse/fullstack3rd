@@ -1,6 +1,6 @@
 import React from "react"
 
-function mypage() {
+function MyPage() {
     return (
         
         <article>
@@ -8,4 +8,4 @@ function mypage() {
         </article>
     );
 }
-export default mypage;
+export default MyPage;

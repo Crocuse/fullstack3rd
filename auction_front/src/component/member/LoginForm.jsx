@@ -1,6 +1,6 @@
 import React from "react"
 
-function login_form() {
+function LoginForm() {
     return (
         
         <article>
@@ -8,4 +8,4 @@ function login_form() {
         </article>
     );
 }
-export default login_form;
+export default LoginForm;
