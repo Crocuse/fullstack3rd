@@ -1,1 +1,1 @@
-# fullstack3rd
+비드버드 (BIDBIRD)
