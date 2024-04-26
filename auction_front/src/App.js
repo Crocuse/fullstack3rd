@@ -22,6 +22,7 @@ import AuctionResult from './component/Admin/AuctionResult'
 import ReciveGoodsMgt from './component/Admin/ReciveGoodsMgt'
 import SalesMgt from './component/Admin/SalesMgt'
 import UserMgt from './component/Admin/UserMgt'
+import AdminMgt from './component/Admin/AdminMgt'
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path='/admin/recive_goods_mgt' element={<ReciveGoodsMgt />}></Route>
           <Route path='/admin/sales_mgt' element={<SalesMgt />}></Route>
           <Route path='/admin/user_mgt' element={<UserMgt />}></Route>
+          <Route path='/admin/admin_mgt' element={<AdminMgt />}></Route>
 
         </Routes>
         <Footer />

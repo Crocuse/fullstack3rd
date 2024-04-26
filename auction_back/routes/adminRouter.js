@@ -16,5 +16,9 @@ router.post('/is_mail', (req, res) => {
     adminService.isMail(req, res);
 });
 
+router.get('/admin_list',(req,res)=>{
+    adminService.admin_list(req,res);
+})
+
 module.exports = router;
 
