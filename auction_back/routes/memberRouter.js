@@ -14,4 +14,12 @@ router.post('/signup_confirm', (req, res) => {
     memberService.signupConfirm(req, res);
 })
 
+router.get('/login_success', (req, res) => {
+    memberService.loginSuccess(req, res);
+})
+
+router.get('/login_fail', (req, res) => {
+    memberService.loginFail(req, res);
+})
+
 module.exports = router;

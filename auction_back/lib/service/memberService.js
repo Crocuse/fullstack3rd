@@ -41,7 +41,7 @@ const memberService = {
         let post = req.body;
 
         DB.query('INSERT INTO TBL_MEMBER(M_ID, M_PW, M_MAIL, M_PHONE, M_ADDR) VALUES(?, ?, ?, ?, ?)',
-        [post.m_mail, bcrypt.hashSync(post.m_pw, 10), post.m_mail, post.m_phone, post.m_addr],
+        [post.m_id, bcrypt.hashSync(post.m_pw, 10), post.m_mail, post.m_phone, post.m_addr],
         (err, rst) => {
             if (rst.affectedRows > 0) {
                 res.json('success');
@@ -51,8 +51,40 @@ const memberService = {
             console.log(err);
             res.json('fail');
         })
-    }
+    },
 
+    loginSuccess: (req, res) => {
+        if (req.user == 'super') {
+            res.json({
+                'sessionID': req.sessionID,
+                'loginID': req.user,
+                'adminLogin': 'super'
+            })
+        }
+
+        DB.query('SELECT * FROM TBL_ADMIN WHERE A_ID = ?', [req.user], (err, admin) => {
+            if (admin.length > 0) {
+                res.json({
+                    'sessionID': req.sessionID,
+                    'loginID': req.user,
+                    'adminLogin': 'admin'
+                })
+            }
+
+            else {
+                res.json({
+                    'sessionID': req.sessionID,
+                    'loginID': req.user,
+                })
+            }
+        })
+    },
+
+    loginFail: (req, res) => {
+        res.json({
+            'error': req.flash('error')
+        })
+    }
 }
 
 module.exports = memberService;

@@ -11,7 +11,7 @@ import CstCT from './component/Customer_center';
 import CurList from './component/Auction/Current_list';
 import RegForm from './component/Auction/Regist_form';
 import PointAdd from './component/member/PointAddForm';
-import MyPage from './component/member/Mypage'
+import MyPage from './component/member/MyPage'
 import SignUp from './component/member/SignUpForm'
 import Login from './component/member/LoginForm'
 import AdminReg from './component/Admin/AdminReg'
@@ -22,6 +22,7 @@ import AuctionResult from './component/Admin/AuctionResult'
 import ReciveGoodsMgt from './component/Admin/ReciveGoodsMgt'
 import SalesMgt from './component/Admin/SalesMgt'
 import UserMgt from './component/Admin/UserMgt'
+import AdminMgt from './component/Admin/AdminMgt'
 
 function App() {
   return (
@@ -34,7 +35,7 @@ function App() {
           <Route path='/auction/Current_list' element={<CurList />}></Route>
           <Route path='/action/Regist_form' element={<RegForm />}></Route>
           <Route path='/member/Point_add_form' element={<PointAdd />}></Route>
-          <Route path='/member/Mypage' element={<MyPage />}></Route>
+          <Route path='/member/MyPage' element={<MyPage />}></Route>
           <Route path='/Customer_center' element={<CstCT />}></Route>
           <Route path='/member/Signup_form' element={<SignUp />}></Route>
           <Route path='/member/Login_form' element={<Login />}></Route>
@@ -46,6 +47,7 @@ function App() {
           <Route path='/admin/recive_goods_mgt' element={<ReciveGoodsMgt />}></Route>
           <Route path='/admin/sales_mgt' element={<SalesMgt />}></Route>
           <Route path='/admin/user_mgt' element={<UserMgt />}></Route>
+          <Route path='/admin/admin_mgt' element={<AdminMgt />}></Route>
 
         </Routes>
         <Footer />

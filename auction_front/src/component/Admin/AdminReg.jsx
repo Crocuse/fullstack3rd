@@ -4,7 +4,7 @@ import { SERVER_URL } from "../../config/server_url";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function SignUpForm() {
+function AdminReg() {
 
     // Hook -----------------------------------------------------------------------------------------------------------
     const [IDCehck, setIDCehck] = useState(false);
@@ -263,4 +263,4 @@ function SignUpForm() {
     )
 
 }
-export default SignUpForm;
+export default AdminReg;

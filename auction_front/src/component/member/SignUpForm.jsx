@@ -4,6 +4,8 @@ import { SERVER_URL } from "../../config/server_url";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+axios.defaults.withCredentials = true;
+
 function SignUpForm() {
 
     // Hook -----------------------------------------------------------------------------------------------------------

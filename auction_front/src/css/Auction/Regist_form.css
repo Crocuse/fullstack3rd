@@ -38,19 +38,20 @@
 }
 
 .img_angle {
+    position: relative;
     display: flex;
     justify-content: center; /* 수평 가운데 정렬 */
     align-items: center; /* 수직 가운데 정렬 */
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 200px;
     background-color: #808080;
-    margin: 0 10px;
+    margin: 0 20px;
     scroll-snap-align: start; /* 왼쪽 끝으로 정렬 */
 }
 
 .add_img {
-    max-width: 100px;
-    max-height: 100px;
+    max-width: 200px;
+    max-height: 200px;
     margin: auto auto;
     display: block;
 }
@@ -60,4 +61,27 @@
     max-width: 500px;
     text-align: center;
     flex-direction: column;
+}
+
+.delete_btn {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    max-width: 40px;
+    min-width: 40px;
+    max-height: 40px;
+    min-height: 40px;
+    background-color: #e30f0f;
+    border-radius: 50%;
+    font-weight: bold;
+    box-shadow: none;
+}
+
+.delete_btn img {
+    max-width: 35px;
+    min-width: 35px;
+    max-height: 35px;
+    min-height: 35px;
 }
