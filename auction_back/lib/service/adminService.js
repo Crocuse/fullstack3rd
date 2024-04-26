@@ -62,16 +62,95 @@ const adminService = {
             res.json('fail');
         })
     },
-    admin_list:(req,res)=>{
+    adminList:(req,res)=>{
         
-        DB.query(`SELECT * FROM TBL_ADMIN`,(err,admins)=>{
+        DB.query(`SELECT * FROM TBL_ADMIN ORDER BY A_REG_DATE ASC`,(err,admins)=>{
             if(err){
                 res.json(null);
             } else {
                 res.json(admins);
             }
         })
+    },
+    memberList:(req,res)=>{
+        
+        DB.query(`SELECT * FROM TBL_MEMBER`,(err,members)=>{
+            if(err){
+                res.json(null);
+            } else {
+                res.json(members);
+            }
+        })
+    },
+    adminDelete:(req,res)=>{
+
+        let a_id = req.body.id;
+
+        console.log('a_id============>',a_id);
+
+        DB.query(`DELETE FROM TBL_ADMIN WHERE A_ID =?`,[a_id],(err,result)=>{
+            if(err){
+                res.json(null);
+            } else {
+                res.json(result.affectedRows);
+            }
+        })
+    },
+    memberDelete:(req,res)=>{
+        let m_id = req.body.id;
+
+        console.log('m_id============>',m_id);
+
+        DB.query(`DELETE FROM TBL_MEMBER WHERE M_ID =?`,[m_id],(err,result)=>{
+            if(err){
+                res.json(null);
+            } else {
+                res.json(result.affectedRows);
+            }
+        })
+    },
+
+    adminModify:(req,res)=>{
+
+        id= req.query.id;
+   
+        DB.query(`SELECT * FROM TBL_ADMIN WHERE A_ID =?`,[id],(error,admin)=>{
+            if(error){
+                res.json(null);
+            } else {
+
+                const [mail1, mail2] = admin[0].A_MAIL.split("@");
+                const [phone1, phone2, phone3] = admin[0].A_PHONE.split("-");
+
+                const selectedAdmin = {
+                    ...admin[0],
+                    mail1,
+                    mail2,
+                    phone1,
+                    phone2,
+                    phone3,
+                };
+
+                res.json(selectedAdmin);
+            }
+        })
+    },
+    adminModifyConfirm:(req,res)=>{
+        let post = req.body;
+        console.log(req.body);
+        DB.query(`UPDATE TBL_ADMIN SET A_NAME =?,A_PHONE=?,A_MAIL=?,A_MOD_DATE = NOW() WHERE A_ID =?`
+                ,[post.a_name,post.a_phone,post.a_mail,post.a_id],
+                (error,result)=>{
+                    if(error){
+                        console.log(error);
+                        res.json(null)
+                    } else {
+                        res.json(result.affectedRows);
+                    }
+                })
+        
     }
+
 
 }
 
