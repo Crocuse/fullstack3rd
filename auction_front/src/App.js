@@ -1,11 +1,10 @@
-
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-
 import { Provider } from 'react-redux';
-import { legacy_createStore } from 'redux';
-import { reducer } from './redux/reducer/reducer';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './redux/store';
 
 import './App.css';
+
 import Nav from './component/include/Nav';
 import Footer from './component/include/Footer';
 import Header from './component/include/Header';
@@ -14,32 +13,30 @@ import CstCT from './component/Customer_center';
 import CurList from './component/Auction/Current_list';
 import RegForm from './component/Auction/Regist_form';
 import PointAdd from './component/member/PointAddForm';
-import MyPage from './component/member/MyPage' 
-import SignUp from './component/member/SignUpForm'
-import Login from './component/member/LoginForm'
+import MyPage from './component/member/MyPage';
+import SignUp from './component/member/SignUpForm';
+import Login from './component/member/LoginForm';
 import Logout from './component/member/Logout';
-import AdminReg from './component/Admin/AdminReg'
-import AdminHome from './component/Admin/AdminHome'
-import AuctionGoodsMgt from './component/Admin/AuctionGoodsMgt'
-import AuctionGoodsReg from './component/Admin/AuctionGoodsReg'
-import AuctionResult from './component/Admin/AuctionResult'
-import ReciveGoodsMgt from './component/Admin/ReciveGoodsMgt'
-import SalesMgt from './component/Admin/SalesMgt'
-import UserMgt from './component/Admin/UserMgt'
-import AdminMgt from './component/Admin/AdminMgt'
+import AdminReg from './component/Admin/AdminReg';
+import AdminHome from './component/Admin/AdminHome';
+import AuctionGoodsMgt from './component/Admin/AuctionGoodsMgt';
+import AuctionGoodsReg from './component/Admin/AuctionGoodsReg';
+import AuctionResult from './component/Admin/AuctionResult';
+import ReciveGoodsMgt from './component/Admin/ReciveGoodsMgt';
+import SalesMgt from './component/Admin/SalesMgt';
+import UserMgt from './component/Admin/UserMgt';
+import AdminMgt from './component/Admin/AdminMgt';
 
 
 function App() {
-  // Hook ------------------------------------------------------------------------------------------------------
-  const store = legacy_createStore(reducer);
-  
-  // Veiw ------------------------------------------------------------------------------------------------------
   return (
 	<>
-    <Provider store={store}>
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
         <Header />
         <Nav />
+
         <Routes>
           <Route path='/' element={<Home />}></Route>
           <Route path='/auction/Current_list' element={<CurList />}></Route>
@@ -59,11 +56,12 @@ function App() {
           <Route path='/admin/sales_mgt' element={<SalesMgt />}></Route>
           <Route path='/admin/user_mgt' element={<UserMgt />}></Route>
           <Route path='/admin/admin_mgt' element={<AdminMgt />}></Route>
-
         </Routes>
+
         <Footer />
       </BrowserRouter>
-	</Provider>
+    </PersistGate>
+  </Provider>
 
 
       <a href='http://localhost:3001/node'></a>

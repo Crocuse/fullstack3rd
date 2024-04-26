@@ -3,8 +3,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const path = require('path');
-const { MemoryStore } = require('express-session');
 const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
 const cors = require('cors');
 const flash = require('express-flash');
 
@@ -23,12 +23,21 @@ app.use(cors({
 // CORS END -----------------------------------------------------------------------------------------------------------
 
 // session setting START -----------------------------------------------------------------------------------------------------------
+const options = {
+    host: '13.238.114.78',
+    port: 3306,
+    user: 'root',
+    password: '1234',
+    database: 'DB_BIDBIRD'
+};
+const sessionStore = new MySQLStore(options);
+
 const maxAge = 1000 * 60 * 30;
 const sessionObj = {                
     secret: 'Dhyonee',
     resave: false,
     saveUninitialized: true,
-    store: new MemoryStore({ checkPeriod: maxAge }),
+    store: sessionStore,
     cookie: {
         maxAge: maxAge,
     },
