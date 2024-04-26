@@ -9,6 +9,7 @@ const DBs = {
             password: '1234',
             database: 'DB_BIDBIRD',
             dateStrings: true,
+            timezone: "Asia/Seoul",
         });
     },
     DB_LOCAL: () => {
@@ -19,6 +20,7 @@ const DBs = {
             password: '1234',
             database: 'DB_BIDBIRD',
             dateStrings: true,
+            "timezone": "+09:00"
         });
     },
     DB_PROD: () => {
@@ -29,6 +31,7 @@ const DBs = {
             password: '1234',
             database: 'DB_BIDBIRD',
             dateStrings: true,
+            "timezone": "+09:00"
         });
     }
 }
