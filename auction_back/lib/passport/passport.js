@@ -1,12 +1,12 @@
 const DB = require('../db/db');
 const bcrypt = require('bcrypt');
 const shortid = require('shortid');
+const google = require('../config/google.json');
 
 exports.passport = (app) => {
     const passport = require('passport');
     const LocalStrategy = require('passport-local').Strategy;
     const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-    const google = require('../config/google.json');
 
     app.use(passport.initialize());
     app.use(passport.session());

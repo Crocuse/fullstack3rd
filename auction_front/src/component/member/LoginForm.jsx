@@ -2,11 +2,16 @@ import React from "react"
 import { SERVER_URL } from "../../config/server_url";
 import axios from "axios";
 import $ from 'jquery';
+import { useDispatch } from "react-redux";
+import { setLoginedId } from "../../redux/action/setLoginedId";
+import { useNavigate } from "react-router-dom";
 
 axios.defaults.withCredentials = true;
 
-function LoginForm(props) {
+function LoginForm() {
     // Hook -----------------------------------------------------------------------------------------------------------
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     // Handler -----------------------------------------------------------------------------------------------------------
     const LoginBtnClickHandler = () => {
@@ -40,8 +45,9 @@ function LoginForm(props) {
                 return;
             }
 
-
-    
+            dispatch(setLoginedId(response.data.loginedAdmin, response.data.loginId));
+            navigate('/');
+                        
         } catch (error) {
             console.log(error);
         }
