@@ -23,6 +23,10 @@ function SignUpForm() {
 
     const IdCheckbtnClick = () => {
         let id = $('input[name="m_id"]').val();
+        if (id == '') {
+            alert('아이디를 입력해주세요.');
+            return;
+        }
 
         axios_is_member(id);
     }
@@ -37,6 +41,11 @@ function SignUpForm() {
         let mail1 = $('input[name="mail1"]').val();
         let mail2 = $('input[name="mail2"]').val();
         let mail = `${mail1}@${mail2}`;
+
+        if (mail1 == '' || mail2 == '') {
+            alert('메일을 입력해주세요.');
+            return;
+        }
 
         axios_is_mail(mail);
     }
