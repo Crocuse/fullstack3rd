@@ -11,7 +11,7 @@ import CstCT from './component/Customer_center';
 import CurList from './component/Auction/Current_list';
 import RegForm from './component/Auction/Regist_form';
 import PointAdd from './component/member/PointAddForm';
-import MyPage from './component/member/MyPage'
+import MyPage from './component/member/MyPage' 
 import SignUp from './component/member/SignUpForm'
 import Login from './component/member/LoginForm'
 import AdminReg from './component/Admin/AdminReg'
