@@ -57,8 +57,8 @@ const memberService = {
         if (req.user == 'super') {
             res.json({
                 'sessionID': req.sessionID,
-                'loginID': req.user,
-                'adminLogin': 'super'
+                'loginedId': req.user,
+                'loginedAdmin': 'super'
             })
         }
 
@@ -66,15 +66,15 @@ const memberService = {
             if (admin.length > 0) {
                 res.json({
                     'sessionID': req.sessionID,
-                    'loginID': req.user,
-                    'adminLogin': 'admin'
+                    'loginedId': req.user,
+                    'loginedAdmin': 'admin'
                 })
             }
 
             else {
                 res.json({
                     'sessionID': req.sessionID,
-                    'loginID': req.user,
+                    'loginedId': req.user,
                 })
             }
         })
@@ -84,6 +84,12 @@ const memberService = {
         res.json({
             'error': req.flash('error')
         })
+    },
+
+    logoutConfirm: (req, res) => {
+        req.logout(() => {
+            res.json('logout');
+        });
     }
 }
 

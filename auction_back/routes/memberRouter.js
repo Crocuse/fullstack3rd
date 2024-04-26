@@ -22,4 +22,8 @@ router.get('/login_fail', (req, res) => {
     memberService.loginFail(req, res);
 })
 
+router.get('/logout_confirm', (req, res) => {
+    memberService.logoutConfirm(req, res);
+})
+
 module.exports = router;

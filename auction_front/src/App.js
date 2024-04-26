@@ -1,6 +1,9 @@
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import React from 'react';
+
+import { Provider } from 'react-redux';
+import { legacy_createStore } from 'redux';
+import { reducer } from './redux/reducer/reducer';
 
 import './App.css';
 import Nav from './component/include/Nav';
@@ -14,6 +17,7 @@ import PointAdd from './component/member/PointAddForm';
 import MyPage from './component/member/MyPage' 
 import SignUp from './component/member/SignUpForm'
 import Login from './component/member/LoginForm'
+import Logout from './component/member/Logout';
 import AdminReg from './component/Admin/AdminReg'
 import AdminHome from './component/Admin/AdminHome'
 import AuctionGoodsMgt from './component/Admin/AuctionGoodsMgt'
@@ -24,9 +28,15 @@ import SalesMgt from './component/Admin/SalesMgt'
 import UserMgt from './component/Admin/UserMgt'
 import AdminMgt from './component/Admin/AdminMgt'
 
+
 function App() {
+  // Hook ------------------------------------------------------------------------------------------------------
+  const store = legacy_createStore(reducer);
+  
+  // Veiw ------------------------------------------------------------------------------------------------------
   return (
-    <>
+	<>
+    <Provider store={store}>
       <BrowserRouter>
         <Header />
         <Nav />
@@ -34,11 +44,12 @@ function App() {
           <Route path='/' element={<Home />}></Route>
           <Route path='/auction/Current_list' element={<CurList />}></Route>
           <Route path='/action/Regist_form' element={<RegForm />}></Route>
+          <Route path='/member/Signup_form' element={<SignUp />}></Route>
+          <Route path='/member/Login_form' element={<Login />}></Route>
+          <Route path='/member/Logout_confirm' element={<Logout />}></Route>
           <Route path='/member/Point_add_form' element={<PointAdd />}></Route>
           <Route path='/member/MyPage' element={<MyPage />}></Route>
           <Route path='/Customer_center' element={<CstCT />}></Route>
-          <Route path='/member/Signup_form' element={<SignUp />}></Route>
-          <Route path='/member/Login_form' element={<Login />}></Route>
           <Route path='/admin/home' element={<AdminHome />}></Route>
           <Route path='/admin/AdminReg' element={<AdminReg />}></Route>
           <Route path='/admin/auction_goods_mgt' element={<AuctionGoodsMgt />}></Route>
@@ -52,7 +63,7 @@ function App() {
         </Routes>
         <Footer />
       </BrowserRouter>
-
+	</Provider>
 
 
       <a href='http://localhost:3001/node'></a>
