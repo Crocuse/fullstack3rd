@@ -66,6 +66,11 @@ function Regist_form() {
     };
 
     const showAddImg = (file) => {
+        if(img.length > 4){
+            alert('이미지는 5개 까지 올릴수 있습니다.');
+            return;
+        }
+
         if(file){
             const reader = new FileReader();
             reader.onload = () => {
@@ -77,9 +82,16 @@ function Regist_form() {
         }
     }
 
-    
     const DragOverHandler = (e) => {
         e.preventDefault();
+    }
+
+    const deleteBtnHandler = (key) => {
+        console.log(key);
+
+        const tempImg = [...img];
+        tempImg.splice(key, 1);
+        setImg(tempImg);
     }
 
 
@@ -104,18 +116,16 @@ function Regist_form() {
                     <input type="file" className="gr_img" onChange={(e) => uploadChangeHandler(e)} />
                     {img.length !== 0 ? (
                         img.map((image, index) => (
-                            //<img key={index} src={image} style={{maxWidth:"100px", maxHeight:"100px"}}/>
-                            <>
-                                <div className="img_angle">
-                                    <img className="add_img" key={index} src={image} />
-                                </div>
-                            </>
+                            <div key={index} className="img_angle">                                    
+                                <img className="add_img" src={image} /><br/>
+                                <button className="delete_btn" onClick={(key) => deleteBtnHandler(key)}><img src="/img/delete_FILL0_wght400_GRAD0_opsz24.png" alt="" /></button>      
+                            </div>
                         ))
                     ) : (
                         <>
                             <div className="img_text" >
                                 <p>클릭 혹은 파일을 이곳에 드롭 하세요.</p>
-                                <p>파일당 최대 3MB</p>
+                                <p>파일당 최대 3MB, 최대 5개</p>
                             </div>
                             
                         </>
