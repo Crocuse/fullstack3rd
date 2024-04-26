@@ -23,6 +23,7 @@ router.get('/login_fail', (req, res) => {
 })
 
 router.get('/logout_confirm', (req, res) => {
+    console.log('/logout_confirm')
     memberService.logoutConfirm(req, res);
 })
 
