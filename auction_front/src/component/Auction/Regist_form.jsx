@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import $ from "jquery";
 import '../../css/Auction/Regist_form.css'
+import axios from "axios";
+import { SERVER_URL } from "../../config/server_url";
+import { useNavigate } from "react-router-dom";
 
 function Regist_form() {
     const [grName, setGrName] = useState('');
@@ -10,7 +13,8 @@ function Regist_form() {
     const [img, setImg] = useState([]);
     const DragStartHandler = () => setIsActive(true);
     const DragEndHandler = () => setIsActive(false);
-    
+    const navigate = useNavigate();
+
     const AuctionRegistBtnClickHandler = () => {
         console.log('AuctionRegistBtnClickHandler()');
 
@@ -20,7 +24,7 @@ function Regist_form() {
         } else if(grPrice === ''){
             alert('희망 가격을 입력 해주세요');
             return;
-        } else if(grPrice === ''){
+        } else if(grInfo === ''){
             alert('상품 설명을 입력 해주세요');
             return;
         }
@@ -31,9 +35,26 @@ function Regist_form() {
 
     async function postTransferFile() {
         console.log('postTransferFile()');
+        let files = img;
 
-        let attach_file = $('input[name]');
+        try{
+            const response = await axios.post(`${SERVER_URL.SERVER_URL}/auction/regist_form`, 
+            {
+                grName, grPrice, grInfo, files
+            });
 
+            console.log(response);
+
+            if(response.data == 'success') {
+                alert('등록이 완료 되었습니다.');
+                navigate('/');
+            } else {
+                alert('등록에 실패 했습니다.');
+                navigate('/action/Regist_form');
+            }
+        } catch(error) {
+            console.log(error);
+        }
     }
 
     const grNameChangeHandler = (e) => {
@@ -61,6 +82,7 @@ function Regist_form() {
 
     const uploadChangeHandler = (e) => {
         console.log('uploadHandler()');
+        
         const file = e.target.files[0];
         showAddImg(file);
     };
@@ -86,14 +108,17 @@ function Regist_form() {
         e.preventDefault();
     }
 
-    const deleteBtnHandler = (key) => {
-        console.log(key);
+    const deleteBtnHandler = (index, e) => {
+        console.log('deleteBtnHandler()');
+
+        e.preventDefault();
 
         const tempImg = [...img];
-        tempImg.splice(key, 1);
+        tempImg.splice(index, 1);
         setImg(tempImg);
-    }
 
+
+    }
 
     return (
         <article>
@@ -118,7 +143,7 @@ function Regist_form() {
                         img.map((image, index) => (
                             <div key={index} className="img_angle">                                    
                                 <img className="add_img" src={image} /><br/>
-                                <button className="delete_btn" onClick={(key) => deleteBtnHandler(key)}><img src="/img/delete_FILL0_wght400_GRAD0_opsz24.png" alt="" /></button>      
+                                <button className="delete_btn" onClick={(e) => deleteBtnHandler(index, e)}><img src="/img/delete_FILL0_wght400_GRAD0_opsz24.png" alt="" /></button>      
                             </div>
                         ))
                     ) : (
