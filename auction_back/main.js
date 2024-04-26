@@ -6,20 +6,23 @@ const path = require('path');
 const { MemoryStore } = require('express-session');
 const session = require('express-session');
 const cors = require('cors');
+const flash = require('express-flash');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(compression());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
+app.use(flash());
 
-// CORS START
+// CORS START -----------------------------------------------------------------------------------------------------------
 app.use(cors({
     origin: 'http://localhost:3000',
     credentials: true,
 }));
-// CORS END
+// CORS END -----------------------------------------------------------------------------------------------------------
 
+// session setting START -----------------------------------------------------------------------------------------------------------
 const maxAge = 1000 * 60 * 30;
 const sessionObj = {                
     secret: 'Dhyonee',
@@ -32,43 +35,25 @@ const sessionObj = {
 }
 
 app.use(session(sessionObj));
+// session setting END -----------------------------------------------------------------------------------------------------------
 
-// passport START
+// passport setting START -----------------------------------------------------------------------------------------------------------
 let pp = require('./lib/passport/passport');
 let passport = pp.passport(app);
 
-app.get('/member/login_confirm', passport.authenticate('local', {
-    successRedirect: '/login_success',
-    failureRedirect: '/login_fail',
+app.post('/member/login_confirm', passport.authenticate('local', {
+    successRedirect: '/member/login_success',
+    failureRedirect: '/member/login_fail',
+    successFlash: true,
+    failureFlash: true
 }));
 
-// 로그인 성공 시
-app.get('/login_success', (req, res) => {
-    console.log('login_success ::: req.user --> ', req.user);
-
-    res.json({
-        'sessionID': req.sessionID,
-        'mId': req.user,
-    });
-
-});
-
-// 로그인 실패 시
-app.get('/login_fail', (req, res) => {
-    console.log('login_fail');
-
-    res.json(null);
-
-});
-// passport END
+// passport setting END -----------------------------------------------------------------------------------------------------------
 
 
-app.get('/node', (req, res) => {
-    res.send('노드 연결 성공 ^0^');
-})
-
-// 라우터 설정
+// 라우터 설정 -----------------------------------------------------------------------------------------------------------
 app.use('/member', require('./routes/memberRouter'));
 app.use('/admin', require('./routes/adminRouter'));
+// 라우터 설정 끗 -----------------------------------------------------------------------------------------------------------
 
 app.listen(3001);
