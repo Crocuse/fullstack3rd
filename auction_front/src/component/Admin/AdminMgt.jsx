@@ -1,4 +1,7 @@
 import React, { useEffect } from "react"
+import { SERVER_URL } from "../../config/server_url";
+import axios from "axios";
+
 
 function AdminMgt() {
     
