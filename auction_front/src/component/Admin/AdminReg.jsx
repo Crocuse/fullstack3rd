@@ -13,7 +13,7 @@ function AdminReg() {
     const navigate = useNavigate();
 
     // Handler -----------------------------------------------------------------------------------------------------------
-    const mIdChangeHandler = () => {
+    const IdChangeHandler = () => {
         setIDCehck(false);
         $('#id_check_false').text(`아이디 중복 검사를 실행해주세요.`);     
         $('#id_check_true').text('');  
@@ -23,20 +23,6 @@ function AdminReg() {
         let id = $('input[name="a_id"]').val();
 
         axios_is_member(id);
-    }
-
-    const mailChangehandler = () => {
-        setMailCheck(false);
-        $('#mail_check_false').text(`메일 중복 검사를 실행해주세요.`);     
-        $('#mail_check_true').text('');
-    }
-
-    const mailCheckClickHandler = () => {
-        let mail1 = $('input[name="mail1"]').val();
-        let mail2 = $('input[name="mail2"]').val();
-        let mail = `${mail1}@${mail2}`;
-
-        axios_is_mail(mail);
     }
 
     const pwChangehandler = () => {
@@ -87,10 +73,6 @@ function AdminReg() {
         else if (form.mail2.value == '') {
             alert('메일 주소를 입력해주세요.');
             form.mail2.focus();
-        }
-        else if (mailCheck == false) {
-            alert('메일 중복 검사를 완료해주세요.')
-            form.mail1.focus();
         }
         else if (form.phone2.value == '') {
             alert('연락처를 입력해주세요.');
@@ -143,34 +125,6 @@ function AdminReg() {
         }
     }
 
-    async function axios_is_mail(mail) {
-
-        try {
-            const response = await axios.post(`${SERVER_URL.SERVER_URL()}/admin/is_mail`,
-            {
-                "mail": mail,
-            });
-
-            if (response.data == 'is_mail') {
-                $('#mail_check_false').text(`사용 중인 메일입니다.`);     
-                $('#mail_check_true').text('');     
-                setMailCheck(false);
-            }
-            else if (response.data == 'error') {
-                $('#mail_check_false').text('오류가 발생했습니다. 다시 시도해주세요.');   
-                $('#mail_check_true').text('');   
-                setMailCheck(false);
-            }
-            else if (response.data == 'not_mail') {
-                $('#mail_check_false').text('');  
-                $('#mail_check_true').text(`사용 가능한 메일입니다.`);
-                setMailCheck(true);
-            }
-    
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
     async function axios_admin_reg_confirm(a_id, a_pw, a_name,a_mail, a_phone) {
 
@@ -201,7 +155,7 @@ function AdminReg() {
 
                 <div className="input_wrap">
                     <p>관리자 아이디</p>
-                    <input type="text" name="a_id" placeholder="아이디를 입력해주세요." onChange={mIdChangeHandler}/>
+                    <input type="text" name="a_id" placeholder="아이디를 입력해주세요." onChange={IdChangeHandler}/>
                     <input type="button" value={"아이디 중복 검사"} onClick={IdCheckbtnClick}/>
                     <span id="id_check_false"></span>
                     <span id="id_check_true"></span>
@@ -229,12 +183,9 @@ function AdminReg() {
 
                 <div className="input_wrap">
                     <p>관리자 이메일</p>
-                    <input type="text" name="mail1" onChange={mailChangehandler}/>
+                    <input type="text" name="mail1" />
                     @
-                    <input type="text" name="mail2" onChange={mailChangehandler}/>
-                    <input type="button" value={"메일 중복 검사"} onClick={mailCheckClickHandler} />
-                    <span id="mail_check_false"></span>
-                    <span id="mail_check_true"></span>
+                    <input type="text" name="mail2" />
                 </div>
                 
                 <div className="input_wrap">

@@ -17,8 +17,28 @@ router.post('/is_mail', (req, res) => {
 });
 
 router.get('/admin_list',(req,res)=>{
-    adminService.admin_list(req,res);
+    adminService.adminList(req,res);
+});
+
+router.get('/member_list',(req,res)=>{
+    adminService.memberList(req,res);
+});
+
+router.delete('/admin_delete',(req,res)=>{
+    adminService.adminDelete(req,res);
+});
+
+router.delete('/member_delete',(req,res)=>{
+    adminService.memberDelete(req,res);
+});
+
+router.get('/admin_modify',(req,res)=>{
+    adminService.adminModify(req,res);
 })
+
+router.post('/admin_modify_confirm',(req,res)=>{
+    adminService.adminModifyConfirm(req,res);
+});
 
 module.exports = router;
 
