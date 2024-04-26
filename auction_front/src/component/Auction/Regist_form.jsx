@@ -38,12 +38,10 @@ function Regist_form() {
         let files = img;
 
         try{
-            const response = await axios.post(`${SERVER_URL.SERVER_URL}/auction/regist_form`, 
+            const response = await axios.post(`${SERVER_URL.SERVER_URL()}/auction/regist_form`, 
             {
                 grName, grPrice, grInfo, files
             });
-
-            console.log(response);
 
             if(response.data == 'success') {
                 alert('등록이 완료 되었습니다.');
