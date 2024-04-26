@@ -1,8 +1,7 @@
 const multer = require('multer');
-const uuid4 = require('uuid4');
 const path = require('path');
 const fs = require('fs');
-const uuid4 = require('uuid4');
+const uuid = require('uuid4');
 
 const uploads = {
     UPLOAD_GOODS_MIDDLEWARE: () => {
