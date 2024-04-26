@@ -16,7 +16,7 @@ function Nav() {
 
         m_menu = 
         <>
-
+            <Link to="/member/logout_confirm">로그아웃</Link>
         </>
     }
     else if (loginedAdmin == 'admin') {
@@ -27,7 +27,7 @@ function Nav() {
 
         m_menu = 
         <>
-
+            <Link to="/member/logout_confirm">로그아웃</Link>
         </>
     }
     else if (loginedUser != '') {
