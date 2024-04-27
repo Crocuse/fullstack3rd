@@ -64,6 +64,7 @@ app.post('/member/login_confirm', passport.authenticate('local', {
 app.use('/member', require('./routes/memberRouter'));
 app.use('/admin', require('./routes/adminRouter'));
 app.use('/auction',require('./routes/auctionRouter'));
+app.use('/point',require('./routes/pointRouter'));
 // 라우터 설정 끗 -----------------------------------------------------------------------------------------------------------
 
 app.listen(3001);
