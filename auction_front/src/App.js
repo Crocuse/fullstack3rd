@@ -12,7 +12,7 @@ import Home from './component/Home';
 import CstCT from './component/Customer_center';
 import CurList from './component/Auction/Current_list';
 import RegForm from './component/Auction/Regist_form';
-import PointAdd from './component/member/PointAddForm';
+import PointAddForm from './component/point/PointAddForm';
 import MyPage from './component/member/MyPage';
 import SignUp from './component/member/SignUpForm';
 import Login from './component/member/LoginForm';
@@ -44,7 +44,7 @@ function App() {
           <Route path='/member/Signup_form' element={<SignUp />}></Route>
           <Route path='/member/Login_form' element={<Login />}></Route>
           <Route path='/member/Logout_confirm' element={<Logout />}></Route>
-          <Route path='/member/Point_add_form' element={<PointAdd />}></Route>
+          <Route path='/point/Point_add_form' element={<PointAddForm />}></Route>
           <Route path='/member/MyPage' element={<MyPage />}></Route>
           <Route path='/Customer_center' element={<CstCT />}></Route>
           <Route path='/admin/home' element={<AdminHome />}></Route>
