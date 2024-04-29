@@ -1,13 +1,47 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { SERVER_URL } from "../../config/server_url";
 
 function Nav() {
+
+    // Hook -----------------------------------------------------------------------------------------------------------------
+    useEffect(() => {
+        axios_session_check();
+    })
+
+    const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
     const loginedAdmin = useSelector(state => state['loginedInfos']['loginedId']['loginedAdmin']);
     const loginedUser = useSelector(state => state['loginedInfos']['loginedId']['loginedId']);
+
+    const navigate = useNavigate();
+
     let mainMenu;
     let m_menu;
 
+    // axios -----------------------------------------------------------------------------------------------------------------
+    async function axios_session_check() {
+
+        try {
+            const response = await axios.post(`${SERVER_URL.SERVER_URL()}/member/session_check`,
+            { sessionId });
+
+            console.log(response.data);
+
+            if (sessionId == '') return;
+            
+            else if (response.data == 'session incorrect') {
+                navigate('/member/logout_confirm');
+                return;
+            }
+                        
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    // view -----------------------------------------------------------------------------------------------------------------
     if (loginedAdmin == 'super') {
         mainMenu = 
         <>

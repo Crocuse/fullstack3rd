@@ -23,7 +23,7 @@ function Logout() {
         try {
             await axios.get(`${SERVER_URL.SERVER_URL()}/member/logout_confirm`);
             
-            dispatch(setLoginedId('', ''));
+            dispatch(setLoginedId('', '', ''));
             navigate('/');
 
         } catch (error) {
