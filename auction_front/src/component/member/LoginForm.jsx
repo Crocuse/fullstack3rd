@@ -78,6 +78,12 @@ function LoginForm() {
             </div>
         </form>
 
+        <div className="social_login_wrap">
+            <a href="#none">구글 계정으로 로그인하기</a> <br />
+            <a href="#none">네이버 계정으로 로그인하기</a> <br />
+            <a href="#none">카카오톡 계정으로 로그인하기</a> <br />
+        </div>
+
     </div>
     )
 }
