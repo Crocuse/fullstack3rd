@@ -1,8 +1,10 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import $ from "jquery";
 import { SERVER_URL } from "../../config/server_url";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { SessionCheck, sessionCheck, useSessionCheck } from "../../util/sessionCheck";
+import { useSelector } from "react-redux";
 
 axios.defaults.withCredentials = true;
 
@@ -12,7 +14,12 @@ function SignUpForm() {
     const [IDCehck, setIDCehck] = useState(false);
     const [mailCheck, setMailCheck] = useState(false);
 
+    const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
     const navigate = useNavigate();
+    
+    useEffect(() => {
+        sessionCheck(sessionId, navigate);
+    })
 
     // Handler -----------------------------------------------------------------------------------------------------------
     const mIdChangeHandler = () => {
