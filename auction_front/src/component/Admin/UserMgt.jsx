@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { SERVER_URL } from "../../config/server_url";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { sessionCheck } from "../../util/sessionCheck";
 
 function UserMgt() {
   
@@ -8,9 +11,12 @@ function UserMgt() {
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedMember, setSelectedMember] = useState(null);
 
+    const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios_member_list();
+        sessionCheck(sessionId, navigate);
     }, [memberList]);
     
     function execDaumPostcode() {

@@ -32,6 +32,7 @@ import MyBids from './component/member/mypage/MyBids';
 import MyWinnigBids from './component/member/mypage/MyWinnigBids';
 import MyRegist from './component/member/mypage/MyRegist';
 import MyPoint from './component/member/mypage/MyPoint';
+import ModifyPassword from './component/member/mypage/ModifyPassword';
 
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
           <Route path='/member/Logout_confirm' element={<Logout />}></Route>
           <Route path="/member/member/my_page" element={<MyPageMenubar />}>
               <Route path="modify_info" element={<ModifyInfo />} />
+              <Route path="modify_password" element={<ModifyPassword />} />
               <Route path="mybids" element={<MyBids />} />
               <Route path="mywinnigbids" element={<MyWinnigBids />} />
               <Route path="myregist" element={<MyRegist />} />

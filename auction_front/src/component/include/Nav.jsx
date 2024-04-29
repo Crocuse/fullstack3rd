@@ -7,19 +7,19 @@ import { SERVER_URL } from "../../config/server_url";
 function Nav() {
 
     // Hook -----------------------------------------------------------------------------------------------------------------
-    useEffect(() => {
-        axios_session_check();
-    })
-
     const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
     const loginedAdmin = useSelector(state => state['loginedInfos']['loginedId']['loginedAdmin']);
     const loginedUser = useSelector(state => state['loginedInfos']['loginedId']['loginedId']);
 
-    const navigate = useNavigate();
+    useEffect(() => {
+        axios_session_check();
+    })
 
+    const navigate = useNavigate();
+    
     let mainMenu;
     let m_menu;
-
+    
     // axios -----------------------------------------------------------------------------------------------------------------
     async function axios_session_check() {
 
