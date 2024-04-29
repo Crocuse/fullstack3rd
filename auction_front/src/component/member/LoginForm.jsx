@@ -45,7 +45,7 @@ function LoginForm() {
                 return;
             }
 
-            dispatch(setLoginedId(response.data.loginedAdmin, response.data.loginId));
+            dispatch(setLoginedId(response.data.sessionID, response.data.loginedAdmin, response.data.loginId));
             navigate('/');
                         
         } catch (error) {
