@@ -35,12 +35,29 @@ function Regist_form() {
 
     async function postTransferFile() {
         console.log('postTransferFile()');
-        let files = img;
+
+        let gr_imgs = $('input[name="gr_imgs"]');
+        console.log(gr_imgs);
+        let files = gr_imgs[0].files;
+        console.log(files[0]);
+
+        const formData = new FormData();
+        formData.append('grName', grName)
+        formData.append('grPrice', grPrice)
+        formData.append('grInfo', grInfo)
+        formData.append('gr_imgs', files[0]);
+
+
+
+        // for(let i = 0; i<img.length; i++){
+        //     formData.append('files', img[i]);
+        // }
 
         try{
-            const response = await axios.post(`${SERVER_URL.SERVER_URL()}/auction/regist_form`, 
-            {
-                grName, grPrice, grInfo, files
+            const response = await axios.post(`${SERVER_URL.SERVER_URL()}/auction/regist_form`, formData,{
+                headers: {
+                    'Content-Type' : 'multipart/form-data'
+                }
             });
 
             if(response.data == 'success') {
@@ -136,7 +153,7 @@ function Regist_form() {
                     onDragLeave={DragEndHandler}
                     onDrop={DropHandler}
                 >
-                    <input type="file" className="gr_img" onChange={(e) => uploadChangeHandler(e)} />
+                    <input type="file" name="gr_imgs" className="gr_img" onChange={(e) => uploadChangeHandler(e)} multiple/>
                     {img.length !== 0 ? (
                         img.map((image, index) => (
                             <div key={index} className="img_angle">                                    
@@ -165,3 +182,4 @@ function Regist_form() {
     );
 }
 export default Regist_form;
+ 

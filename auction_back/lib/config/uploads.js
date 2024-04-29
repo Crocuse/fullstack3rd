@@ -1,23 +1,23 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const uuid = require('uuid4');
+const uuid4 = require('uuid4');
 
 const uploads = {
     UPLOAD_GOODS_MIDDLEWARE: () => {
         const upload = multer({
             storage: multer.diskStorage({
-                destination(req, file, done) {
-                    let fileDir = `/home/ubuntu/acution/goodsImg/`;
+                destination(req, files, done) {
+                    //let fileDir = `/home/ubuntu/acution/goodsImg/`;
+                    let fileDir = 'C:/ysw/';
                     if(!fs.existsSync(fileDir)) {
                         fs.mkdirSync(fileDir, {recursive: true});
                     }
-                    done(null, `/home/ubuntu/acution/goodsImg/`);
+                    done(null, fileDir);
                 },
                 filename(req, file, done) {
-                    let uuid4 = uuid4();
-                    let extName = path.extname(file.originalname);
-                    let fileName = uuid + extName;
+                    const extName = path.extname(file.originalname);
+                    const fileName = uuid4() + extName;
                     done(null, fileName);
                 }
             }),
@@ -26,7 +26,7 @@ const uploads = {
             }
         })
 
-        return upload.array(req.body.files)
+        return upload.array('gr_imgs')
     }
 }
 
