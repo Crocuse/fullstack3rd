@@ -151,22 +151,23 @@ function AdminMgt() {
                         </tr>
                     </thead>
                     <tbody>
-                        {adminList.map((admin) => (
-                            <tr key={admin.A_ID}>
-                            <td>{admin.A_ID}</td>
-                            <td>{admin.A_NAME}</td>
-                            <td>{admin.A_PHONE}</td>
-                            <td>{admin.A_MAIL}</td>
-                            <td>{admin.A_REG_DATE}</td>
-                            <td>{admin.A_MOD_DATE}</td>
-                            <td>
-                                <button onClick={()=>adminModifyBtn(admin.A_ID)}>수정</button>
-                            </td>
-                            <td>
-                                <button onClick={()=>adminDeleteBtn(admin.A_ID)}>탈퇴</button>
-                            </td>
-                            </tr>
-                        ))}
+                    {adminList.filter((admin) => admin.A_ID !== "super")
+                                .map((admin) => (
+                                <tr key={admin.A_ID}>
+                                    <td>{admin.A_ID}</td>
+                                    <td>{admin.A_NAME}</td>
+                                    <td>{admin.A_PHONE}</td>
+                                    <td>{admin.A_MAIL}</td>
+                                    <td>{admin.A_REG_DATE}</td>
+                                    <td>{admin.A_MOD_DATE}</td>
+                                    <td>
+                                    <button onClick={() => adminModifyBtn(admin.A_ID)}>수정</button>
+                                    </td>
+                                    <td>
+                                    <button onClick={() => adminDeleteBtn(admin.A_ID)}>탈퇴</button>
+                                    </td>
+                                </tr>
+                                ))}
                     </tbody>
                 </table>
 

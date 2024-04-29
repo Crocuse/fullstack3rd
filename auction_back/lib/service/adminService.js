@@ -149,6 +149,49 @@ const adminService = {
                     }
                 })
         
+    },
+    memberModify:(req,res)=>{
+        id= req.query.id;
+   
+        DB.query(`SELECT * FROM TBL_MEMBER WHERE M_ID =?`,[id],(error,member)=>{
+            if(error){
+                res.json(null);
+            } else {
+
+                const [mail1, mail2] = member[0].M_MAIL.split("@");
+                const [phone1, phone2, phone3] = member[0].M_PHONE.split("-");
+                const [addr1, addr2, addr3, addr4] = member[0].M_ADDR.split("/");
+
+                const selectedMember = {
+                    ...member[0],
+                    mail1,
+                    mail2,
+                    phone1,
+                    phone2,
+                    phone3,
+                    addr1,
+                    addr2,
+                    addr3,
+                    addr4
+                };
+
+                res.json(selectedMember);
+            }
+        })
+    },
+    memberModifyConfirm:(req,res)=>{
+        let post = req.body;
+        console.log(req.body);
+        DB.query(`UPDATE TBL_MEMBER SET M_MAIL =?,M_PHONE=?,M_ADDR=?, M_MOD_DATE = NOW() WHERE M_ID =?`
+                ,[post.m_mail,post.m_phone,post.m_addr,post.m_id],
+                (error,result)=>{
+                    if(error){
+                        console.log(error);
+                        res.json(null)
+                    } else {
+                        res.json(result.affectedRows);
+                    }
+                })
     }
 
 
