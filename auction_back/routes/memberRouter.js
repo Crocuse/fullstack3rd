@@ -2,6 +2,10 @@ const express = require('express');
 const memberService = require('../lib/service/memberService');
 const router = express.Router();
 
+router.post('/session_check', (req, res) => {
+    memberService.sessionCheck(req, res);
+})
+
 router.get('/is_member', (req, res) => {
     memberService.isMember(req, res);
 })

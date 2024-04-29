@@ -3,6 +3,20 @@ const bcrypt = require('bcrypt');
 
 const memberService = {
     
+    sessionCheck: (req, res) => {
+        let sessionId = req.body.sessionId;
+        console.log("🚀 ~ req.sessionID:", req.sessionID)
+        console.log("🚀 ~ sessionID:", sessionId)
+        
+        if(req.sessionID == sessionId) {
+            res.json('session correct')
+        }
+        else {
+            res.json('session incorrect')
+        }
+
+    },
+    
     isMember: (req, res) => {
         let m_id = req.query.id;
 
