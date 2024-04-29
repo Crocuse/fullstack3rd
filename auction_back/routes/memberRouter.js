@@ -26,6 +26,18 @@ router.get('/login_fail', (req, res) => {
     memberService.loginFail(req, res);
 })
 
+router.get('/get_my_info', (req, res) => {
+    memberService.getMyInfo(req, res);
+})
+
+router.post('/modify_phone', (req, res) => {
+    memberService.modifyPhone(req, res);
+})
+
+router.post('/modify_addr', (req, res) => {
+    memberService.modifyAddr(req, res);
+})
+
 router.get('/logout_confirm', (req, res) => {
     console.log('/logout_confirm')
     memberService.logoutConfirm(req, res);

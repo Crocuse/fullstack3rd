@@ -122,7 +122,7 @@ function SignUpForm() {
             let m_pw = form.m_pw.value;
             let m_mail = `${form.mail1.value}@${form.mail2.value}`;
             let m_phone = `${form.phone1.value}-${form.phone2.value}-${form.phone3.value}`;
-            let m_addr = `${form.postcode.value}/${form.roadAddress.value}/${form.detailAddress.value}`;
+            let m_addr = `(${form.postcode.value})/${form.roadAddress.value}/${form.detailAddress.value}`;
             if (form.extraAddress.value != '')
                 m_addr += `/${form.extraAddress.value}`
 
