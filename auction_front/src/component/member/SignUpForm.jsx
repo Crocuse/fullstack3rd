@@ -3,7 +3,7 @@ import $ from "jquery";
 import { SERVER_URL } from "../../config/server_url";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { SessionCheck, sessionCheck, useSessionCheck } from "../../util/sessionCheck";
+import { sessionCheck } from "../../util/sessionCheck";
 import { useSelector } from "react-redux";
 
 axios.defaults.withCredentials = true;
@@ -14,12 +14,7 @@ function SignUpForm() {
     const [IDCehck, setIDCehck] = useState(false);
     const [mailCheck, setMailCheck] = useState(false);
 
-    const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
     const navigate = useNavigate();
-    
-    useEffect(() => {
-        sessionCheck(sessionId, navigate);
-    })
 
     // Handler -----------------------------------------------------------------------------------------------------------
     const mIdChangeHandler = () => {
@@ -127,9 +122,9 @@ function SignUpForm() {
             let m_pw = form.m_pw.value;
             let m_mail = `${form.mail1.value}@${form.mail2.value}`;
             let m_phone = `${form.phone1.value}-${form.phone2.value}-${form.phone3.value}`;
-            let m_addr = `(${form.postcode.value}) ${form.roadAddress.value} ${form.detailAddress.value}`;
+            let m_addr = `${form.postcode.value}/${form.roadAddress.value}/${form.detailAddress.value}`;
             if (form.extraAddress.value != '')
-                m_addr += ` (${form.extraAddress.value})`
+                m_addr += `/${form.extraAddress.value}`
 
             axios_signup_confirm(m_id, m_pw, m_mail, m_phone, m_addr);
         }
