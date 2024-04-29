@@ -38,6 +38,14 @@ router.post('/modify_addr', (req, res) => {
     memberService.modifyAddr(req, res);
 })
 
+router.post('/check_password', (req, res) => {
+    memberService.checkPassword(req, res)
+})
+
+router.post('/modify_password', (req, res) => {
+    memberService.modifyPassword(req, res)
+})
+
 router.get('/logout_confirm', (req, res) => {
     console.log('/logout_confirm')
     memberService.logoutConfirm(req, res);

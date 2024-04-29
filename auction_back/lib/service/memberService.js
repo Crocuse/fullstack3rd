@@ -156,6 +156,40 @@ const memberService = {
         })
     },
 
+    checkPassword: (req, res) => {
+        let id = req.body.id;
+        let pw = req.body.pw;
+
+        DB.query('SELECT M_PW FROM TBL_MEMBER WHERE M_ID = ?', [id], (err, member) => {
+            if (err || member.affectedRows == 0) {
+                console.log(err);
+                res.json('error');
+                return;
+            };
+
+            if (bcrypt.compareSync(pw, member[0].M_PW))
+                res.json('success');
+            else
+                res.json('fail');
+        })
+    },
+
+    modifyPassword: (req, res) => {
+        let id = req.body.id;
+        let pw = req.body.pw;
+
+        DB.query('UPDATE TBL_MEMBER SET M_PW = ? WHERE M_ID = ?', 
+        [bcrypt.hashSync(pw, 10), id], (err, member) => {
+            if (err || member.affectedRows == 0) {
+                console.log('err: ', err);
+                res.json('error');
+                return;
+            };
+
+            res.json('modified');
+        })
+    },
+
     logoutConfirm: (req, res) => {
         req.logout(() => {
             res.json('logout');

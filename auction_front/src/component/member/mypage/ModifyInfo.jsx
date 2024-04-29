@@ -6,6 +6,8 @@ import axios from "axios";
 import { SERVER_URL } from "../../../config/server_url";
 import $ from 'jquery';
 
+axios.defaults.withCredentials = true;
+
 function ModifyInfo() {
     // Hook -----------------------------------------------------------------------------------------------------------
     const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);

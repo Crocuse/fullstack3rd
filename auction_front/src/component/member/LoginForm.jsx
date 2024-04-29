@@ -31,11 +31,14 @@ function LoginForm() {
             axios_login_confirm(m_id, m_pw);
     }
 
+    const googleLoginClick = () => {
+        axios_google_login();
+    }
+
     // Function -----------------------------------------------------------------------------------------------------------
 
     // Axios -----------------------------------------------------------------------------------------------------------
     async function axios_login_confirm(m_id, m_pw) {
-
         try {
             const response = await axios.post(`${SERVER_URL.SERVER_URL()}/member/login_confirm`,
             { m_id, m_pw });
@@ -52,6 +55,25 @@ function LoginForm() {
             console.log(error);
         }
     }
+
+    async function axios_google_login() {
+        try {
+            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auth/google`);
+
+            if(response.data.error) {
+                $('#fail_massage').text(response.data.error[0]);
+                return;
+            }
+
+            dispatch(setLoginedId(response.data.sessionID, response.data.loginedAdmin, response.data.loginedId));
+            navigate('/');
+                        
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    
 
     // View -----------------------------------------------------------------------------------------------------------
     return (
@@ -78,10 +100,36 @@ function LoginForm() {
             </div>
         </form>
 
+        <div className="find_member">
+            <a href="">아이디 찾기</a>
+            <a href="">비밀번호 찾기</a>
+        </div>
+
         <div className="social_login_wrap">
-            <a href="#none">구글 계정으로 로그인하기</a> <br />
-            <a href="#none">네이버 계정으로 로그인하기</a> <br />
-            <a href="#none">카카오톡 계정으로 로그인하기</a> <br />
+            <div className="google_login" onClick={googleLoginClick}>
+                <div className="icon">
+                    <img src="/img/member/login_icon/google.png"/>
+                </div>
+                <div className="login_txt">
+                    구글로 로그인하기
+                </div>
+            </div>
+            <div className="naver_login">
+                <div className="icon">
+                    <img src="/img/member/login_icon/naver.png"/>
+                </div>
+                <div className="login_txt">
+                    네이버 로그인하기
+                </div>
+            </div>
+            <div className="kakao_login">
+                <div className="icon">
+                    <img src="/img/member/login_icon/kakao.png"/>
+                </div>
+                <div className="login_txt">
+                    카카오 로그인하기
+                </div>
+            </div>
         </div>
 
     </div>

@@ -2,6 +2,7 @@ const DB = require('../db/db');
 const bcrypt = require('bcrypt');
 const shortid = require('shortid');
 const google = require('../config/google.json');
+const cors = require('cors');
 
 exports.passport = (app) => {
     const passport = require('passport');
@@ -54,6 +55,7 @@ exports.passport = (app) => {
         })
     }))
 
+    // GOOGLE SETTING START 
     passport.use(new GoogleStrategy({
         clientID: google.web.client_id,
         clientSecret: google.web.client_secret,
@@ -96,6 +98,30 @@ exports.passport = (app) => {
             })
         }
     ));
+
+    app.get('/auth/google',
+    cors({
+        origin: 'http://localhost:3000',
+        methods: ['GET'],
+    }),
+    passport.authenticate('google', {
+        scope: ['https://www.googleapis.com/auth/plus.login', 'email'] 
+    })
+);
+
+app.get(
+    '/auth/google/callback',
+    cors({
+        origin: 'http://localhost:3000',
+        methods: ['GET'],
+    }),
+    passport.authenticate('google', { failureRedirect: '/member/login_fail' }),
+    (req, res) => {
+        console.log('------> 2')
+        res.redirect('/member/login_success');
+    }
+);
+    // GOOGLE SETTING END
 
     return passport;
 
