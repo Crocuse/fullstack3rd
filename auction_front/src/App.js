@@ -13,7 +13,7 @@ import CstCT from './component/Customer_center';
 import CurList from './component/Auction/Current_list';
 import RegForm from './component/Auction/Regist_form';
 import PointAddForm from './component/point/PointAddForm';
-import MyPage from './component/member/MyPage';
+import MyPage from './component/member/mypage/MyPage';
 import SignUp from './component/member/SignUpForm';
 import Login from './component/member/LoginForm';
 import Logout from './component/member/Logout';
@@ -26,6 +26,12 @@ import ReciveGoodsMgt from './component/Admin/ReciveGoodsMgt';
 import SalesMgt from './component/Admin/SalesMgt';
 import UserMgt from './component/Admin/UserMgt';
 import AdminMgt from './component/Admin/AdminMgt';
+import ModifyInfo from './component/member/mypage/ModifyInfo';
+import MyPageMenubar from './component/member/mypage/MyPageMenubar';
+import MyBids from './component/member/mypage/MyBids';
+import MyWinnigBids from './component/member/mypage/MyWinnigBids';
+import MyRegist from './component/member/mypage/MyRegist';
+import MyPoint from './component/member/mypage/MyPoint';
 
 
 function App() {
@@ -44,6 +50,13 @@ function App() {
           <Route path='/member/Signup_form' element={<SignUp />}></Route>
           <Route path='/member/Login_form' element={<Login />}></Route>
           <Route path='/member/Logout_confirm' element={<Logout />}></Route>
+          <Route path="/member/member/my_page" element={<MyPageMenubar />}>
+              <Route path="modify_info" element={<ModifyInfo />} />
+              <Route path="mybids" element={<MyBids />} />
+              <Route path="mywinnigbids" element={<MyWinnigBids />} />
+              <Route path="myregist" element={<MyRegist />} />
+              <Route path="mypoint" element={<MyPoint />} />
+          </Route>
           <Route path='/point/Point_add_form' element={<PointAddForm />}></Route>
           <Route path='/member/MyPage' element={<MyPage />}></Route>
           <Route path='/Customer_center' element={<CstCT />}></Route>
