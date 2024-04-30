@@ -2,14 +2,20 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const uuid4 = require('uuid4');
+const os = require('os');
 
 const uploads = {
     UPLOAD_GOODS_MIDDLEWARE: () => {
         const upload = multer({
             storage: multer.diskStorage({
                 destination(req, files, done) {
-                    //let fileDir = `/home/ubuntu/acution/goodsImg/`;
-                    let fileDir = 'C:/ysw/';
+                    let fileDir = ''
+                    if(os.version().includes('Windows')) {  
+                        fileDir = 'C:/acution/goodsImg/';
+                    } else {
+                        fileDir = '/home/ubuntu/acution/goodsImg';
+                    }
+                    
                     if(!fs.existsSync(fileDir)) {
                         fs.mkdirSync(fileDir, {recursive: true});
                     }

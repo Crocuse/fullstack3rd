@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import $ from "jquery";
 import '../../css/Auction/Regist_form.css'
 import axios from "axios";
 import { SERVER_URL } from "../../config/server_url";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { sessionCheck } from "../../util/sessionCheck";
 
 function Regist_form() {
     const [grName, setGrName] = useState('');
@@ -13,7 +15,15 @@ function Regist_form() {
     const [img, setImg] = useState([]);
     const DragStartHandler = () => setIsActive(true);
     const DragEndHandler = () => setIsActive(false);
+
+    const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
     const navigate = useNavigate();
+    
+    useEffect(() => {
+        sessionCheck(sessionId, navigate);
+
+        console.log(sessionId);
+    })
 
     const AuctionRegistBtnClickHandler = () => {
         console.log('AuctionRegistBtnClickHandler()');
@@ -37,21 +47,16 @@ function Regist_form() {
         console.log('postTransferFile()');
 
         let gr_imgs = $('input[name="gr_imgs"]');
-        console.log(gr_imgs);
         let files = gr_imgs[0].files;
-        console.log(files[0]);
 
         const formData = new FormData();
         formData.append('grName', grName)
         formData.append('grPrice', grPrice)
         formData.append('grInfo', grInfo)
-        formData.append('gr_imgs', files[0]);
 
-
-
-        // for(let i = 0; i<img.length; i++){
-        //     formData.append('files', img[i]);
-        // }
+        for(let i = 0; i<img.length; i++){
+            formData.append('gr_imgs', files[i]);
+        }
 
         try{
             const response = await axios.post(`${SERVER_URL.SERVER_URL()}/auction/regist_form`, formData,{
@@ -91,31 +96,30 @@ function Regist_form() {
         console.log('DropHandler()');
         e.preventDefault();
         setIsActive(false);
-        const file = e.dataTransfer.files[0];
-        showAddImg(file);
+        const files = e.dataTransfer.files;
+        showAddImg(files);
     }    
 
     const uploadChangeHandler = (e) => {
         console.log('uploadHandler()');
         
-        const file = e.target.files[0];
-        showAddImg(file);
+        const files = e.target.files;
+        showAddImg(files);
     };
 
-    const showAddImg = (file) => {
-        if(img.length > 4){
+    const showAddImg = (files) => {
+        console.log('showAddImg()');
+        if(img.length  + files.length > 5){
             alert('이미지는 5개 까지 올릴수 있습니다.');
             return;
         }
 
-        if(file){
+        for(let i = 0; i < files.length; i++) {
             const reader = new FileReader();
             reader.onload = () => {
-                setImg([...img, reader.result]);
-
+                setImg(prevImg => [...prevImg, reader.result]);
             };
-            reader.readAsDataURL(file);
-            
+            reader.readAsDataURL(files[i]);
         }
     }
 
@@ -131,8 +135,6 @@ function Regist_form() {
         const tempImg = [...img];
         tempImg.splice(index, 1);
         setImg(tempImg);
-
-
     }
 
     return (
