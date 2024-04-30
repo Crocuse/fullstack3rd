@@ -59,7 +59,6 @@ app.post('/member/login_confirm', passport.authenticate('local', {
 
 // passport setting END -----------------------------------------------------------------------------------------------------------
 
-
 // 라우터 설정 -----------------------------------------------------------------------------------------------------------
 app.use('/member', require('./routes/memberRouter'));
 app.use('/admin', require('./routes/adminRouter'));
