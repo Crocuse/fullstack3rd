@@ -260,10 +260,12 @@ function SignUpForm() {
                 <input type="text" name="m_id" placeholder="아이디를 입력해주세요." onChange={mIdChangeHandler} />
                 <input type="button" value={"아이디 중복 검사"} onClick={IdCheckbtnClick} />
               </div>
-
-                <span id="id_check_false"></span>
-                <span id="id_check_true"></span>
             </div>
+
+			<div>
+			<	span id="id_check_false"></span>
+                <span id="id_check_true"></span>
+			</div>
       
             <div className="input_wrap">
               <div className="input_name">
@@ -298,10 +300,12 @@ function SignUpForm() {
                 <input type="text" name="mail2" onChange={mailChangehandler} />
                 <input type="button" value={"메일 중복 검사"} onClick={mailCheckClickHandler} />
               </div>
-
-                <span id="mail_check_false"></span>
-                <span id="mail_check_true"></span>
             </div>
+
+			<div>
+				<span id="mail_check_false"></span>
+                <span id="mail_check_true"></span>
+			</div>
       
             <div className="input_wrap" id="input_phone">
               <div className="input_name">

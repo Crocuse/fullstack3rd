@@ -87,13 +87,6 @@
   margin: 0 5px;
 }
 
-.signup_wrap .input span {
-  color: #999;
-  display: block;
-  font-size: 14px;
-  margin-top: 10px;
-}
-
 .signup_wrap #input_phone input {
   width: 50px;
 }
