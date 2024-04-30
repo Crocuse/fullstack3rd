@@ -192,6 +192,33 @@ const adminService = {
                         res.json(result.affectedRows);
                     }
                 })
+    },
+    goodsList:(req,res)=>{
+        DB.query(`SELECT * FROM TBL_GOODS_REGIST`,(err,goods)=>{
+            if(err){
+                res.json(null);
+            } else {
+                res.json(goods);
+            }
+        })
+    },
+    goodsStateChange:(req,res)=>{
+
+        let approval = req.body.approval;
+        let receipt = req.body.receipt;
+
+
+        DB.query(`UPDATE TBL_GOODS_REGIST SET GR_APPROVAL=?, GR_RECEIPT=? ,GR_MOD_DATE=NOW() WHERE GR_NO = ?`,
+                [approval,receipt,req.body.gr_no],
+                (err,result)=>{
+            
+                    if(err){
+                        console.log(err);
+                        res.json(null);
+                    } else {
+                        res.json(result.affectedRows);
+                    }
+        })
     }
 
 

@@ -48,5 +48,11 @@ router.post('/member_modify_confirm',(req,res)=>{
     adminService.memberModifyConfirm(req,res);
 });
 
+router.get('/goods_list',(req,res)=>{
+    adminService.goodsList(req,res);
+});
+router.post('/goods_state_change',(req,res)=>{
+    adminService.goodsStateChange(req,res);
+});
 module.exports = router;
 
