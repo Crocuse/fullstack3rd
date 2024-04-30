@@ -59,17 +59,11 @@ function LoginForm() {
 
     async function axios_google_login() {
         try {
-            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auth/google`);
-
-            if(response.data.error) {
-                $('#fail_massage').text(response.data.error[0]);
-                return;
-            }
-
-            dispatch(setLoginedId(response.data.sessionID, response.data.loginedAdmin, response.data.loginedId));
-            navigate('/');
-                        
-        } catch (error) {
+            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/member/google_login`);
+            
+            window.location.href = response.data.url;
+        }
+        catch (error) {
             console.log(error);
         }
     }

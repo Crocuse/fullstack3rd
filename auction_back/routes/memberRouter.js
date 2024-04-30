@@ -18,6 +18,11 @@ router.post('/signup_confirm', (req, res) => {
     memberService.signupConfirm(req, res);
 })
 
+router.get('/google_login', (req, res) => {
+    console.log('google_login')
+    memberService.googleLogin(req, res);
+})
+
 router.get('/login_success', (req, res) => {
     memberService.loginSuccess(req, res);
 })

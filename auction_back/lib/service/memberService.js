@@ -1,5 +1,6 @@
 const DB = require("../db/db");
 const bcrypt = require('bcrypt');
+const google = require('../config/google.json');
 
 const memberService = {
     
@@ -63,6 +64,11 @@ const memberService = {
             console.log(err);
             res.json('fail');
         })
+    },
+
+    googleLogin: (req, res) => {
+        const googleAuthURL = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&redirect_uri=${encodeURIComponent('http://localhost:3000/auth/google/callback')}&scope=https://www.googleapis.com/auth/plus.login email&client_id=${google.web.client_id}`;
+        res.json({ url: googleAuthURL });
     },
 
     loginSuccess: (req, res) => {
