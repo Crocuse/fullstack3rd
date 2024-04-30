@@ -5,6 +5,7 @@ import $ from 'jquery';
 import { useDispatch } from "react-redux";
 import { setLoginedId } from "../../redux/action/setLoginedId";
 import { useNavigate } from "react-router-dom";
+import '../../css/member/LoginForm.css'
 
 axios.defaults.withCredentials = true;
 
@@ -77,17 +78,15 @@ function LoginForm() {
 
     // View -----------------------------------------------------------------------------------------------------------
     return (
-        <div className="login_wrap">
+    <div className="login_wrap">
         <h2>로그인</h2>
 
         <form method="post" name="login_form">
             <div className="input_wrap">
-                <p>아이디</p>
                 <input type="text" name="m_id" placeholder="아이디를 입력해주세요."/>
             </div>
 
             <div className="input_wrap">
-                <p>비밀번호</p>
                 <input type="password" name="m_pw" placeholder="비밀번호를 입력해주세요."/>
             </div>
 
@@ -111,7 +110,7 @@ function LoginForm() {
                     <img src="/img/member/login_icon/google.png"/>
                 </div>
                 <div className="login_txt">
-                    구글로 로그인하기
+                    구글 로그인
                 </div>
             </div>
             <div className="naver_login">
@@ -119,7 +118,7 @@ function LoginForm() {
                     <img src="/img/member/login_icon/naver.png"/>
                 </div>
                 <div className="login_txt">
-                    네이버 로그인하기
+                    네이버 로그인
                 </div>
             </div>
             <div className="kakao_login">
@@ -127,7 +126,7 @@ function LoginForm() {
                     <img src="/img/member/login_icon/kakao.png"/>
                 </div>
                 <div className="login_txt">
-                    카카오 로그인하기
+                    카카오 로그인
                 </div>
             </div>
         </div>
