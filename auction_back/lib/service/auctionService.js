@@ -3,8 +3,7 @@ const DB = require("../db/db");
 const auctionService = {
     goods_regist : (req, res) => {
         let post = req.body;
-
-        console.log(post.files[0].name);
+        let files = req.files;
 
         // DB.query('INSERT INTO TBL_GOODS_REGIST(GR_NAME, GR_PRICE, GR_INFO, M_ID) VALUES(?, ?, ?, ?)', 
         // [post.grName, post.grPrice, post.grInfo, 'id'],
