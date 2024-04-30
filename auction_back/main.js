@@ -21,11 +21,13 @@ if(os.version().includes('Windows')) {
     app.use(cors({
         origin: 'http://localhost:3000',
         credentials: true,
+        optionsSuccessStatus: 200
     }));
 } else {
     app.use(cors({
         origin: 'http://3.24.176.186:3000',
         credentials: true,
+        optionsSuccessStatus: 200
     }));
 }
 // CORS END -----------------------------------------------------------------------------------------------------------

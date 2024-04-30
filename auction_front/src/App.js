@@ -33,6 +33,7 @@ import MyWinnigBids from './component/member/mypage/MyWinnigBids';
 import MyRegist from './component/member/mypage/MyRegist';
 import MyPoint from './component/member/mypage/MyPoint';
 import ModifyPassword from './component/member/mypage/ModifyPassword';
+import GoogleLogin from './component/member/GoogleLogin';
 
 
 function App() {
@@ -59,6 +60,7 @@ function App() {
               <Route path="myregist" element={<MyRegist />} />
               <Route path="mypoint" element={<MyPoint />} />
           </Route>
+          <Route path='/auth/google/callback' element={<GoogleLogin/>}></Route>
           <Route path='/point/Point_add_form' element={<PointAddForm />}></Route>
           <Route path='/member/MyPage' element={<MyPage />}></Route>
           <Route path='/Customer_center' element={<CstCT />}></Route>
