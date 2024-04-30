@@ -1,0 +1,152 @@
+.signup_wrap {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 50px auto;
+  max-width: 400px;
+  padding: 40px;
+  width: 100%;
+}
+
+.signup_wrap h2 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.signup_wrap .input_wrap {
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.signup_wrap .input_name {
+  margin-right: 10px;
+  width: 120px;
+}
+
+.signup_wrap .input_name p {
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.signup_wrap .input {
+  align-items: center;
+  display: flex;
+  flex: 1;
+}
+
+.signup_wrap .input input[type='text'],
+.signup_wrap .input input[type='password'],
+.signup_wrap .input input[type='number'],
+.signup_wrap .input select {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: #333;
+  flex: 1;
+  font-size: 14px;
+  padding: 10px;
+}
+
+.signup_wrap .input input[type='button'] {
+  background-color: #1e88e5;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 10px;
+  padding: 10px 15px;
+}
+
+.signup_wrap .input_wrap .input {
+  margin-bottom: 5px;
+}
+
+.signup_wrap .input_wrap #id_check_false,
+.signup_wrap .input_wrap #pw_check_false,
+.signup_wrap .input_wrap #mail_check_false {
+  margin-left: 3px;
+  color: rgb(228, 69, 7);
+}
+
+.signup_wrap .input_wrap #id_check_true,
+.signup_wrap .input_wrap #pw_check_true,
+.signup_wrap .input_wrap #mail_check_true {
+  margin-left: 3px;
+  color: rgb(0, 173, 135);
+}
+
+.signup_wrap #input_mail input[type="text"] {
+  width: 95px;  
+} 
+
+.signup_wrap #input_mail .input p {
+  margin: 0 5px;
+}
+
+.signup_wrap .input span {
+  color: #999;
+  display: block;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.signup_wrap #input_phone input {
+  width: 50px;
+}
+
+.signup_wrap #input_post div {
+  display: block;
+}
+
+.signup_wrap .input #postcode,
+.signup_wrap .input input[type='button'][value='우편번호 찾기'] {
+  display: inline-block;
+  margin-top: 5px;
+  vertical-align: middle;
+  width: calc(50% - 5px); /* 수정된 부분: 우편번호 필드와 버튼이 한 줄에 나오도록 너비 조정 */
+}
+
+.signup_wrap .input #roadAddress,
+.signup_wrap .input #guide,
+.signup_wrap .input #detailAddress,
+.signup_wrap .input #extraAddress {
+  display: block; /* 수정된 부분: 나머지 주소 필드들이 줄바꿈되도록 설정 */
+  margin-top: 5px;
+  width: 100%;
+}
+
+.signup_wrap .btns {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.signup_wrap .btns input[type='button'],
+.signup_wrap .btns input[type='reset'] {
+  background-color: #1e88e5;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 0 5px;
+  padding: 15px 30px;
+  transition: background-color 0.3s ease;
+}
+
+.signup_wrap .btns input[type='reset'] {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+.signup_wrap .btns input[type='button']:hover {
+  background-color: #1565c0;
+}
+
+.signup_wrap .btns input[type='reset']:hover {
+  background-color: #eee;
+}

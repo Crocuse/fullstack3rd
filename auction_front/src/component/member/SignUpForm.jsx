@@ -3,8 +3,7 @@ import $ from "jquery";
 import { SERVER_URL } from "../../config/server_url";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { sessionCheck } from "../../util/sessionCheck";
-import { useSelector } from "react-redux";
+import '../../css/member/SignUpForm.css'
 
 axios.defaults.withCredentials = true;
 
@@ -248,80 +247,105 @@ function SignUpForm() {
     }
 
     // view
-    return(
+    return (
         <div className="signup_wrap">
-            <h2>회원가입</h2>
+          <h2>회원가입</h2>
+      
+          <form method="post" name="signup_form">
+            <div className="input_wrap">
+              <div className="input_name">
+                <p>아이디</p>
+              </div>
+              <div className="input">
+                <input type="text" name="m_id" placeholder="아이디를 입력해주세요." onChange={mIdChangeHandler} />
+                <input type="button" value={"아이디 중복 검사"} onClick={IdCheckbtnClick} />
+              </div>
 
-            <form method="post" name="signup_form">
+                <span id="id_check_false"></span>
+                <span id="id_check_true"></span>
+            </div>
+      
+            <div className="input_wrap">
+              <div className="input_name">
+                <p>비밀번호</p>
+              </div>
+              <div className="input">
+                <input type="password" name="m_pw" placeholder="비밀번호를 입력해주세요." onChange={pwChangehandler} />
+              </div>
+            </div>
+      
+            <div className="input_wrap">
+              <div className="input_name">
+                <p>비밀번호 확인</p>
+              </div>
+              <div className="input">
+                <input type="password" name="m_pw_check" placeholder="비밀번호 확인을 입력해주세요." onChange={pwChangehandler} />
+              </div>
+            </div>
+      
+            <div>
+              <span id="pw_check_false"></span>
+              <span id="pw_check_true"></span>
+            </div>
+      
+            <div className="input_wrap" id="input_mail">
+              <div className="input_name">
+                <p>이메일</p>
+              </div>
+              <div className="input">
+                <input type="text" name="mail1" onChange={mailChangehandler} />
+                <p>@</p>
+                <input type="text" name="mail2" onChange={mailChangehandler} />
+                <input type="button" value={"메일 중복 검사"} onClick={mailCheckClickHandler} />
+              </div>
 
-                <div className="input_wrap">
-                    <p>아이디</p>
-                    <input type="text" name="m_id" placeholder="아이디를 입력해주세요." onChange={mIdChangeHandler}/>
-                    <input type="button" value={"아이디 중복 검사"} onClick={IdCheckbtnClick}/>
-                    <span id="id_check_false"></span>
-                    <span id="id_check_true"></span>
+                <span id="mail_check_false"></span>
+                <span id="mail_check_true"></span>
+            </div>
+      
+            <div className="input_wrap" id="input_phone">
+              <div className="input_name">
+                <p>연락처</p>
+              </div>
+              <div className="input">
+                <select name="phone1">
+                  <option value="010">010</option>
+                  <option value="011">011</option>
+                  <option value="016">016</option>
+                  <option value="017">017</option>
+                  <option value="018">018</option>
+                  <option value="019">019</option>
+                </select>
+                -
+                <input type="number" name="phone2" />
+                -
+                <input type="number" name="phone3" />
+              </div>
+            </div>
+      
+            <div className="input_wrap" id="input_post">
+              <div className="input_name">
+                <p>주소</p>
+              </div>
+              <div className="input">
+                <div className="postcode_wrap">
+                  <input type="text" name="postcode" id="postcode" placeholder="우편번호" />
+                  <input type="button" onClick={execDaumPostcode} value="우편번호 찾기" />
                 </div>
-
-                <div className="input_wrap">
-                    <p>비밀번호</p>
-                    <input type="password" name="m_pw" placeholder="비밀번호를 입력해주세요." onChange={pwChangehandler}/>
-                </div>
-
-                <div className="input_wrap">
-                    <p>비밀번호 확인</p>
-                    <input type="password" name="m_pw_check" placeholder="비밀번호 확인을 입력해주세요." onChange={pwChangehandler}/>
-                </div>
-
-                <div>
-                    <span id="pw_check_false"></span>
-                    <span id="pw_check_true"></span>
-                </div>
-
-                <div className="input_wrap">
-                    <p>이메일</p>
-                    <input type="text" name="mail1" onChange={mailChangehandler}/>
-                    @
-                    <input type="text" name="mail2" onChange={mailChangehandler}/>
-                    <input type="button" value={"메일 중복 검사"} onClick={mailCheckClickHandler} />
-                    <span id="mail_check_false"></span>
-                    <span id="mail_check_true"></span>
-                </div>
-                
-                <div className="input_wrap">
-                    <p>연락처</p>
-                    <select name="phone1">
-                        <option value="010">010</option>
-                        <option value="011">011</option>
-                        <option value="016">016</option>
-                        <option value="017">017</option>
-                        <option value="018">018</option>
-                        <option value="019">019</option>
-                    </select>
-                    -
-                    <input type="number" name="phone2"/>
-                    -
-                    <input type="number" name="phone3"/>
-                </div>
-
-                <div className="input_wrap">
-                    <p>주소</p>
-                    <input type="text" name="postcode" id="postcode" placeholder="우편번호" />
-                    <input type="button" onClick={execDaumPostcode} value="우편번호 찾기" />
-                    <br />
-                    <input type="text" name="roadAddress" id="roadAddress" placeholder="도로명주소" />
-                    <span id="guide" style={{ color: "#999", display: "none" }}></span>
-                    <input type="text" name="detailAddress" id="detailAddress" placeholder="상세주소" />
-                    <input type="text" name="extraAddress" id="extraAddress" placeholder="참고항목" />
-                </div>
-
-                <div className="btns">
-                    <input type="button" value="회원가입" onClick={signUpBtnClick}/>
-                    <input type="reset" value="초기화" />
-                </div>
-                
-            </form>
+                <input type="text" name="roadAddress" id="roadAddress" placeholder="도로명주소" />
+                <span id="guide" style={{ color: "#999", display: "none" }}></span>
+                <input type="text" name="detailAddress" id="detailAddress" placeholder="상세주소" />
+                <input type="text" name="extraAddress" id="extraAddress" placeholder="참고항목" />
+              </div>
+            </div>
+      
+            <div className="btns">
+              <input type="button" value="회원가입" onClick={signUpBtnClick} />
+              <input type="reset" value="초기화" />
+            </div>
+          </form>
         </div>
-    )
+      );
 
 }
 export default SignUpForm;
