@@ -34,51 +34,53 @@ import MyRegist from './component/member/mypage/MyRegist';
 import MyPoint from './component/member/mypage/MyPoint';
 import ModifyPassword from './component/member/mypage/ModifyPassword';
 import GoogleLogin from './component/member/GoogleLogin';
+import PayAPI from './component/point/PayAPI';
 
 
 function App() {
   return (
-	<>
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <BrowserRouter>
-        <Header />
-        <Nav />
+    <>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <BrowserRouter>
+            <Header />
+            <Nav />
 
-        <Routes>
-          <Route path='/' element={<Home />}></Route>
-          <Route path='/auction/Current_list' element={<CurList />}></Route>
-          <Route path='/action/Regist_form' element={<RegForm />}></Route>
-          <Route path='/member/Signup_form' element={<SignUp />}></Route>
-          <Route path='/member/Login_form' element={<Login />}></Route>
-          <Route path='/member/Logout_confirm' element={<Logout />}></Route>
-          <Route path="/member/member/my_page" element={<MyPageMenubar />}>
-              <Route path="modify_info" element={<ModifyInfo />} />
-              <Route path="modify_password" element={<ModifyPassword />} />
-              <Route path="mybids" element={<MyBids />} />
-              <Route path="mywinnigbids" element={<MyWinnigBids />} />
-              <Route path="myregist" element={<MyRegist />} />
-              <Route path="mypoint" element={<MyPoint />} />
-          </Route>
-          <Route path='/auth/google/callback' element={<GoogleLogin/>}></Route>
-          <Route path='/point/Point_add_form' element={<PointAddForm />}></Route>
-          <Route path='/member/MyPage' element={<MyPage />}></Route>
-          <Route path='/Customer_center' element={<CstCT />}></Route>
-          <Route path='/admin/home' element={<AdminHome />}></Route>
-          <Route path='/admin/AdminReg' element={<AdminReg />}></Route>
-          <Route path='/admin/auction_goods_mgt' element={<AuctionGoodsMgt />}></Route>
-          <Route path='/admin/auction_goods_reg' element={<AuctionGoodsReg />}></Route>
-          <Route path='/admin/auction_result' element={<AuctionResult />}></Route>
-          <Route path='/admin/recive_goods_mgt' element={<ReciveGoodsMgt />}></Route>
-          <Route path='/admin/sales_mgt' element={<SalesMgt />}></Route>
-          <Route path='/admin/user_mgt' element={<UserMgt />}></Route>
-          <Route path='/admin/admin_mgt' element={<AdminMgt />}></Route>
-        </Routes>
+            <Routes>
+              <Route path='/' element={<Home />}></Route>
+              <Route path='/auction/Current_list' element={<CurList />}></Route>
+              <Route path='/action/Regist_form' element={<RegForm />}></Route>
+              <Route path='/member/Signup_form' element={<SignUp />}></Route>
+              <Route path='/member/Login_form' element={<Login />}></Route>
+              <Route path='/member/Logout_confirm' element={<Logout />}></Route>
+              <Route path="/member/member/my_page" element={<MyPageMenubar />}>
+                <Route path="modify_info" element={<ModifyInfo />} />
+                <Route path="modify_password" element={<ModifyPassword />} />
+                <Route path="mybids" element={<MyBids />} />
+                <Route path="mywinnigbids" element={<MyWinnigBids />} />
+                <Route path="myregist" element={<MyRegist />} />
+                <Route path="mypoint" element={<MyPoint />} />
+              </Route>
+              <Route path='/auth/google/callback' element={<GoogleLogin />}></Route>
+              <Route path='/point/Point_add_form' element={<PointAddForm />}></Route>
+              <Route path='/point/PayAPI' element={<PayAPI />} />
+              <Route path='/member/MyPage' element={<MyPage />}></Route>
+              <Route path='/Customer_center' element={<CstCT />}></Route>
+              <Route path='/admin/home' element={<AdminHome />}></Route>
+              <Route path='/admin/AdminReg' element={<AdminReg />}></Route>
+              <Route path='/admin/auction_goods_mgt' element={<AuctionGoodsMgt />}></Route>
+              <Route path='/admin/auction_goods_reg' element={<AuctionGoodsReg />}></Route>
+              <Route path='/admin/auction_result' element={<AuctionResult />}></Route>
+              <Route path='/admin/recive_goods_mgt' element={<ReciveGoodsMgt />}></Route>
+              <Route path='/admin/sales_mgt' element={<SalesMgt />}></Route>
+              <Route path='/admin/user_mgt' element={<UserMgt />}></Route>
+              <Route path='/admin/admin_mgt' element={<AdminMgt />}></Route>
+            </Routes>
 
-        <Footer />
-      </BrowserRouter>
-    </PersistGate>
-  </Provider>
+            <Footer />
+          </BrowserRouter>
+        </PersistGate>
+      </Provider>
 
 
       <a href='http://localhost:3001/node'></a>
