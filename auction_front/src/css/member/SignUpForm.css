@@ -65,16 +65,22 @@
   margin-bottom: 5px;
 }
 
-.signup_wrap .input_wrap #id_check_false,
-.signup_wrap .input_wrap #pw_check_false,
-.signup_wrap .input_wrap #mail_check_false {
+.signup_wrap .id_check_wrap,
+.signup_wrap .pw_check_wrap,
+.signup_wrap .mail_check_wrap {
+  display: none;
+}
+
+.signup_wrap #id_check_false,
+.signup_wrap #pw_check_false,
+.signup_wrap #mail_check_false {
   margin-left: 3px;
   color: rgb(228, 69, 7);
 }
 
-.signup_wrap .input_wrap #id_check_true,
-.signup_wrap .input_wrap #pw_check_true,
-.signup_wrap .input_wrap #mail_check_true {
+.signup_wrap #id_check_true,
+.signup_wrap #pw_check_true,
+.signup_wrap #mail_check_true {
   margin-left: 3px;
   color: rgb(0, 173, 135);
 }

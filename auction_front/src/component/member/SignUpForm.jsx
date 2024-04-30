@@ -18,6 +18,7 @@ function SignUpForm() {
     // Handler -----------------------------------------------------------------------------------------------------------
     const mIdChangeHandler = () => {
         setIDCehck(false);
+		$('.id_check_wrap').css('display', 'block');
         $('#id_check_false').text(`아이디 중복 검사를 실행해주세요.`);     
         $('#id_check_true').text('');  
     }
@@ -33,6 +34,7 @@ function SignUpForm() {
     }
 
     const mailChangehandler = () => {
+		$('.mail_check_wrap').css('display', 'block');
         setMailCheck(false);
         $('#mail_check_false').text(`메일 중복 검사를 실행해주세요.`);     
         $('#mail_check_true').text('');
@@ -55,13 +57,15 @@ function SignUpForm() {
         let pw = $('input[name="m_pw"]').val();
         let pw_check = $('input[name="m_pw_check"]').val();
 
-        if (pw == pw_check) {
-            $('#pw_check_false').text('비밀번호가 일치합니다.');
-            $('#pw_check_true').text('');
+        if (pw === pw_check) {
+			$('.pw_check_wrap').css('display', 'block');
+            $('#pw_check_true').text('비밀번호가 일치합니다.');
+            $('#pw_check_false').text('');
         }
         else {
-            $('#pw_check_false').text('');
-            $('#pw_check_true').text('비밀번호가 일치하지 않습니다.');
+			$('.pw_check_wrap').css('display', 'block');
+            $('#pw_check_true').text('');
+            $('#pw_check_false').text('비밀번호가 일치하지 않습니다.');
         }
     }
 
@@ -262,7 +266,7 @@ function SignUpForm() {
               </div>
             </div>
 
-			<div>
+			<div className="id_check_wrap">
 			<	span id="id_check_false"></span>
                 <span id="id_check_true"></span>
 			</div>
@@ -285,7 +289,7 @@ function SignUpForm() {
               </div>
             </div>
       
-            <div>
+            <div  className="pw_check_wrap">
               <span id="pw_check_false"></span>
               <span id="pw_check_true"></span>
             </div>
@@ -302,7 +306,7 @@ function SignUpForm() {
               </div>
             </div>
 
-			<div>
+			<div  className="mail_check_wrap">
 				<span id="mail_check_false"></span>
                 <span id="mail_check_true"></span>
 			</div>
