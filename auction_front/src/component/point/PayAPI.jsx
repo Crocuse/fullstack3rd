@@ -13,7 +13,12 @@ function PayAPI({ chargeAmount }) {
     }, [chargeAmount]);
 
     function pointAddBtn() {
-        console.log('chargeAmount', chargeAmount)
+        console.log('chargeAmount', chargeAmount);
+
+        if (!chargeAmount || chargeAmount === '0') {
+            alert("포인트 충전 금액을 입력하세요.");
+            return;
+        }
         IMP.request_pay(
             {
                 pg: "html5_inicis.INIpayTest",
