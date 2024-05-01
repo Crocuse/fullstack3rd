@@ -1,8 +1,8 @@
+import axios from "axios";
 import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SERVER_URL } from "../../config/server_url";
-import axios from "axios";
-import { useDispatch } from "react-redux";
 import { setLoginedId } from "../../redux/action/setLoginedId";
 
 function GoogleLogin() {
@@ -39,7 +39,7 @@ function GoogleLogin() {
     }
 
     return (
-        <div>
+        <div style={{textAlign: 'center', height: '600px', lineHeight: '600px'}}>
             <p>Google Login 처리 중...</p>
         </div>
     )

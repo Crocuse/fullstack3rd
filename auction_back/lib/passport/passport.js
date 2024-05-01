@@ -5,6 +5,7 @@ const google = require('../config/google.json');
 const cors = require('cors');
 const { OAuth2Client } = require('google-auth-library');
 const axios = require('axios');
+const NaverStrategy = require('passport-naver').Strategy;
 
 exports.passport = (app) => {
     const passport = require('passport');
@@ -67,6 +68,7 @@ exports.passport = (app) => {
             scope: ['https://www.googleapis.com/auth/plus.login', 'email'] 
         })
     );
+    
     const client = new OAuth2Client(
         google.web.client_id,
         google.web.client_secret,
@@ -159,6 +161,45 @@ exports.passport = (app) => {
         }
     );
     // GOOGLE SETTING END
+
+    // NAVER SETTING START
+    passport.use(new NaverStrategy({
+        clientID: config.naver.clientID,
+        clientSecret: config.naver.clientSecret,
+        callbackURL: config.naver.callbackURL
+    },
+    function(accessToken, refreshToken, profile, done) {
+        User.findOne({
+            'naver.id': profile.id
+        }, function(err, user) {
+            if (!user) {
+                user = new User({
+                    name: profile.displayName,
+                    email: profile.emails[0].value,
+                    username: profile.displayName,
+                    provider: 'naver',
+                    naver: profile._json
+                });
+                user.save(function(err) {
+                    if (err) console.log(err);
+                    return done(err, user);
+                });
+            } else {
+                return done(err, user);
+            }
+        });
+    }));
+
+    app.route('/auth/naver')
+        .get(passport.authenticate('naver', {
+            failureRedirect: '#!/auth/login'
+        }), users.signin);
+
+    app.route('/auth/naver/callback')
+        .get(passport.authenticate('naver', {
+            failureRedirect: '#!/auth/login'
+        }), users.createAccount, users.authCallback);
+        // NAVER SETTING END
 
     return passport;
 
