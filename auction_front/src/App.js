@@ -1,40 +1,41 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
-import { store, persistor } from './redux/store';
+import { persistor, store } from './redux/store';
 
 import './App.css';
 
-import Nav from './component/include/Nav';
-import Footer from './component/include/Footer';
-import Header from './component/include/Header';
-import Home from './component/Home';
-import CstCT from './component/Customer_center';
-import CurList from './component/Auction/Current_list';
-import RegForm from './component/Auction/Regist_form';
-import PointAddForm from './component/point/PointAddForm';
-import MyPage from './component/member/mypage/MyPage';
-import SignUp from './component/member/SignUpForm';
-import Login from './component/member/LoginForm';
-import Logout from './component/member/Logout';
-import AdminReg from './component/Admin/AdminReg';
 import AdminHome from './component/Admin/AdminHome';
+import AdminMgt from './component/Admin/AdminMgt';
+import AdminReg from './component/Admin/AdminReg';
 import AuctionGoodsMgt from './component/Admin/AuctionGoodsMgt';
 import AuctionGoodsReg from './component/Admin/AuctionGoodsReg';
 import AuctionResult from './component/Admin/AuctionResult';
 import ReciveGoodsMgt from './component/Admin/ReciveGoodsMgt';
 import SalesMgt from './component/Admin/SalesMgt';
 import UserMgt from './component/Admin/UserMgt';
-import AdminMgt from './component/Admin/AdminMgt';
-import ModifyInfo from './component/member/mypage/ModifyInfo';
-import MyPageMenubar from './component/member/mypage/MyPageMenubar';
-import MyBids from './component/member/mypage/MyBids';
-import MyWinnigBids from './component/member/mypage/MyWinnigBids';
-import MyRegist from './component/member/mypage/MyRegist';
-import MyPoint from './component/member/mypage/MyPoint';
-import ModifyPassword from './component/member/mypage/ModifyPassword';
+import CurList from './component/Auction/Current_list';
+import RegForm from './component/Auction/Regist_form';
+import CstCT from './component/Customer_center';
+import Home from './component/Home';
+import Footer from './component/include/Footer';
+import Header from './component/include/Header';
+import Nav from './component/include/Nav';
 import GoogleLogin from './component/member/GoogleLogin';
+import Login from './component/member/LoginForm';
+import Logout from './component/member/Logout';
+import NaverLogin from './component/member/NaverLogin';
+import SignUp from './component/member/SignUpForm';
+import ModifyInfo from './component/member/mypage/ModifyInfo';
+import ModifyPassword from './component/member/mypage/ModifyPassword';
+import MyBids from './component/member/mypage/MyBids';
+import MyPage from './component/member/mypage/MyPage';
+import MyPageMenubar from './component/member/mypage/MyPageMenubar';
+import MyPoint from './component/member/mypage/MyPoint';
+import MyRegist from './component/member/mypage/MyRegist';
+import MyWinnigBids from './component/member/mypage/MyWinnigBids';
 import PayAPI from './component/point/PayAPI';
+import PointAddForm from './component/point/PointAddForm';
 
 
 function App() {
@@ -62,6 +63,7 @@ function App() {
                 <Route path="mypoint" element={<MyPoint />} />
               </Route>
               <Route path='/auth/google/callback' element={<GoogleLogin />}></Route>
+              <Route path='/auth/naver/callback' element={<NaverLogin />}></Route>
               <Route path='/point/Point_add_form' element={<PointAddForm />}></Route>
               <Route path='/point/PayAPI' element={<PayAPI />} />
               <Route path='/member/MyPage' element={<MyPage />}></Route>
