@@ -28,6 +28,7 @@
     "passport-google-oauth": "^2.0.0",
     "passport-local": "^1.0.0",
     "passport-naver": "^1.0.6",
+    "qs": "^6.12.1",
     "shortid": "^2.2.16",
     "uuid4": "^2.0.3"
   },

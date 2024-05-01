@@ -19,8 +19,12 @@ router.post('/signup_confirm', (req, res) => {
 })
 
 router.get('/google_login', (req, res) => {
-    console.log('google_login')
     memberService.googleLogin(req, res);
+})
+
+router.get('/naver_login', (req, res) => {
+    console.log('naver_login')
+    memberService.naverLogin(req, res);
 })
 
 router.get('/login_success', (req, res) => {

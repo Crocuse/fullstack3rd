@@ -5,7 +5,7 @@ const google = require('../config/google.json');
 const cors = require('cors');
 const { OAuth2Client } = require('google-auth-library');
 const axios = require('axios');
-const NaverStrategy = require('passport-naver').Strategy;
+const naver = require('../config/naver.json');
 
 exports.passport = (app) => {
     const passport = require('passport');
@@ -97,7 +97,6 @@ exports.passport = (app) => {
             const accessToken = await getAccessToken(code); // await 추가
             const profile = await getGoogleProfile(accessToken); // await 추가
             
-            console.log("🚀 ~ profile:", profile);
             
             // 프로필 정보를 활용하여 사용자 조회 또는 생성
             DB.query(`SELECT * FROM TBL_MEMBER WHERE M_MAIL = ?`, [profile.email], (err, member) => {
@@ -163,43 +162,115 @@ exports.passport = (app) => {
     // GOOGLE SETTING END
 
     // NAVER SETTING START
-    passport.use(new NaverStrategy({
-        clientID: config.naver.clientID,
-        clientSecret: config.naver.clientSecret,
-        callbackURL: config.naver.callbackURL
-    },
-    function(accessToken, refreshToken, profile, done) {
-        User.findOne({
-            'naver.id': profile.id
-        }, function(err, user) {
-            if (!user) {
-                user = new User({
-                    name: profile.displayName,
-                    email: profile.emails[0].value,
-                    username: profile.displayName,
-                    provider: 'naver',
-                    naver: profile._json
+    app.get('/auth/naver',
+    cors({
+        origin: 'http://localhost:3000',
+        methods: ['GET'],
+    }),
+    passport.authenticate('naver', {
+        scope: ['email']
+    })
+    );
+
+    async function getNaverAccessToken(code, state) {
+    const { data } = await axios({
+        method: 'POST',
+        url: 'https://nid.naver.com/oauth2.0/token',
+        params: {
+            grant_type: 'authorization_code',
+            client_id: naver.web.client_id,
+            client_secret: naver.web.client_secret,
+            code: code,
+            state: state
+        }
+    });
+    return data.access_token;
+    }
+
+    async function getNaverProfile(accessToken) {
+    const { data } = await axios({
+        method: 'GET',
+        url: 'https://openapi.naver.com/v1/nid/me',
+        headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    return data.response;
+    }
+
+    app.post('/auth/naver/callback',
+    cors({
+        origin: 'http://localhost:3000',
+        methods: ['POST'],
+    }),
+    async (req, res) => {
+        const { code, state } = req.body;
+        const accessToken = await getNaverAccessToken(code, state);
+        const profile = await getNaverProfile(accessToken);
+
+        DB.query(`SELECT * FROM TBL_MEMBER WHERE M_MAIL = ?`, [profile.email], (err, member) => {
+            if (err) {
+                console.log(err);
+                return res.json({ success: false, message: '네이버 로그인에 실패했습니다.' });
+            }
+
+            if (member.length == 0) {
+                DB.query(`INSERT INTO TBL_MEMBER(M_ID, M_SOCIAL_ID, M_PW, M_MAIL, M_PHONE) VALUES(?, ?, ?, ?, ?)`,
+                [`N_${profile.id}`, `N_${profile.id}`, bcrypt.hashSync(shortid(), 10), profile.email, '--'],
+                (err, rst) => {
+                    if (err) {
+                        console.log(err);
+                        return res.json({ success: false, message: '네이버 로그인에 실패했습니다.' });
+                    }
+
+                    const user = {
+                        id: `N_${profile.id}`,
+                        name: profile.nickname
+                    };
+
+                    req.login(user, (err) => {
+                        if (err) {
+                            console.log(err);
+                            return res.json({ success: false, message: '네이버 로그인에 실패했습니다.' });
+                        }
+
+                        return res.json({
+                            success: true,
+                            sessionID: req.sessionID,
+                            loginedId: `N_${profile.id}`
+                        });
+                    });
                 });
-                user.save(function(err) {
-                    if (err) console.log(err);
-                    return done(err, user);
+            }
+            else {
+                DB.query('UPDATE TBL_MEMBER SET M_SOCIAL_ID = ? WHERE M_MAIL = ?',
+                [`N_${profile.id}`, profile.email], (err, rst) => {
+                    if (err) {
+                        console.log(err);
+                        return res.json({ success: false, message: '네이버 로그인에 실패했습니다.' });
+                    }
+
+                    const user = {
+                        id: member[0].M_ID,
+                        name: member[0].M_ID
+                    };
+
+                    req.login(user, (err) => {
+                        if (err) {
+                            console.log(err);
+                            return res.json({ success: false, message: '네이버 로그인에 실패했습니다.' });
+                        }
+
+                        return res.json({
+                            success: true,
+                            sessionID: req.sessionID,
+                            loginedId: member[0].M_ID
+                        });
+                    });
                 });
-            } else {
-                return done(err, user);
             }
         });
-    }));
-
-    app.route('/auth/naver')
-        .get(passport.authenticate('naver', {
-            failureRedirect: '#!/auth/login'
-        }), users.signin);
-
-    app.route('/auth/naver/callback')
-        .get(passport.authenticate('naver', {
-            failureRedirect: '#!/auth/login'
-        }), users.createAccount, users.authCallback);
-        // NAVER SETTING END
+    }
+    );
+    // NAVER SETTING END
 
     return passport;
 
