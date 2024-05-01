@@ -61,6 +61,10 @@
     border-radius: 8px;
 }
 
+.poin_page_input::placeholder{
+    font-size: 0.7em;
+}
+
 .btn_wrap {
     margin-top: 20px;
 }
