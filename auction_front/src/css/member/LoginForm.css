@@ -83,7 +83,7 @@
     line-height: 8px;
   }
   
-  .login_wrap .social_login_wrap .icon {
+  .logn_wrap .social_login_wrap .icon {
     margin-right: 10px;
   }
   
@@ -95,4 +95,5 @@
   .login_wrap .social_login_wrap .login_txt {
     font-size: 14px;
     color: #333;
+    margin-left: 10px;
   }
