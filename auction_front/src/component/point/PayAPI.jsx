@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { SERVER_URL } from "../../config/server_url";
 import axios from "axios";
+import "../../css/Point/point.css";
 
 function PayAPI({ chargeAmount }) {
     const IMP = window.IMP;
@@ -58,7 +59,7 @@ function PayAPI({ chargeAmount }) {
     return (
         <>
 
-            <input type="button" onClick={pointAddBtn} value='포인트 충전' />
+            <input type="button" onClick={pointAddBtn} value='포인트 충전' className="charge_amount_btn" />
 
         </>
     );
