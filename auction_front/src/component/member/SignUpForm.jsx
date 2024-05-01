@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react"
-import $ from "jquery";
-import { SERVER_URL } from "../../config/server_url";
 import axios from "axios";
+import $ from "jquery";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import '../../css/member/SignUpForm.css'
+import { SERVER_URL } from "../../config/server_url";
+import '../../css/member/SignUpForm.css';
 
 axios.defaults.withCredentials = true;
 

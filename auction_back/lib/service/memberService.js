@@ -1,6 +1,7 @@
 const DB = require("../db/db");
 const bcrypt = require('bcrypt');
 const google = require('../config/google.json');
+const naver = require('../config/naver.json')
 
 const memberService = {
     
@@ -69,6 +70,11 @@ const memberService = {
     googleLogin: (req, res) => {
         const googleAuthURL = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&redirect_uri=${encodeURIComponent('http://localhost:3000/auth/google/callback')}&scope=https://www.googleapis.com/auth/plus.login email&client_id=${google.web.client_id}`;
         res.json({ url: googleAuthURL });
+    },
+
+    naverLogin: (req, res) => {
+        const naverAuthURL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naver.web.client_id}&redirect_uri=${encodeURIComponent(naver.web.redirect_uri)}`;
+        res.json({ url: naverAuthURL });
     },
 
     loginSuccess: (req, res) => {
