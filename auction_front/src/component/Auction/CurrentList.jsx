@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react"
 import { SERVER_URL } from "../../config/server_url";
+import '../../css/Auction/CurrentList.css'
 
 function CurrentList() {
     const [auctionProduct, setAuctionProduct] = useState([]);
@@ -19,8 +20,6 @@ function CurrentList() {
             else{
                 let product = response.data;
                 setAuctionProduct(prevProduct => [...prevProduct, product]);
-
-                sortProduct();
             }
         } catch(error) {
             console.log(error);
@@ -38,8 +37,7 @@ function CurrentList() {
             else{
                 for(let i = 0; i < response.data.length; i++)
                     getTodayAuctionProduct(response.data[i].GR_NO);
-
-                
+                sortProduct();
             }
                 
         } catch(error) {
@@ -47,21 +45,41 @@ function CurrentList() {
         }
     }
     const sortProduct = () => {
-
+        console.log(auctionProduct[0].GR_NO);
+        console.log(auctionProduct[1].GR_NO);
     }
+
+    const productBtnClickHandler = () => {
+    }
+
     return (
         <div className="current_wrap">
-            <table>
-                <tbody>
-                    {auctionProduct.map((product, idx) => (
-                        <tr>
-                            <td><img src={`${SERVER_URL.SERVER_URL()}/goodsImg/${product.imgs[0]}`} alt="" /></td>
-                            <td>{product.GR_NAME}</td>
-                            <td>{product.GR_PRICE}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+    <table>
+        <tbody>
+            {auctionProduct.map((product, idx) => (
+                idx % 3 === 0 && idx !== 0 ?
+                <tr>
+                    <td className="product"> 
+                        <button type="button" onClick={productBtnClickHandler}>
+                            <img src={`${SERVER_URL.SERVER_URL()}/goodsImg/${product.imgs[0]}`} alt={product.GR_NAME} /> 
+                        </button><br />                 
+                        {product.GR_NAME}<br />
+                        {product.GR_PRICE} 원
+                    </td>
+                </tr>
+                :
+                <>
+                    <td className="product">
+                        <button type="button" onClick={productBtnClickHandler}>
+                            <img src={`${SERVER_URL.SERVER_URL()}/goodsImg/${product.imgs[0]}`} alt={product.GR_NAME} />   
+                        </button><br /> 
+                        {product.GR_NAME}<br />
+                        {product.GR_PRICE} 원
+                    </td>
+                </>
+            ))}
+        </tbody>
+    </table>
         </div>
     );
 }
