@@ -260,23 +260,27 @@ const adminService = {
         let as_start_date = req.body.as_start_date;
         let gr_no = req.body.gr_no;
         
-        if(as_state == 0){
-            as_location_num = null,
-            as_start_date = null
-        }
-
+        console.log('스테이트값1!',as_state);
         DB.query(`SELECT COUNT(*) FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE= ? AND AS_LOCATION_NUM = ?`
                 ,[as_start_date,as_location_num],
                 (err,count)=>{
-                    const countValue = count[0]['COUNT(*)'];
-
+                    let countValue = count[0]['COUNT(*)'];
+                    console.log('스테이트값2!',as_state);
                     if(err){
                         console.log(err);
                         res.json('error')
                     } else if(countValue == 1){
                         res.json('already')
                     } else {
-                        DB.query(`UPDATE TBL_AUCTION_SCHEDULE SET AS_STATUS =?,AS_START_DATE=?,AS_LOCATION_NUM =? WHERE GR_NO =?`,
+                      console.log('스테이트값3!',as_state);
+                      
+                      if(as_state == '0'){
+                          as_location_num = null;
+                          as_start_date = null;
+                          console.log('여기까지 찍히나');
+                        }
+
+                        DB.query(`UPDATE TBL_AUCTION_SCHEDULE SET AS_STATUS =?,AS_START_DATE=?,AS_LOCATION_NUM =?,AS_MOD_DATE =NOW() WHERE GR_NO =?`,
                         [as_state,as_start_date,as_location_num,gr_no],
                         (err,result)=>{
                             if(err){
@@ -289,10 +293,79 @@ const adminService = {
                         })
                     }
                 })
+    },
+    auctionResultList: (req, res) => {
+      const sql = `
+        SELECT 
+          AR.GR_NO,
+          AR.AR_IS_BID,
+          AR.AR_SELL_ID,
+          AR.AR_BUY_ID,
+          AR.AR_POINT,
+          AR.AR_REG_DATE,
+          AR.AR_MOD_DATE,
+          GR.GR_NAME,
+          DG.DG_ADDR,
+          DG.DG_STATUS
+        FROM 
+          TBL_AUCTION_RESULT AS AR
+          JOIN TBL_GOODS_REGIST AS GR ON AR.GR_NO = GR.GR_NO
+          LEFT JOIN TBL_DELIVERY_GOODS AS DG ON AR.GR_NO = DG.GR_NO
+      `;
+    
+      DB.query(sql, (err, results) => {
+        if (err) {
+          console.log(err);
+          res.json(null);
+        } else {
+          res.json(results);
+        }
+      });
+    },
+    deliveryGoods:(req,res)=>{
+
+      let gr_no = req.body.gr_no;
 
 
-       
+      DB.query(`UPDATE TBL_DELIVERY_GOODS SET DG_STATUS = 1 WHERE GR_NO = ?`,[gr_no],(err,result)=>{
+        if(err){
+          console.log(err);
+          res.json(null);
+        } else {
+          res.json(result.affectedRows);
+        }
+      })
+    },
+    getSalesData:(req,res)=>{
+      const sql = `
+        SELECT 
+          AR.GR_NO,
+          AR.AR_IS_BID,
+          AR.AR_SELL_ID,
+          AR.AR_BUY_ID,
+          AR.AR_POINT,
+          AR.AR_REG_DATE,
+          AR.AR_MOD_DATE,
+          ASC.AS_LOCATION_NUM,
+          GR.GR_NAME
+        FROM
+          TBL_AUCTION_RESULT AR
+              JOIN
+          TBL_AUCTION_SCHEDULE ASC ON AR.GR_NO = ASC.GR_NO
+              JOIN
+          TBL_GOODS_REGIST GR ON AR.GR_NO = GR.GR_NO
+      `;
+      DB.query(sql, (err, datas) => {
+        if (err) {
+          console.log(err);
+          res.json(null);
+        } else {
+          res.json(datas);
+        }
+      });
+
     }
+    
 
 
 }

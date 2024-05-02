@@ -62,7 +62,19 @@ router.get('/goods_reg_list',(req,res)=>{
 
 router.post('/goods_reg_state_change',(req,res)=>{
     adminService.goodsRegStateChange(req,res);
+});
+
+router.get('/auction_result_list',(req,res)=>{
+    adminService.auctionResultList(req,res);
+});
+
+router.post('/delivery_goods',(req,res)=>{
+    adminService.deliveryGoods(req,res);
 })
+
+router.get('/get_sales_data',(req,res)=>{
+    adminService.getSalesData(req,res);
+});
 
 module.exports = router;
 
