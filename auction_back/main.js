@@ -23,21 +23,12 @@ if (os.version().includes('Windows')) {
     app.use(express.static(`/home/ubuntu/acution`));
 }
 
-//socket.io -------------------------------------------------------------------------
-const io = require('socket.io')(server, {
-    cors: {
-        origin: "*",
-        credentials: true
-    }
-});
+//SOCKET.IO -----------------------------------------------------------------------------------------------------------
 
+const AuctionAlarm = require('./lib/websocket/AuctionAlarm');
+AuctionAlarm(server);
 
-io.on('connection', socket => {
-    console.log("websocket connected !!!! ");
-    socket.on('message', ({ name, message }) => {
-        io.emit('message', ({ name, message }))
-    })
-})
+//SOCKET.IO END -----------------------------------------------------------------------------------------------------------
 
 // CORS START -----------------------------------------------------------------------------------------------------------
 if (os.version().includes('Windows')) {
@@ -100,6 +91,4 @@ app.use('/point', require('./routes/pointRouter'));
 // 라우터 설정 끗 -----------------------------------------------------------------------------------------------------------
 
 //app.listen(3001);
-server.listen(3001, function () {
-    console.log('listening on port 3001');
-});
+server.listen(3001);
