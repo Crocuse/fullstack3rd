@@ -36,6 +36,7 @@ import MyRegist from './component/member/mypage/MyRegist';
 import MyWinnigBids from './component/member/mypage/MyWinnigBids';
 import PayAPI from './component/point/PayAPI';
 import PointAddForm from './component/point/PointAddForm';
+import KakaoChat from './component/include/KakaoChat';
 
 
 function App() {
@@ -80,6 +81,7 @@ function App() {
             </Routes>
 
             <Footer />
+            <KakaoChat />
           </BrowserRouter>
         </PersistGate>
       </Provider>

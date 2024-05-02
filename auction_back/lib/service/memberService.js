@@ -1,7 +1,8 @@
 const DB = require("../db/db");
 const bcrypt = require('bcrypt');
 const google = require('../config/google.json');
-const naver = require('../config/naver.json')
+const naver = require('../config/naver.json');
+const kakao = require('../config/kakao.json');
 
 const memberService = {
     
@@ -76,7 +77,7 @@ const memberService = {
         const naverAuthURL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naver.web.client_id}&redirect_uri=${encodeURIComponent(naver.web.redirect_uri)}`;
         res.json({ url: naverAuthURL });
     },
-
+    
     loginSuccess: (req, res) => {
         if (req.user == 'super') {
             res.json({

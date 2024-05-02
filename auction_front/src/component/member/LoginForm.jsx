@@ -128,14 +128,6 @@ function LoginForm() {
                     네이버 로그인
                 </div>
             </div>
-            <div className="kakao_login">
-                <div className="icon">
-                    <img src="/img/member/login_icon/kakao.png"/>
-                </div>
-                <div className="login_txt">
-                    카카오 로그인
-                </div>
-            </div>
         </div>
 
     </div>

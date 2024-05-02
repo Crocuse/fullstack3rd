@@ -6,6 +6,7 @@ const cors = require('cors');
 const { OAuth2Client } = require('google-auth-library');
 const axios = require('axios');
 const naver = require('../config/naver.json');
+const kakao = require('../config/kakao.json');
 
 exports.passport = (app) => {
     const passport = require('passport');

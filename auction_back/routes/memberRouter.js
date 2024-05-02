@@ -23,10 +23,8 @@ router.get('/google_login', (req, res) => {
 })
 
 router.get('/naver_login', (req, res) => {
-    console.log('naver_login')
     memberService.naverLogin(req, res);
 })
-
 router.get('/login_success', (req, res) => {
     memberService.loginSuccess(req, res);
 })
