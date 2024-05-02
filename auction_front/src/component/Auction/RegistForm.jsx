@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import $ from "jquery";
-import '../../css/Auction/Regist_form.css'
+import '../../css/Auction/RegistForm.css'
 import axios from "axios";
 import { SERVER_URL } from "../../config/server_url";
 import { useNavigate } from "react-router-dom";
