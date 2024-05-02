@@ -82,7 +82,7 @@ function Nav() {
         mainMenu = 
         <>
             <Link to="/auction/Current_list">진행중경매</Link>
-            <Link to="/action/Regist_form">경매등록</Link>
+            <Link to="/auction/Regist_form">경매등록</Link>
             <Link to="/point/Point_add_form">포인트충전</Link>
             <Link to="/Customer_center">고객센터</Link>
         </>;
@@ -99,7 +99,7 @@ function Nav() {
         mainMenu = 
         <>
             <Link to="/auction/Current_list">진행중경매</Link>
-            <Link to="/action/Regist_form">경매등록</Link>
+            <Link to="/auction/Regist_form">경매등록</Link>
             <Link to="/point/Point_add_form">포인트충전</Link>
             <Link to="/Customer_center">고객센터</Link>
         </>;
