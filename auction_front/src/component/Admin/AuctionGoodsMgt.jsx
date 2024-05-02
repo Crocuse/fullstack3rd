@@ -21,6 +21,7 @@ function AuctionGoodsMgt() {
     axios_goods_list();
   }, []);
 
+
   const goodsStateclickBtn = (goods) => {
     setGoodsState(!goodsState);
     if (!goodsState) {
@@ -211,14 +212,31 @@ function AuctionGoodsMgt() {
               <td>{goods.M_ID}</td>
               <td>{goods.GR_PRICE}</td>
               <td>
-                {goodsState && selectedGoods.GR_NO === goods.GR_NO ? (
-                  <select name={`goods_approval_sel_${goods.GR_NO}`} defaultValue={goods.GR_APPROVAL}>
-                    <option value="0">대기</option>
-                    <option value="1">승인</option>
-                    <option value="2">반려</option>
-                  </select>
-                ) : goods.GR_APPROVAL === 0 ? "대기" : goods.GR_APPROVAL === 1 ? "승인" : "반려"}
-              </td>
+  {goodsState && selectedGoods.GR_NO === goods.GR_NO ? (
+    <>
+      <select name={`goods_approval_sel_${goods.GR_NO}`} defaultValue={goods.GR_APPROVAL}
+        onChange={(e) => {
+          if (e.target.value === "2") {
+            setSelectedGoods({ ...selectedGoods, showRejectInput: true });
+          } else {
+            setSelectedGoods({ ...selectedGoods, showRejectInput: false });
+          }
+        }}
+      >
+        <option value="0">대기</option>
+        <option value="1">승인</option>
+        <option value="2">반려</option>
+      </select>
+      {selectedGoods.showRejectInput && (
+        <input
+          type="text"
+          placeholder="반려 사유를 입력하세요"
+          onChange={(e) => setSelectedGoods({ ...selectedGoods, rejectReason: e.target.value })}
+        />
+      )}
+    </>
+  ) : goods.GR_APPROVAL === 0 ? "대기" : goods.GR_APPROVAL === 1 ? "승인" : "반려"}
+</td>
               <td>
                 {goodsState && selectedGoods.GR_NO === goods.GR_NO ? (
                   <select name={`goods_receipt_sel_${goods.GR_NO}`} defaultValue={goods.GR_RECEIPT}>

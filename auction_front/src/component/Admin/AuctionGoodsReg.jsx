@@ -47,9 +47,7 @@ function AuctionGoodsReg() {
             const asState = document.querySelector(`select[name="goods_state_${gr_no}"]`).value;
             const startDate = document.querySelector(`input[name="as_start_date_${gr_no}"]`).value;
 
-            if(asState == 0){
-                return;
-            } else if(startDate <= getTodayDate()){
+            if(startDate <= getTodayDate()){
                 alert('당일이나 오늘 이전으로는 등록할 수 없습니다.');
                 return;
             }
