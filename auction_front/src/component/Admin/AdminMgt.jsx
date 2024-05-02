@@ -151,8 +151,9 @@ function AdminMgt() {
                         </tr>
                     </thead>
                     <tbody>
+                    
                     {adminList.filter((admin) => admin.A_ID !== "super")
-                                .map((admin) => (
+                              .map((admin) => (
                                 <tr key={admin.A_ID}>
                                     <td>{admin.A_ID}</td>
                                     <td>{admin.A_NAME}</td>
