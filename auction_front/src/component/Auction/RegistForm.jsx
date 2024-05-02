@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { sessionCheck } from "../../util/sessionCheck";
 
-function Regist_form() {
+function RegistForm() {
     const [grName, setGrName] = useState('');
     const [grPrice, setGrPrice] = useState('');
     const [grInfo, setGrInfo] = useState('');
@@ -70,7 +70,7 @@ function Regist_form() {
                 navigate('/');
             } else {
                 alert('등록에 실패 했습니다.');
-                navigate('/action/Regist_form');
+                navigate('/auction/Regist_form');
             }
         } catch(error) {
             console.log(error);
@@ -183,5 +183,5 @@ function Regist_form() {
 
     );
 }
-export default Regist_form;
+export default RegistForm;
  

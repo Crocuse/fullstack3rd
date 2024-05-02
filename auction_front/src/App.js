@@ -14,8 +14,9 @@ import AuctionResult from './component/Admin/AuctionResult';
 import ReciveGoodsMgt from './component/Admin/ReciveGoodsMgt';
 import SalesMgt from './component/Admin/SalesMgt';
 import UserMgt from './component/Admin/UserMgt';
-import CurList from './component/Auction/Current_list';
-import RegForm from './component/Auction/Regist_form';
+import CurList from './component/Auction/CurrentList';
+import RegForm from './component/Auction/RegistForm';
+import AuctionPage from './component/Auction/AuctionPage';
 import CstCT from './component/Customer_center';
 import Home from './component/Home';
 import Footer from './component/include/Footer';
@@ -50,8 +51,9 @@ function App() {
 
             <Routes>
               <Route path='/' element={<Home />}></Route>
-              <Route path='/auction/Current_list' element={<CurList />}></Route>
-              <Route path='/action/Regist_form' element={<RegForm />}></Route>
+              <Route path='/auction/current_list' element={<CurList />}></Route>
+              <Route path='/auction/regist_form' element={<RegForm />}></Route>
+              <Route path='/auction/auction_page' element={<AuctionPage />}></Route>
               <Route path='/member/Signup_form' element={<SignUp />}></Route>
               <Route path='/member/Login_form' element={<Login />}></Route>
               <Route path='/member/Logout_confirm' element={<Logout />}></Route>

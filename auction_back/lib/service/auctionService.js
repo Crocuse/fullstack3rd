@@ -6,8 +6,6 @@ const auctionService = {
         let files = req.files;
         let mId = req.user;
 
-        console.log('mId', mId);
-
         DB.query('INSERT INTO TBL_GOODS_REGIST(GR_NAME, GR_PRICE, GR_INFO, M_ID) VALUES(?, ?, ?, ?)', 
         [post.grName, post.grPrice, post.grInfo, 'gildong'],
         (error, result) => {
@@ -30,7 +28,6 @@ const auctionService = {
                             console.log(error);
                     });
                 }
-
                 res.json('success');
             }
         });
