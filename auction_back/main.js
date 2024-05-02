@@ -16,6 +16,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(flash());
 
+if(os.version().includes('Windows')) {
+    app.use(express.static(`C:/acution`));
+} else {
+    app.use(express.static(`/home/ubuntu/acution`));
+}
+
 // CORS START -----------------------------------------------------------------------------------------------------------
 if(os.version().includes('Windows')) {
     app.use(cors({
