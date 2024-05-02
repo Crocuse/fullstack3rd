@@ -49,8 +49,16 @@ router.post('/check_password', (req, res) => {
     memberService.checkPassword(req, res)
 })
 
+router.get('/social_id_check', (req, res) => {
+    memberService.socialIdCheck(req, res);
+})
+
 router.post('/modify_password', (req, res) => {
     memberService.modifyPassword(req, res)
+})
+
+router.post('/get_my_regist_list', (req, res) => {
+    memberService.getMyRegistList(req, res);
 })
 
 router.get('/logout_confirm', (req, res) => {

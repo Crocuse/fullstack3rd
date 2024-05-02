@@ -35,7 +35,11 @@ function NaverLogin() {
         fetchData();
     }, [dispatch, location, navigate]);
 
-    return null;
+    return (
+        <div style={{textAlign: 'center', height: '600px', lineHeight: '600px'}}>
+            <p>네이버 로그인 처리 중...</p>
+        </div>
+    )
 }
 
 export default NaverLogin;
