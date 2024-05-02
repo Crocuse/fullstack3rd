@@ -122,7 +122,7 @@ function ModifyInfo() {
             }
 
             setMemberInfo(response.data.selectedMember);
-            setMemberPoint(response.data.currentPoint);
+            setMemberPoint(response.data.currentPoint.P_CURRENT);
 
         } catch (error){
             console.log(error)
@@ -240,7 +240,7 @@ function ModifyInfo() {
                 </div>
 
                 <div className="point">
-                    내 포인트 {memberPoint}
+                    내 포인트 {memberPoint.toLocaleString()}
                 </div>
 
                 <div className="reg_mod_date">

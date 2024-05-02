@@ -120,7 +120,7 @@ const memberService = {
                 return;
             };
 
-                DB.query('SELECT * FROM TBL_POINT WHERE M_ID = ? ORDER BY P_REG_DATE DESC LIMIT 1', [id], (err, point) => {
+                DB.query('SELECT P_CURRENT FROM TBL_POINT WHERE M_ID = ? ORDER BY P_REG_DATE DESC LIMIT 1', [id], (err, point) => {
                     if (err) {
                       console.log(err);
                       res.json('error');
@@ -132,7 +132,7 @@ const memberService = {
                         M_ADDR: member[0].M_ADDR.replace(/\//g, ' ')
                     };
 
-                    const currentPoint = 0;
+                    let currentPoint = 0;
                     if (point.length != 0) currentPoint = point[0];
 
                     res.json({selectedMember, currentPoint});
