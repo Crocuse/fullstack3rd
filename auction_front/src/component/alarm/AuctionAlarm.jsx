@@ -8,7 +8,7 @@ function AuctionAlarm() {
         const socket = io(`${SERVER_URL.SERVER_URL()}`);
 
         socket.on('connect', () => {
-            console.log('connected to server');
+            console.log('connected to server성공 !!!');
         });
 
         socket.on('disconnect', () => {

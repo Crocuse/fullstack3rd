@@ -8,22 +8,39 @@ const MySQLStore = require('express-mysql-session')(session);
 const cors = require('cors');
 const flash = require('express-flash');
 const os = require('os');
+const server = require('http').createServer(app);
 
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(compression());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(flash());
 
-if(os.version().includes('Windows')) {
+if (os.version().includes('Windows')) {
     app.use(express.static(`C:/acution`));
 } else {
     app.use(express.static(`/home/ubuntu/acution`));
 }
 
+//socket.io -------------------------------------------------------------------------
+const io = require('socket.io')(server, {
+    cors: {
+        origin: "*",
+        credentials: true
+    }
+});
+
+
+io.on('connection', socket => {
+    console.log("websocket connected !!!! ");
+    socket.on('message', ({ name, message }) => {
+        io.emit('message', ({ name, message }))
+    })
+})
+
 // CORS START -----------------------------------------------------------------------------------------------------------
-if(os.version().includes('Windows')) {
+if (os.version().includes('Windows')) {
     app.use(cors({
         origin: 'http://localhost:3000',
         credentials: true,
@@ -49,7 +66,7 @@ const options = {
 const sessionStore = new MySQLStore(options);
 
 const maxAge = 1000 * 60 * 30;
-const sessionObj = {                
+const sessionObj = {
     secret: 'Dhyonee',
     resave: false,
     saveUninitialized: true,
@@ -78,8 +95,11 @@ app.post('/member/login_confirm', passport.authenticate('local', {
 // 라우터 설정 -----------------------------------------------------------------------------------------------------------
 app.use('/member', require('./routes/memberRouter'));
 app.use('/admin', require('./routes/adminRouter'));
-app.use('/auction',require('./routes/auctionRouter'));
-app.use('/point',require('./routes/pointRouter'));
+app.use('/auction', require('./routes/auctionRouter'));
+app.use('/point', require('./routes/pointRouter'));
 // 라우터 설정 끗 -----------------------------------------------------------------------------------------------------------
 
-app.listen(3001);
+//app.listen(3001);
+server.listen(3001, function () {
+    console.log('listening on port 3001');
+});
