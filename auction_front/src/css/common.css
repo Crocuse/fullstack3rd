@@ -158,9 +158,13 @@ section:hover {
   
   body {
     font-family: 'LINESeedKR-Rg';
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
   }
 
 footer {
+    flex-shrink: 0;
     background-color: #333;
     color: #ffffff;
     padding: 20px;

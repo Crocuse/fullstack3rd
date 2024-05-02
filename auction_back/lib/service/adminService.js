@@ -202,23 +202,96 @@ const adminService = {
             }
         })
     },
-    goodsStateChange:(req,res)=>{
-
+    goodsStateChange: (req, res) => {
         let approval = req.body.approval;
         let receipt = req.body.receipt;
+      
+        DB.query(
+          `UPDATE TBL_GOODS_REGIST SET GR_APPROVAL=?, GR_RECEIPT=? ,GR_MOD_DATE=NOW() WHERE GR_NO = ?`,
+          [approval, receipt, req.body.gr_no],
+          (err1, result1) => {
+            if (err1) {
+              console.log(err1);
+              res.json(null);
+            } else if (approval == 1 && receipt == 1 && result1.affectedRows == 1) {
+              DB.query(
+                `INSERT INTO TBL_AUCTION_SCHEDULE(GR_NO) VALUES (?)`,
+                [req.body.gr_no],
+                (err2, result2) => {
+                  if (err2) {
+                    console.log(err2);
+                    res.json(null);
+                  } else {
+                    res.json('success');
+                  }
+                }
+              );
+            } else if (approval == 2 || approval == 0) {
+              DB.query(
+                `DELETE FROM TBL_AUCTION_SCHEDULE WHERE GR_NO =?`,
+                [req.body.gr_no],
+                (err3, result3) => {
+                  if (err3) {
+                    console.log(err3);
+                    res.json(null);
+                  } else {
+                    res.json('success');
+                  }
+                }
+              );
+            } else {
+              res.json('success');
+            }
+          }
+        );
+      },
+    goodsRegList:(req,res)=>{
+        DB.query(`SELECT * FROM TBL_AUCTION_SCHEDULE AS A JOIN TBL_GOODS_REGIST AS GR ON A.GR_NO = GR.GR_NO`,(err,goods)=>{
+            if(err){
+                res.json(null);
+            } else {
+                res.json(goods);
+            }
+        })
+    },
+    goodsRegStateChange:(req,res)=>{
+        let as_location_num = req.body.as_location_num;
+        let as_state = req.body.as_state;
+        let as_start_date = req.body.as_start_date;
+        let gr_no = req.body.gr_no;
+        
+        if(as_state == 0){
+            as_location_num = null,
+            as_start_date = null
+        }
 
+        DB.query(`SELECT COUNT(*) FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE= ? AND AS_LOCATION_NUM = ?`
+                ,[as_start_date,as_location_num],
+                (err,count)=>{
+                    const countValue = count[0]['COUNT(*)'];
 
-        DB.query(`UPDATE TBL_GOODS_REGIST SET GR_APPROVAL=?, GR_RECEIPT=? ,GR_MOD_DATE=NOW() WHERE GR_NO = ?`,
-                [approval,receipt,req.body.gr_no],
-                (err,result)=>{
-            
                     if(err){
                         console.log(err);
-                        res.json(null);
+                        res.json('error')
+                    } else if(countValue == 1){
+                        res.json('already')
                     } else {
-                        res.json(result.affectedRows);
+                        DB.query(`UPDATE TBL_AUCTION_SCHEDULE SET AS_STATUS =?,AS_START_DATE=?,AS_LOCATION_NUM =? WHERE GR_NO =?`,
+                        [as_state,as_start_date,as_location_num,gr_no],
+                        (err,result)=>{
+                            if(err){
+                                console.log(err);
+                                res.json(null);
+                            } else {
+                                res.json('success');
+                                return;
+                            }
+                        })
                     }
-        })
+                })
+
+
+       
     }
 
 

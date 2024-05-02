@@ -6,7 +6,7 @@ import CertificationAPI from "./CertificationAPI";
 import PayAPI from "./PayAPI";
 import { useNavigate } from "react-router-dom";
 import { sessionCheck } from "../../util/sessionCheck"
-import { addPoint } from "../../redux/action/addPoint";
+import "../../css/Point/point.css";
 
 function PointAddForm() {
     const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
@@ -52,19 +52,25 @@ function PointAddForm() {
 
     return (
         <>
-            <article>
+            <article className="p_article">
                 <div className="add_point_wrap">
                     <div className="add_point_title">
                         <p>포인트 충전</p>
                     </div>
                     <div className="add_point_content">
-                        <span>현재 포인트 : </span>
-                        <input type="text" name="currentPoint" readOnly value={currenPoint} />P <br />
-                        <span>포인트 충전 : </span>
-                        <input type="text" name="chargeAmount" value={chargeAmount} onChange={(e) => chargeAmountHandler(e)} placeholder="포인트 충전 금액을 입력하세요." />원 <br />
-                    </div>
+                        <div>
+                            <span className="span_txt">현재 포인트 : </span>
+                            <input type="text" className="poin_page_input" readOnly value={currenPoint} /><span className="span_txt">P</span> <br />
+                        </div>
+                        <div>
+                            <span className="span_txt">포인트 충전 : </span>
+                            <input type="text" className="poin_page_input" value={chargeAmount} onChange={(e) => chargeAmountHandler(e)} placeholder="포인트 충전 금액을 입력하세요." /><span className="span_txt">원</span> <br />
+                        </div>
+                     </div>
                     {/* <CertificationAPI /> */}
-                    <PayAPI chargeAmount={chargeAmount} />
+                    <div className="btn_wrap">
+                        <PayAPI chargeAmount={chargeAmount} />
+                    </div>
                 </div>
 
 
