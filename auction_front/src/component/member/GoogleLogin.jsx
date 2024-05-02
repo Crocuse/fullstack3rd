@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SERVER_URL } from "../../config/server_url";
 import { setLoginedId } from "../../redux/action/setLoginedId";
+import LoadingModal from '../include/LoadingModal';
 
 function GoogleLogin() {
     const location = useLocation();
@@ -39,9 +40,7 @@ function GoogleLogin() {
     }
 
     return (
-        <div style={{textAlign: 'center', height: '600px', lineHeight: '600px'}}>
-            <p>구글 로그인 처리 중...</p>
-        </div>
+        <LoadingModal />
     )
 }
 

@@ -122,7 +122,7 @@ function ModifyInfo() {
             }
 
             setMemberInfo(response.data.selectedMember);
-            setMemberPoint(response.data.currentPoint.P_CURRENT);
+            setMemberPoint(response.data.currentPoint.P_CURRENT || 0);
 
         } catch (error){
             console.log(error)
