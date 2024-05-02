@@ -1,11 +1,12 @@
 import axios from "axios";
 import $ from 'jquery';
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { SERVER_URL } from "../../config/server_url";
 import '../../css/member/LoginForm.css';
 import { setLoginedId } from "../../redux/action/setLoginedId";
+import LoadingModal from "../include/LoadingModal";
 
 axios.defaults.withCredentials = true;
 
@@ -13,23 +14,27 @@ function LoginForm() {
     // Hook -----------------------------------------------------------------------------------------------------------
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    
+    const [loadingModalShow, setLoaingModalShow] = useState(false);
 
     // Handler -----------------------------------------------------------------------------------------------------------
     const LoginBtnClickHandler = () => {
+        setLoaingModalShow(true);
+
         let form = document.login_form;
         let m_id = form.m_id.value;
         let m_pw = form.m_pw.value;
 
         if (m_id == '') {
             alert('아이디를 입력해주세요.');
-            m_id();
+            return;
         }
-        else if (m_pw == '') {
+        if (m_pw == '') {
             alert('비밀번호를 입력해주세요.');
-            m_pw();
+            return;
         }
-        else 
-            axios_login_confirm(m_id, m_pw);
+
+        axios_login_confirm(m_id, m_pw);
     }
 
     const googleLoginClick = () => {
@@ -40,6 +45,10 @@ function LoginForm() {
         axios_naver_login();
     }
 
+    const enterPressHandler = (e) => {
+        if (e.key === 'Enter') LoginBtnClickHandler();
+    }
+
     // Function -----------------------------------------------------------------------------------------------------------
 
     // Axios -----------------------------------------------------------------------------------------------------------
@@ -48,8 +57,10 @@ function LoginForm() {
             const response = await axios.post(`${SERVER_URL.SERVER_URL()}/member/login_confirm`,
             { m_id, m_pw });
 
+            console.log("🚀 ~ axios_login_confirm ~ response.data.error:", response.data.error)
             if(response.data.error) {
                 $('#fail_massage').text(response.data.error[0]);
+                setLoaingModalShow(false);
                 return;
             }
 
@@ -58,6 +69,7 @@ function LoginForm() {
                         
         } catch (error) {
             console.log(error);
+            setLoaingModalShow(false);
         }
     }
 
@@ -90,14 +102,14 @@ function LoginForm() {
 
         <form method="post" name="login_form">
             <div className="input_wrap">
-                <input type="text" name="m_id" placeholder="아이디를 입력해주세요."/>
+                <input type="text" name="m_id" placeholder="아이디를 입력해주세요." />
             </div>
 
             <div className="input_wrap">
-                <input type="password" name="m_pw" placeholder="비밀번호를 입력해주세요."/>
+                <input type="password" name="m_pw" placeholder="비밀번호를 입력해주세요." onKeyDown={enterPressHandler} />
             </div>
 
-            <div className="massage_wrap">
+            <div className="massage_wrap" >
                 <p id="fail_massage"></p>
             </div>
 
@@ -129,6 +141,12 @@ function LoginForm() {
                 </div>
             </div>
         </div>
+
+        {
+            (loadingModalShow === true) ?
+            <LoadingModal /> :
+            null
+        }
 
     </div>
     )

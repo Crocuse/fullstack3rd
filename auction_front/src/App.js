@@ -29,7 +29,7 @@ import NaverLogin from './component/member/NaverLogin';
 import SignUp from './component/member/SignUpForm';
 import ModifyInfo from './component/member/mypage/ModifyInfo';
 import ModifyPassword from './component/member/mypage/ModifyPassword';
-import MyBids from './component/member/mypage/MyBids';
+import MySells from './component/member/mypage/MySells';
 import MyPage from './component/member/mypage/MyPage';
 import MyPageMenubar from './component/member/mypage/MyPageMenubar';
 import MyPoint from './component/member/mypage/MyPoint';
@@ -39,8 +39,15 @@ import PayAPI from './component/point/PayAPI';
 import PointAddForm from './component/point/PointAddForm';
 import KakaoChat from './component/include/KakaoChat';
 
+// 폰트어썸
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+
 
 function App() {
+  // 폰트어썸 적용
+  library.add(fas);
+
   return (
     <>
       <Provider store={store}>
@@ -60,7 +67,7 @@ function App() {
               <Route path="/member/member/my_page" element={<MyPageMenubar />}>
                 <Route path="modify_info" element={<ModifyInfo />} />
                 <Route path="modify_password" element={<ModifyPassword />} />
-                <Route path="mybids" element={<MyBids />} />
+                <Route path="mysells" element={<MySells />} />
                 <Route path="mywinnigbids" element={<MyWinnigBids />} />
                 <Route path="myregist" element={<MyRegist />} />
                 <Route path="mypoint" element={<MyPoint />} />
