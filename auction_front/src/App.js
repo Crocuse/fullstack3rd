@@ -38,6 +38,7 @@ import MyWinnigBids from './component/member/mypage/MyWinnigBids';
 import PayAPI from './component/point/PayAPI';
 import PointAddForm from './component/point/PointAddForm';
 import KakaoChat from './component/include/KakaoChat';
+import AuctionAlarm from './component/alarm/AuctionAlarm';
 
 // 폰트어썸
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -76,6 +77,7 @@ function App() {
               <Route path='/auth/naver/callback' element={<NaverLogin />}></Route>
               <Route path='/point/Point_add_form' element={<PointAddForm />}></Route>
               <Route path='/point/PayAPI' element={<PayAPI />} />
+              <Route path='/alarm/AuctionAlarm' element={<AuctionAlarm />} />
               <Route path='/member/MyPage' element={<MyPage />}></Route>
               <Route path='/Customer_center' element={<CstCT />}></Route>
               <Route path='/admin/home' element={<AdminHome />}></Route>

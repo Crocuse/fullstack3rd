@@ -26,8 +26,8 @@ function Home() {
                         </div>
                         <div className="bid_btn_wrap">
                             <div className="bid_btn">
-                                <a href="#">입찰하기</a>
-                                <a href="/auction/Regist_form">등록하기</a>
+                                <a href="/auction/Current_list">입찰하기</a>
+                                <a href="/action/Regist_form">등록하기</a>
                             </div>
                         </div>
                     </div>
