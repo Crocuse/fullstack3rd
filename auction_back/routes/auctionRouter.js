@@ -7,7 +7,17 @@ const upload = require('../lib/config/uploads');
 
 router.post('/regist_form', upload.UPLOAD_GOODS_MIDDLEWARE(), (req, res) => {
     console.log('/auction/regist_form');
-    auctionService.goods_regist(req, res);
+    auctionService.goodsRegist(req, res);
+});
+
+router.get('/current_list', upload.UPLOAD_GOODS_MIDDLEWARE(), (req, res) => {
+    console.log('/auction/current_list');
+    auctionService.currentList(req, res);
+});
+
+router.get('/list_product', upload.UPLOAD_GOODS_MIDDLEWARE(), (req, res) => {
+    console.log('/auction/list_product');
+    auctionService.listProduct(req, res);
 });
 
 
