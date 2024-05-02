@@ -186,6 +186,23 @@ const memberService = {
         })
     },
 
+    socialIdCheck: (req, res) => {
+        let loginedId = req.query.loginedId;
+
+        DB.query('SELECT M_SOCIAL_ID FROM TBL_MEMBER WHERE M_ID = ?', [loginedId], (err, rst) => {
+            if (err) {
+                console.log(err);
+                res.json('error');
+                return;
+            };
+
+            if (rst.length > 0)
+                res.json(true);
+            else 
+                res.json(false);
+        })
+    },
+
     modifyPassword: (req, res) => {
         let id = req.body.id;
         let pw = req.body.pw;
@@ -199,6 +216,21 @@ const memberService = {
             };
 
             res.json('modified');
+        })
+    },
+
+    getMyRegistList: (req, res) => {
+        let id = req.body.id;
+
+        DB.query('SELECT * FROM TBL_GOODS_REGIST AS GR LEFT JOIN TBL_AUCTION_SCHEDULE AS A ON GR.GR_NO = A.GR_NO WHERE GR.M_ID = ?', [id], (err, list) => {
+            if (err) {
+                console.log(err);
+                res.json('error');
+                return;
+            }
+            console.log("🚀 ~ DB.query ~ list:", list)
+
+            res.json(list)
         })
     },
 

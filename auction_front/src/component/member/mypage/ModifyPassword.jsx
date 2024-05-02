@@ -13,9 +13,11 @@ function ModifyPassword() {
     const navigate = useNavigate();
 
     const [checkPw, setCheckPw] = useState(false);
+    const [socialId, setSocialId] = useState(false);
     
     useEffect(() => {
         sessionCheck(sessionId, navigate);
+        changeDisplayModufyWrap();
     })
 
     // Handler -----------------------------------------------------------------------------------------------------------
@@ -56,6 +58,18 @@ function ModifyPassword() {
     }
 
     // Fucntion -----------------------------------------------------------------------------------------------------------
+    function changeDisplayModufyWrap () {
+        let socialIdMark = loginedId.substring(0, 2);
+
+        if (socialIdMark == 'G_' || socialIdMark == 'N_') {
+            $('.modify_wrap').css('display', 'none');
+            $('.social_id_true').css('display', 'block');
+        }
+        else {
+            $('.modify_wrap').css('display', 'block');
+            $('.social_id_true').css('display', 'none');
+        }
+    }
 
     // Axios -----------------------------------------------------------------------------------------------------------
     async function axios_check_password(id, pw) {
@@ -118,7 +132,10 @@ function ModifyPassword() {
                 <button onClick={modifyPwBtnClick}>변경</button>
             </div>
 
-            
+            <div className="social_id_true">
+                <p>소셜 로그인으로 가입한 아이디는 비밀번호를 변경할 수 없습니다.</p>
+            </div>
+
         </article>
     );
 }

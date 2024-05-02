@@ -40,7 +40,7 @@ function GoogleLogin() {
 
     return (
         <div style={{textAlign: 'center', height: '600px', lineHeight: '600px'}}>
-            <p>Google Login 처리 중...</p>
+            <p>구글 로그인 처리 중...</p>
         </div>
     )
 }
