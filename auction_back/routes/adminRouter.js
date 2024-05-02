@@ -51,8 +51,18 @@ router.post('/member_modify_confirm',(req,res)=>{
 router.get('/goods_list',(req,res)=>{
     adminService.goodsList(req,res);
 });
+
 router.post('/goods_state_change',(req,res)=>{
     adminService.goodsStateChange(req,res);
 });
+
+router.get('/goods_reg_list',(req,res)=>{
+    adminService.goodsRegList(req,res);
+});
+
+router.post('/goods_reg_state_change',(req,res)=>{
+    adminService.goodsRegStateChange(req,res);
+})
+
 module.exports = router;
 
