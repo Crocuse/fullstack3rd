@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import { SERVER_URL } from "../../config/server_url";
 import io from "socket.io-client";
+import { useSelector } from "react-redux";
 
 function AuctionAlarm() {
+    const loginedId = useSelector(state => state.loginedInfos.loginedId.loginedId);
 
     useEffect(() => {
         const socket = io(`${SERVER_URL.SERVER_URL()}`);
@@ -10,10 +12,7 @@ function AuctionAlarm() {
         socket.on('connect', () => {
             console.log('connected to server성공 !!!');
         });
-
-        socket.on('disconnect', () => {
-            console.log('disconnected from server');
-        });
+        socket.emit('overbidding', { loginedId });
 
     }, []);
 
