@@ -65,6 +65,14 @@ router.post('/get_my_sells', (req, res) => {
     memberService.getMySells(req, res);
 })
 
+router.post('/get_my_winnigs', (req, res) => {
+    memberService.getMyWinnigs(req, res);
+})
+
+router.post('/get_my_point_history', (req, res) => {
+    memberService.getMyPointHistory(req, res);
+})
+
 router.get('/logout_confirm', (req, res) => {
     console.log('/logout_confirm')
     memberService.logoutConfirm(req, res);

@@ -222,7 +222,12 @@ const memberService = {
     getMyRegistList: (req, res) => {
         let id = req.body.id;
 
-        DB.query('SELECT * FROM TBL_GOODS_REGIST AS GR LEFT JOIN TBL_AUCTION_SCHEDULE AS A ON GR.GR_NO = A.GR_NO WHERE GR.M_ID = ?', [id], (err, list) => {
+        DB.query(`SELECT GR.GR_NO, GR_NAME, GR_PRICE, GR_INFO, GR_APPROVAL, GR_RECEIPT, AS_START_DATE 
+                FROM TBL_GOODS_REGIST AS GR 
+                LEFT JOIN TBL_AUCTION_SCHEDULE AS A ON GR.GR_NO = A.GR_NO 
+                WHERE GR.M_ID = ? 
+                ORDER BY GR.GR_NO DESC`, 
+                [id], (err, list) => {
             if (err) {
                 console.log(err);
                 res.json('error');
@@ -239,9 +244,9 @@ const memberService = {
                 FROM TBL_AUCTION_RESULT AS AR 
                 LEFT JOIN TBL_GOODS_REGIST AS GR ON AR.GR_NO = GR.GR_NO 
                 LEFT JOIN TBL_GOODS_IMG AS GI ON AR.GR_NO = GI.GR_NO
-                WHERE AR.AR_SELL_ID = ?`,
+                WHERE AR.AR_SELL_ID = ?
+                ORDER BY AR.AR_REG_DATE DESC`,
         [id], (err, sells) => {
-            console.log("🚀 ~ sells:", sells)
             if (err) {
                 console.log(err);
                 res.json('error');
@@ -249,6 +254,56 @@ const memberService = {
             }
 
             res.json(sells);
+        })
+    },
+
+    getMyWinnigs: (req, res) => {
+        let id = req.body.id;
+
+        DB.query(`SELECT AR.GR_NO, GR_NAME, GR_PRICE, AR_POINT, AR_REG_DATE
+                    FROM TBL_AUCTION_RESULT AS AR
+                    LEFT JOIN TBL_GOODS_REGIST AS GR ON AR.GR_NO = GR.GR_NO
+                    WHERE AR.AR_BUY_ID = ? AND AR.AR_IS_BID = 1 
+                    ORDER BY AR.AR_REG_DATE DESC`,
+        [id], (err, winnigs) => {
+            if (err) {
+                console.log(err);
+                res.json('error');
+                return;
+            }
+
+            res.json(winnigs);
+        })
+    },
+
+    getMyPointHistory: (req, res) => {
+        let id = req.body.id;
+        let page = req.body.page || 1;
+        let limit = req.body.limit || 10;
+        let offset = (page - 1) * limit;
+
+        DB.query('SELECT * FROM TBL_POINT WHERE M_ID = ? ORDER BY P_REG_DATE DESC LIMIT ? OFFSET ?',
+        [id, limit, offset], (err, history) => {
+            if (err) {
+                console.log(err);
+                res.json('error');
+                return;
+            }
+
+            DB.query('SELECT COUNT(*) AS total FROM TBL_POINT WHERE M_ID = ?',
+            [id], (err, rst) => {
+                if (err) {
+                    console.log(err);
+                    res.json('error');
+                    return;
+                }
+
+                let total = rst[0].total;
+                let totalPages = Math.ceil(total / limit);
+
+                res.json({ history, totalPages });
+            })
+
         })
     },
 

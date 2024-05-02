@@ -50,11 +50,9 @@ function MySells() {
 
             {
                 (sellsList.length === 0) ?
-                <>
-                    <tr>
-                        <td colSpan={7}>판매 내역이 없습니다.</td>
-                    </tr>
-                </>
+                <div className="not_sell">
+                    판매 내역이 없습니다.
+                </div>
                 :
                 <div className="sells_table">
                     <table>
