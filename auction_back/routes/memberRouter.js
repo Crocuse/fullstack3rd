@@ -61,6 +61,10 @@ router.post('/get_my_regist_list', (req, res) => {
     memberService.getMyRegistList(req, res);
 })
 
+router.post('/get_my_sells', (req, res) => {
+    memberService.getMySells(req, res);
+})
+
 router.get('/logout_confirm', (req, res) => {
     console.log('/logout_confirm')
     memberService.logoutConfirm(req, res);

@@ -228,9 +228,27 @@ const memberService = {
                 res.json('error');
                 return;
             }
-            console.log("🚀 ~ DB.query ~ list:", list)
-
             res.json(list)
+        })
+    },
+
+    getMySells: (req, res) => {
+        let id = req.body.id;
+
+        DB.query(`SELECT AR.AR_IS_BID, AR.AR_POINT, AR.AR_REG_DATE, GR.GR_NAME, GR.GR_PRICE, GI.GI_NAME
+                FROM TBL_AUCTION_RESULT AS AR 
+                LEFT JOIN TBL_GOODS_REGIST AS GR ON AR.GR_NO = GR.GR_NO 
+                LEFT JOIN TBL_GOODS_IMG AS GI ON AR.GR_NO = GI.GR_NO
+                WHERE AR.AR_SELL_ID = ?`,
+        [id], (err, sells) => {
+            console.log("🚀 ~ sells:", sells)
+            if (err) {
+                console.log(err);
+                res.json('error');
+                return;
+            }
+
+            res.json(sells);
         })
     },
 
