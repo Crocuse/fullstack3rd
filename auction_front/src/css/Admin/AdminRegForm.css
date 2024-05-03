@@ -1,0 +1,109 @@
+.admin_reg_wrap {
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 50px auto;
+    max-width: 400px;
+    padding: 40px;
+    width: 100%;
+  }
+  
+  .admin_reg_wrap h2 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+  
+  .admin_reg_wrap .input_wrap {
+    margin-bottom: 20px;
+  }
+  
+  .admin_reg_wrap label {
+    color: #333;
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .admin_reg_wrap input[type='text'],
+  .admin_reg_wrap input[type='password'],
+  .admin_reg_wrap input[type='number'],
+  .admin_reg_wrap select {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #333;
+    font-size: 14px;
+    padding: 10px;
+    width: 100%;
+  }
+  .admin_reg_wrap .input_wrap input[name="a_id"]{
+    width: 62%;
+  }
+  .admin_reg_wrap .input_wrap input[name="mail1"],
+  .admin_reg_wrap .input_wrap input[name="mail2"]{
+    width: 48%;
+  }
+  .admin_reg_wrap .input_wrap select[name="phone1"],
+  .admin_reg_wrap .input_wrap input[name="phone2"],
+  .admin_reg_wrap .input_wrap input[name="phone3"] {
+    width: 32%;
+  }
+  .admin_reg_wrap input[type='button'] {
+    background-color: #1e88e5;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 10px;
+    padding: 10px 15px;
+  }
+  
+  .admin_reg_wrap .check_msg_wrap {
+    margin-top: 5px;
+  }
+  
+  .admin_reg_wrap #id_check_false,
+  .admin_reg_wrap #pw_check_true{
+    color: rgb(228, 69, 7);
+  }
+  
+  .admin_reg_wrap #id_check_true,
+
+  .admin_reg_wrap #pw_check_false {
+    color: rgb(0, 173, 135);
+  }
+  
+  .admin_reg_wrap .btns {
+    margin-top: 40px;
+    text-align: center;
+  }
+  
+  .admin_reg_wrap .btns button {
+    background-color: #1e88e5;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 5px;
+    padding: 15px 30px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .admin_reg_wrap .btns .reset_btn {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    color: #333;
+  }
+  
+  .admin_reg_wrap .btns button:hover {
+    background-color: #1565c0;
+  }
+  
+  .admin_reg_wrap .btns .reset_btn:hover {
+    background-color: #eee;
+  }

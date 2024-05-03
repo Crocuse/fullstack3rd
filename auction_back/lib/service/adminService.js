@@ -346,12 +346,12 @@ const adminService = {
           AR.AR_POINT,
           AR.AR_REG_DATE,
           AR.AR_MOD_DATE,
-          ASC.AS_LOCATION_NUM,
+          TAS.AS_LOCATION_NUM,
           GR.GR_NAME
         FROM
           TBL_AUCTION_RESULT AR
               JOIN
-          TBL_AUCTION_SCHEDULE ASC ON AR.GR_NO = ASC.GR_NO
+          TBL_AUCTION_SCHEDULE TAS ON AR.GR_NO = TAS.GR_NO
               JOIN
           TBL_GOODS_REGIST GR ON AR.GR_NO = GR.GR_NO
       `;

@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { SERVER_URL } from "../../config/server_url";
 import axios from "axios";
-import { data } from "jquery";
-import '../../css/Admin/modify_modal.css'
+import '../../css/Admin/modify_modal.css';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { sessionCheck } from "../../util/sessionCheck";
+import '../../css/Admin/AdminMgt.css';
 function AdminMgt() {
-  
+    
+    const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);   
+    const navigate = useNavigate();
 
     //hook
     const [adminList, setAdminList] = useState([]);
@@ -14,9 +19,9 @@ function AdminMgt() {
 
     useEffect(() => {
 
-
+        sessionCheck(sessionId, navigate);
         axios_admin_list();
-    }, []);
+    }, [sessionId, navigate]);
 
     //function
 
@@ -134,24 +139,22 @@ function AdminMgt() {
     
 
     return (
-
-        <article>
-            <div>ADMIN MANAGEMENT</div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>관리자 아이디</th>
-                            <th>관리자 이름</th>
-                            <th>관리자 전화번호</th>
-                            <th>관리자 이메일</th>
-                            <th>관리자 등록일</th>
-                            <th>관리자 수정일</th>
-                            <th>수정</th>
-                            <th>탈퇴</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    
+        <article className="admin-mgt">
+            <div className="admin-mgt-title">ADMIN MANAGEMENT</div>
+            <table className="admin-mgt-table">
+                <thead>
+                    <tr>
+                        <th>관리자 아이디</th>
+                        <th>관리자 이름</th>
+                        <th>관리자 전화번호</th>
+                        <th>관리자 이메일</th>
+                        <th>관리자 등록일</th>
+                        <th>관리자 수정일</th>
+                        <th>수정</th>
+                        <th>탈퇴</th>
+                    </tr>
+                </thead>
+                <tbody>
                     {adminList.filter((admin) => admin.A_ID !== "super")
                               .map((admin) => (
                                 <tr key={admin.A_ID}>
@@ -162,71 +165,74 @@ function AdminMgt() {
                                     <td>{admin.A_REG_DATE}</td>
                                     <td>{admin.A_MOD_DATE}</td>
                                     <td>
-                                    <button onClick={() => adminModifyBtn(admin.A_ID)}>수정</button>
+                                        <button className="admin-mgt-button" onClick={() => adminModifyBtn(admin.A_ID)}>수정</button>
                                     </td>
                                     <td>
-                                    <button onClick={() => adminDeleteBtn(admin.A_ID)}>탈퇴</button>
+                                        <button className="admin-mgt-button" onClick={() => adminDeleteBtn(admin.A_ID)}>탈퇴</button>
                                     </td>
                                 </tr>
-                                ))}
-                    </tbody>
-                </table>
+                              ))}
+                </tbody>
+            </table>
 
-                {modalVisible && (
-                    <div className="modal">
-                        <div className="modal-content">
-                            <h2>관리자 정보 수정</h2>
-                            <form name="admin_modify_form" method="post">
-                                ID<br/>
-                                <input type="text" name="a_id" defaultValue={selectedAdmin.A_ID} readOnly/><br/>
-                                이름<br/>
-                                <input type="text" name="a_name" defaultValue={selectedAdmin.A_NAME}/><br/>
-                                연락처<br/>
-                                <select name="phone1" defaultValue={selectedAdmin.phone1}>
-                                    <option defaultValue="010">010</option>
-                                    <option defaultValue="011">011</option>
-                                    <option defaultValue="016">016</option>
-                                    <option defaultValue="017">017</option>
-                                    <option defaultValue="018">018</option>
-                                    <option defaultValue="019">019</option>
-                                </select>
-                                -
-                                <input
-                                    type="number"
-                                    name="phone2"
-                                    defaultValue={selectedAdmin.phone2}
-                                />
-                                -
-                                <input
-                                    type="number"
-                                    name="phone3"
-                                    defaultValue={selectedAdmin.phone3}
-                                />
-                                <br />
-                                이메일
-                                <br />
-                                <input
-                                    type="text"
-                                    name="mail1"
-                                    defaultValue={selectedAdmin.mail1}
-                                />
-                                @
-                                <input
-                                    type="text"
-                                    name="mail2"
-                                    defaultValue={selectedAdmin.mail2}
-                                />
-                                    <br />
-                                <button onClick={closeModal}>닫기</button>
-                                <button type="reset">초기화</button>
-                                <button onClick={adminModifyConfirmBtnClick}>수정</button> 
-                            </form>
-                            
-                        </div>
+            {modalVisible && (
+                <div className="admin-mgt-modal">
+                    <div className="admin-mgt-modal-content">
+                        <h2 className="admin-mgt-modal-title">관리자 정보 수정</h2>
+                        <form className="admin-mgt-modal-form" name="admin_modify_form" method="post">
+                            ID<br/>
+                            <input className="admin-mgt-modal-input" type="text" name="a_id" defaultValue={selectedAdmin.A_ID} readOnly/><br/>
+                            이름<br/>
+                            <input className="admin-mgt-modal-input" type="text" name="a_name" defaultValue={selectedAdmin.A_NAME}/><br/>
+                            연락처<br/>
+                            <select className="admin-mgt-modal-select" name="phone1" defaultValue={selectedAdmin.phone1}>
+                                <option defaultValue="010">010</option>
+                                <option defaultValue="011">011</option>
+                                <option defaultValue="016">016</option>
+                                <option defaultValue="017">017</option>
+                                <option defaultValue="018">018</option>
+                                <option defaultValue="019">019</option>
+                            </select>
+                            -
+                            <input
+                                className="admin-mgt-modal-input"
+                                type="number"
+                                name="phone2"
+                                defaultValue={selectedAdmin.phone2}
+                            />
+                            -
+                            <input
+                                className="admin-mgt-modal-input"
+                                type="number"
+                                name="phone3"
+                                defaultValue={selectedAdmin.phone3}
+                            />
+                            <br />
+                            이메일
+                            <br />
+                            <input
+                                className="admin-mgt-modal-input"
+                                type="text"
+                                name="mail1"
+                                defaultValue={selectedAdmin.mail1}
+                            />
+                            @
+                            <input
+                                className="admin-mgt-modal-input"
+                                type="text"
+                                name="mail2"
+                                defaultValue={selectedAdmin.mail2}
+                            />
+                            <br />
+                            <button className="admin-mgt-modal-button" onClick={closeModal}>닫기</button>
+                            <button className="admin-mgt-modal-button" type="reset">초기화</button>
+                            <button className="admin-mgt-modal-button" onClick={adminModifyConfirmBtnClick}>수정</button> 
+                        </form>
                     </div>
-                )}
+                </div>
+            )}
         </article>
     );
-    }
+}
 
 export default AdminMgt;

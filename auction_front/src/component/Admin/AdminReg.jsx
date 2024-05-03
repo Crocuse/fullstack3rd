@@ -1,16 +1,26 @@
-import React, { useState } from "react"
+import React, { useState,useEffect } from "react"
 import $ from "jquery";
 import { SERVER_URL } from "../../config/server_url";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import { sessionCheck } from "../../util/sessionCheck";
+import '../../css/Admin/AdminRegForm.css';
 
 function AdminReg() {
+
+    const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
 
     // Hook -----------------------------------------------------------------------------------------------------------
     const [IDCehck, setIDCehck] = useState(false);
     const [mailCheck, setMailCheck] = useState(false);
 
     const navigate = useNavigate();
+   
+    useEffect(() => {
+        sessionCheck(sessionId, navigate);
+
+    }, [sessionId, navigate]);
 
     // Handler -----------------------------------------------------------------------------------------------------------
     const IdChangeHandler = () => {
@@ -30,7 +40,7 @@ function AdminReg() {
         let pw_check = $('input[name="a_pw_check"]').val();
 
         if (pw == pw_check) {
-            $('#pw_check_false').text('비밀번호가 일치합니다.');
+            $('#pw_check_false').text(`비밀번호가 일치합니다.`);
             $('#pw_check_true').text('');
         }
         else {
@@ -154,42 +164,42 @@ function AdminReg() {
             <form method="post" name="admin_reg_form">
 
                 <div className="input_wrap">
-                    <p>관리자 아이디</p>
-                    <input type="text" name="a_id" placeholder="아이디를 입력해주세요." onChange={IdChangeHandler}/>
+                    <label htmlFor="a_id">관리자 아이디</label><br/>
+                    <input type="text" id="a_id" name="a_id" placeholder="아이디를 입력해주세요." onChange={IdChangeHandler}/>
                     <input type="button" value={"아이디 중복 검사"} onClick={IdCheckbtnClick}/>
-                    <span id="id_check_false"></span>
-                    <span id="id_check_true"></span>
+                    <span id="id_check_false" className="check_msg"></span>
+                    <span id="id_check_true" className="check_msg"></span>
                 </div>
 
                 <div className="input_wrap">
-                    <p>비밀번호</p>
-                    <input type="password" name="a_pw" placeholder="비밀번호를 입력해주세요." onChange={pwChangehandler}/>
+                    <label htmlFor="a_pw">비밀번호</label><br/>
+                    <input type="password" id="a_pw" name="a_pw" placeholder="비밀번호를 입력해주세요." onChange={pwChangehandler}/>
                 </div>
 
                 <div className="input_wrap">
-                    <p>비밀번호 확인</p>
-                    <input type="password" name="a_pw_check" placeholder="비밀번호 확인을 입력해주세요." onChange={pwChangehandler}/>
+                    <label htmlFor="a_pw_check">비밀번호 확인</label><br/>
+                    <input type="password" id="a_pw_check" name="a_pw_check" placeholder="비밀번호 확인을 입력해주세요." onChange={pwChangehandler}/>
                 </div>
 
-                <div>
-                    <span id="pw_check_false"></span>
-                    <span id="pw_check_true"></span>
-                </div>
-
-                <div className="input_wrap">
-                    <p>관리자 이름</p>
-                    <input type="text" name="a_name" placeholder="관리자 이름을 입력하세요"/>
+                <div className="check_msg_wrap">
+                    <span id="pw_check_false" className="check_msg"></span>
+                    <span id="pw_check_true" className="check_msg"></span>
                 </div>
 
                 <div className="input_wrap">
-                    <p>관리자 이메일</p>
+                    <label htmlFor="a_name">관리자 이름</label><br/>
+                    <input type="text" id="a_name" name="a_name" placeholder="관리자 이름을 입력하세요"/>
+                </div>
+
+                <div className="input_wrap">
+                    <label>관리자 이메일</label><br/>
                     <input type="text" name="mail1" />
                     @
                     <input type="text" name="mail2" />
                 </div>
                 
                 <div className="input_wrap">
-                    <p>관리자 연락처</p>
+                    <label>관리자 연락처</label><br/>
                     <select name="phone1">
                         <option value="010">010</option>
                         <option value="011">011</option>
@@ -205,8 +215,8 @@ function AdminReg() {
                 </div>
 
                 <div className="btns">
-                    <input type="button" value="어드민등록" onClick={adminRegBtnClick}/>
-                    <input type="reset" value="초기화" />
+                    <button type="button" className="reg_btn" onClick={adminRegBtnClick}>어드민등록</button>
+                    <button type="reset" className="reset_btn">초기화</button>
                 </div>
                 
             </form>
