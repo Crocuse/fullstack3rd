@@ -33,7 +33,8 @@ const auctionService = {
         });
     },
     currentList : (req, res) => {
-        DB.query(`SELECT * FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE = DATE_ADD(CURDATE(), INTERVAL 1 DAY)`,
+        DB.query(`SELECT * FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE = '2024-05-03'`,
+        //DB.query(`SELECT * FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE = DATE_ADD(CURDATE(),)`,
         [],
         (error, list) => {
             if(error){
