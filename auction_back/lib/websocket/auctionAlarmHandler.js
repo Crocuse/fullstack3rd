@@ -1,13 +1,7 @@
-const socketIO = require('socket.io');
+const auctionAlarmHandler = require('./initializeSocket');
 const alarmService = require('../service/alarmService');
 
-function AuctionAlarm(server) {
-    const io = socketIO(server, {
-        cors: {
-            origin: "http://localhost:3000",
-            credentials: true
-        }
-    });
+function auctionAlarmHandler(io) {
 
     io.on('connection', socket => {
         console.log("websocket connected !!!! ");
@@ -22,7 +16,6 @@ function AuctionAlarm(server) {
         });
     });
 
-
 }
 
-module.exports = AuctionAlarm;
+module.exports = auctionAlarmHandler;
