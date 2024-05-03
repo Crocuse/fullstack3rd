@@ -49,25 +49,20 @@ module.exports = {
                                 res.json('success');
                             }
                         })
-                }
-
-                if (info.length > 0) {
-                    DB.query(`UPDATE TBL_POINT
-                    SET 
-                        P_CHANGE = ?,
-                        P_HISTORY = ?,
-                        P_CURRENT = P_CURRENT + ?,
-                        P_REG_DATE = NOW()
-                    WHERE M_ID = ?`,
-                        [chargeAmount, history, chargeAmount, id],
+                } else {
+                    const currentPoint = info[0].P_CURRENT + chargeAmount;
+                    DB.query(
+                        `INSERT INTO TBL_POINT (M_ID, P_CHANGE, P_HISTORY, P_CURRENT, P_REG_DATE) 
+                         VALUES(?, ?, ?, ?, NOW())`,
+                        [id, chargeAmount, history, currentPoint],
                         (err, result) => {
                             if (err) {
                                 res.json(err);
-
                             } else {
                                 res.json('success');
                             }
-                        })
+                        }
+                    );
                 }
             })
 
