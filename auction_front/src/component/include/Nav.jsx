@@ -52,7 +52,6 @@ function Nav() {
                 <Link to="/admin/auction_goods_reg">경매 물품 등록</Link>
                 <Link to="/admin/auction_goods_mgt">경매 신청 물품 관리</Link>
                 <Link to="/admin/auction_result">경매 결과 조회</Link>
-                <Link to="/admin/recive_goods_mgt">수령 대기 물품 관리</Link>
                 <Link to="/admin/sales_mgt">매출 관리</Link>
             </>;
 
@@ -69,7 +68,6 @@ function Nav() {
                 <Link to="/admin/auction_goods_reg">경매 물품 등록</Link>
                 <Link to="/admin/auction_goods_mgt">경매 신청 물품 관리</Link>
                 <Link to="/admin/auction_result">경매 결과 조회</Link>
-                <Link to="/admin/recive_goods_mgt">수령 대기 물품 관리</Link>
                 <Link to="/admin/sales_mgt">매출 관리</Link>
             </>;
 

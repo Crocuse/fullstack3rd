@@ -1,13 +1,20 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { SERVER_URL } from "../../config/server_url";
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { sessionCheck } from "../../util/sessionCheck";
 
 function AuctionResult() {
+  const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);   
+  const navigate = useNavigate();
+  
   const [resultList, setResultList] = useState([]);
 
-  useEffect(() => {
+  useEffect(() => { 
+    sessionCheck(sessionId, navigate);
     axios_auction_result_list();
-  }, []);
+  }, [sessionId, navigate]);
 
   const reBidAlert = (no,id) =>{
     let confirm = window.confirm(`판매자 ${id} 에게 재경매 여부 알림을 보내시겠습니까?`);

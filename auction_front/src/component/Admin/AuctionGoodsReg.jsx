@@ -1,18 +1,24 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react"
 import { SERVER_URL } from "../../config/server_url";
-
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { sessionCheck } from "../../util/sessionCheck";
 
 function AuctionGoodsReg() {
     
+    const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);   
+    const navigate = useNavigate();
+
     const [goodsRegList, setGoodsRegList] = useState([]);
     const [goodsState, setGoodsState] = useState(false);
     const [selectedGoods, setSelectedGoods] = useState(null);
 
     useEffect(()=>{
+        sessionCheck(sessionId, navigate);
         axios_goods_reg_list();
         console.log(goodsState);
-    },[])
+    },[sessionId, navigate])
 
     function getTodayDate() {
         const today = new Date();

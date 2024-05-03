@@ -1,8 +1,16 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { SERVER_URL } from "../../config/server_url";
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { sessionCheck } from "../../util/sessionCheck";
 
 function AuctionGoodsMgt() {
+
+  const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
+
+  const navigate = useNavigate();
+
   const [goodsList, setGoodsList] = useState([]);
   const [goodsState, setGoodsState] = useState(false);
   const [selectedGoods, setSelectedGoods] = useState(null);
@@ -18,8 +26,9 @@ function AuctionGoodsMgt() {
   const [endDate, setEndDate] = useState("");
 
   useEffect(() => {
+    sessionCheck(sessionId, navigate);
     axios_goods_list();
-  }, []);
+  },[sessionId, navigate]);
 
 
   const goodsStateclickBtn = (goods) => {
