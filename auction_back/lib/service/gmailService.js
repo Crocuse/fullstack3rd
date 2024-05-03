@@ -4,10 +4,6 @@ const senderInfo = require('../config/mailInfo.json');
 const mailSender = {
     // 메일발송 함수
     sendGmail: function (toEmail, subject, htmlContent) {
-        console.log('🚀 ~ senderInfo.gmail.email_service:', senderInfo.gmail.email_service);
-        console.log('🚀 ~ senderInfo.pass:', senderInfo.pass);
-        console.log('🚀 ~ senderInfo.user:', senderInfo.user);
-
         let transporter = nodemailer.createTransport({
             service: senderInfo.gmail.email_service, // 메일 보내는 곳
             auth: {
@@ -18,7 +14,7 @@ const mailSender = {
 
         // 메일 옵션
         let mailOptions = {
-            from: senderInfo.user, // 보내는 메일의 주소
+            from: '"비드버드" <' + senderInfo.gmail.user + '>', // 보내는 메일의 주소
             to: toEmail, // 수신할 이메일
             subject: subject, // 메일 제목
             html: htmlContent, // 메일 내용 (HTML 코드)

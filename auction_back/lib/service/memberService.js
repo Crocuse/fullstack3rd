@@ -49,7 +49,7 @@ const memberService = {
     mailCodeSend: (req, res) => {
         let mail = req.body.mail;
         let subject = `[비드버드] 회원가입 이메일 인증 코드입니다.`;
-        let code = shortId.generate();
+        let code = shortId.generate().slice(0, 6);
 
         let html = `
             <div
