@@ -4,6 +4,7 @@ import { SERVER_URL } from "../../config/server_url";
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { sessionCheck } from "../../util/sessionCheck";
+import '../../css/Admin/AuctionGoodsReg.css';
 
 function AuctionGoodsReg() {
     
@@ -53,6 +54,8 @@ function AuctionGoodsReg() {
             const asState = document.querySelector(`select[name="goods_state_${gr_no}"]`).value;
             const startDate = document.querySelector(`input[name="as_start_date_${gr_no}"]`).value;
 
+        
+
             if(startDate <= getTodayDate()){
                 alert('당일이나 오늘 이전으로는 등록할 수 없습니다.');
                 return;
@@ -86,33 +89,35 @@ function AuctionGoodsReg() {
 
     return (
         
-        <article>
-            <div>AuctionGoodsReg</div>    
+        <article className="auction-goods-reg">
+            <div className="auction-goods-reg-title">AuctionGoodsReg</div>    
 
-            <table>
+            <table className="auction-goods-reg-table">
                 <thead>
-                    <th>상품번호</th>
-                    <th>상품명</th>
-                    <th>시작가격</th>
-                    <th>등록자ID</th>
-                    <th>대기상태</th>
-                    <th>자리위치번호</th>
-                    <th>경매시작날</th>
-                    <th>경매등록</th>
+                    <tr>
+                        <th>상품번호</th>
+                        <th>등록자ID</th>
+                        <th>상품명</th>
+                        <th>시작가격</th>
+                        <th>대기상태</th>
+                        <th>자리위치번호</th>
+                        <th>경매시작날</th>
+                        <th>경매등록</th>
+                    </tr>
                 </thead>
                 <tbody>
                     {goodsRegList.length == 0 ? (
                         <tr>
-                        <td colSpan="8">등록 대기중인 상품이 없습니다.</td>
+                        <td colSpan="8" className="auction-goods-reg-empty">등록 대기중인 상품이 없습니다.</td>
                         </tr>
                     ) : (
                         goodsRegList.map((goods) => (
-                        <tr key={goods.GR_NO}>
+                        <tr key={goods.GR_NO} className="auction-goods-reg-row">
                             <td>{goods.GR_NO}</td>
+                            <td>{goods.M_ID}</td>
                             <td>{goods.GR_NAME}</td>
                             <td>{goods.GR_PRICE}</td>
-                            <td>{goods.M_ID}</td>
-                            <td>
+                            <td className="auction-goods-reg-status">
                                 {goodsState && selectedGoods.GR_NO === goods.GR_NO ?
                                 
                                 
@@ -146,7 +151,7 @@ function AuctionGoodsReg() {
                                 }
 
                             </td>
-                            <td>
+                            <td className="auction-goods-reg-location">
                                 {goodsState && selectedGoods.GR_NO === goods.GR_NO ?
                                 
                                 <select name={`goods_location_num_${goods.GR_NO}`} defaultValue={goods.AS_LOCATION_NUM}>
@@ -172,7 +177,7 @@ function AuctionGoodsReg() {
                                 }
                             </td>
 
-                            <td>
+                            <td className="auction-goods-reg-date">
                                 {goodsState && selectedGoods.GR_NO === goods.GR_NO ?
                                 
                                     <input type="date" name={`as_start_date_${goods.GR_NO}`} defaultValue={goods.AS_START_DATE}/>
@@ -184,7 +189,7 @@ function AuctionGoodsReg() {
                                 )}
                                 </td>
                             <td>
-                                <button onClick={()=>goodsStateclickBtn(goods)}>등록수정</button>
+                                <button className="auction-goods-reg-button" onClick={()=>goodsStateclickBtn(goods)}>등록수정</button>
                             </td>
                         </tr>
                         ))
