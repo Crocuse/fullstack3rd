@@ -33,13 +33,14 @@ const auctionService = {
         });
     },
     currentList : (req, res) => {
-        DB.query(`SELECT * FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE = '2024-05-03'`,
-        //DB.query(`SELECT * FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE = DATE_ADD(CURDATE(),)`,
+        DB.query(`SELECT * FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE = '2024-05-04' ORDER BY AS_LOCATION_NUM ASC`,
+        //DB.query(`SELECT * FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE = DATE_ADD(CURDATE())`,
         [],
         (error, list) => {
             if(error){
                 console.log(error);
             } else {
+                console.log(list);
                 if(list.length > 0) {
                     res.json(list);
                 } else {
@@ -50,13 +51,13 @@ const auctionService = {
     },
     listProduct : (req, res) => {
         let grNo = req.query.grNo;
-        let img = [];
         DB.query(`SELECT * FROM TBL_GOODS_REGIST WHERE GR_NO = ?`, 
         [grNo],
         (error, product) => {
             if(error) {
                 console.log(error);
             } else {
+                console.log(product);
                 DB.query(`SELECT GI_NAME FROM TBL_GOODS_IMG WHERE GR_NO = ?`,
                 [grNo],
                 (error, imgs) => {
@@ -64,7 +65,7 @@ const auctionService = {
                         console.log(error);
                     } 
                     const data = {
-                        ...product[0],
+                        ...product[0],  
                         imgs: imgs.map(item => item.GI_NAME)
                     };
                     res.json(data);
