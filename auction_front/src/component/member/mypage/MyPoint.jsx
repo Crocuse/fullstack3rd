@@ -15,14 +15,15 @@ function MyPoint() {
     const [pointHistory, setPointHistory] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    const [totlaPoint, setTotalPoint] = useState(0);
 
     useEffect(() => {
         sessionCheck(sessionId, navigate);
-        axois_getMyPointHistory(1);
-    });
+        axois_getMyPointHistory(currentPage);
+    }, [sessionId, navigate, currentPage]);
 
     // Handler -----------------------------------------------------------------------------------------------------------
-    function handlePageChange(page) {
+    function pageChangeHandler(page) {
         setCurrentPage(page);
         axois_getMyPointHistory(page);
     }
@@ -43,6 +44,7 @@ function MyPoint() {
             } else {
                 setPointHistory(response.data.history || []);
                 setTotalPages(response.data.totalPages);
+                setTotalPoint(response.data.history[0].P_CURRENT || 0);
             }
         } catch (error) {
             console.log(error);
@@ -59,7 +61,7 @@ function MyPoint() {
 
             <div className="current_table">
                 현재 내 포인트
-                <span>{pointHistory.length > 0 ? pointHistory[0].P_CURRENT.toLocaleString() : 0}</span>
+                <span>{totlaPoint.toLocaleString()}</span>
             </div>
 
             {pointHistory.length === 0 ? (
@@ -91,7 +93,7 @@ function MyPoint() {
 
                     <div className="pagination">
                         <div className="pre_page">
-                            <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+                            <button onClick={() => pageChangeHandler(currentPage - 1)} disabled={currentPage === 1}>
                                 <FontAwesomeIcon icon="fa-solid fa-caret-left" />
                             </button>
                         </div>
@@ -99,7 +101,7 @@ function MyPoint() {
                             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                                 <button
                                     key={page}
-                                    onClick={() => handlePageChange(page)}
+                                    onClick={() => pageChangeHandler(page)}
                                     disabled={currentPage === page}
                                 >
                                     {page}
@@ -108,7 +110,7 @@ function MyPoint() {
                         </div>
                         <div className="next_page">
                             <button
-                                onClick={() => handlePageChange(currentPage + 1)}
+                                onClick={() => pageChangeHandler(currentPage + 1)}
                                 disabled={currentPage === totalPages}
                             >
                                 <FontAwesomeIcon icon="fa-solid fa-caret-right" />
