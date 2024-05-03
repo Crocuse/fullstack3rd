@@ -4,3 +4,20 @@ td.product img {
     min-width: 200px;
     min-height: 200px;
 }
+
+.table-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  table {
+    border-collapse: collapse;
+  }
+  
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }

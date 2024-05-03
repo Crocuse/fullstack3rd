@@ -5,9 +5,12 @@ import '../../css/Auction/CurrentList.css'
 
 function CurrentList() {
     const [auctionProduct, setAuctionProduct] = useState([]);
+    const [test, setTest] = useState([]);
     
     useEffect(()=> {
-        getTodayAuctionList();
+        //getTodayAuctionList();
+        for(let i = 9; i<18; i++)
+            setTest(prev=>[...prev, i]);
     }, [])
     
     async function getTodayAuctionProduct(grNo) {
@@ -37,7 +40,6 @@ function CurrentList() {
             else{
                 for(let i = 0; i < response.data.length; i++)
                     getTodayAuctionProduct(response.data[i].GR_NO);
-                sortProduct();
             }
                 
         } catch(error) {
@@ -54,33 +56,44 @@ function CurrentList() {
 
     return (
         <div className="current_wrap">
-    <table>
-        <tbody>
-            {auctionProduct.map((product, idx) => (
-                idx % 3 === 0 && idx !== 0 ?
-                <tr>
-                    <td className="product"> 
-                        <button type="button" onClick={productBtnClickHandler}>
-                            <img src={`${SERVER_URL.SERVER_URL()}/goodsImg/${product.imgs[0]}`} alt={product.GR_NAME} /> 
-                        </button><br />                 
-                        {product.GR_NAME}<br />
-                        {product.GR_PRICE} 원
-                    </td>
-                </tr>
-                :
-                <>
-                    <td className="product">
-                        <button type="button" onClick={productBtnClickHandler}>
-                            <img src={`${SERVER_URL.SERVER_URL()}/goodsImg/${product.imgs[0]}`} alt={product.GR_NAME} />   
-                        </button><br /> 
-                        {product.GR_NAME}<br />
-                        {product.GR_PRICE} 원
-                    </td>
-                </>
-            ))}
-        </tbody>
-    </table>
+            <table>
+                <tbody>
+                    {[...Array(3)].map((_, rowIdx) => (
+                        <tr key={rowIdx}>
+                            {[...Array(3)].map((_, colIdx) => {
+                                const idx = rowIdx * 3 + colIdx;
+                                return (
+                                    <td key={colIdx} className="product">
+                                    {idx < auctionProduct.length ? auctionProduct[idx] : ''}
+                                    </td>
+                                );
+                            })}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 }
 export default CurrentList;
+
+// idx % 3 === 0 && idx !== 0 ?
+                // <tr>
+                //     <td className="product"> 
+                //         <button type="button" onClick={productBtnClickHandler}>
+                //             <img src={`${SERVER_URL.SERVER_URL()}/goodsImg/${product.imgs[0]}`} alt={product.GR_NAME} /> 
+                //         </button><br />                 
+                //         {product.GR_NAME}<br />
+                //         {product.GR_PRICE} 원
+                //     </td>
+                // </tr>
+                // :
+                // <tr>
+                //     <td className="product">
+                //         <button type="button" onClick={productBtnClickHandler}>
+                //             <img src={`${SERVER_URL.SERVER_URL()}/goodsImg/${product.imgs[0]}`} alt={product.GR_NAME} />   
+                //         </button><br /> 
+                //         {product.GR_NAME}<br />
+                //         {product.GR_PRICE} 원
+                //     </td>
+                // </tr>
