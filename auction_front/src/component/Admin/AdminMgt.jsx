@@ -224,9 +224,12 @@ function AdminMgt() {
                                 defaultValue={selectedAdmin.mail2}
                             />
                             <br />
-                            <button className="admin-mgt-modal-button" onClick={closeModal}>닫기</button>
-                            <button className="admin-mgt-modal-button" type="reset">초기화</button>
-                            <button className="admin-mgt-modal-button" onClick={adminModifyConfirmBtnClick}>수정</button> 
+
+                            <div className="admin-mgt-modal-buttons">
+                                <button className="admin-mgt-modal-button" onClick={adminModifyConfirmBtnClick}>수정</button>
+                                <button className="admin-mgt-modal-button" type="reset">초기화</button>
+                                <button className="admin-mgt-modal-button" onClick={closeModal}>닫기</button>
+                            </div>
                         </form>
                     </div>
                 </div>

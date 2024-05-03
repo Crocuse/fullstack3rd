@@ -4,6 +4,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { sessionCheck } from "../../util/sessionCheck";
+import '../../css/Admin/UserMgt.css';
 
 function UserMgt() {
   
@@ -177,107 +178,91 @@ function UserMgt() {
     }
 
   return (
-    <article>
-      <div>MEMBER MANAGEMENT</div>
-      <table>
-        <thead>
-          <tr>
-            <th>회원 아이디</th>
-            <th>회원 이메일</th>
-            <th>회원 전화번호</th>
-            <th>회원 주소</th>
-            <th>회원 등록일</th>
-            <th>회원 수정일</th>
-            <th>수정</th>
-            <th>탈퇴</th>
-          </tr>
-        </thead>
-        <tbody>
-            {memberList.map((member) => (
-                <tr key={member.M_ID}>
-                <td>{member.M_ID}</td>
-                <td>{member.M_MAIL}</td>
-                <td>{member.M_PHONE}</td>
-                <td>{member.M_ADDR.split('/').join(' ')}</td>
-                <td>{member.M_REG_DATE}</td>
-                <td>{member.M_MOD_DATE}</td>
-                <td>
-                    <button onClick={()=>memberModifyBtn(member.M_ID)}>수정</button>
-                </td>
-                <td>
-                    <button onClick={()=>memberDeleteBtn(member.M_ID)}>탈퇴</button>
-                </td>
-                </tr>
-            ))}
-            </tbody>
-      </table>
-      {modalVisible && (
-                    <div className="modal">
-                        <div className="modal-content">
-                            <h2>유저 정보 수정</h2>
-                            <form name="member_modify_form" method="post">
-                                ID<br/>
-                                <input type="text" name="m_id" defaultValue={selectedMember.M_ID} readOnly/><br/>
-                                
-                                연락처<br/>
-                                <select name="phone1" defaultValue={selectedMember.phone1}>
-                                    <option defaultValue="010">010</option>
-                                    <option defaultValue="011">011</option>
-                                    <option defaultValue="016">016</option>
-                                    <option defaultValue="017">017</option>
-                                    <option defaultValue="018">018</option>
-                                    <option defaultValue="019">019</option>
-                                </select>
-                                -
-                                <input
-                                    type="number"
-                                    name="phone2"
-                                    defaultValue={selectedMember.phone2}
-                                />
-                                -
-                                <input
-                                    type="number"
-                                    name="phone3"
-                                    defaultValue={selectedMember.phone3}
-                                />
-                                <br />
-                                이메일
-                                <br />
-                                <span>{selectedMember.M_SOCIAL_ID ? "소셜로그인한 사람은 MAIL 수정이 불가합니다":""}</span>
-                                <input 
-                                    readOnly={selectedMember.M_SOCIAL_ID ? true : false}
-                                    type="text"
-                                    name="mail1"
-                                    defaultValue={selectedMember.mail1}
-                                />
-                                @
-                                <input
-                                    readOnly={selectedMember.M_SOCIAL_ID ? true : false}
-                                    type="text"
-                                    name="mail2"
-                                    defaultValue={selectedMember.mail2}
-                                />
-                                <br/>
-                                주소
-                                <br />
-                                <input type="text" name="postcode" id="postcode" placeholder="우편번호" defaultValue={selectedMember.addr1}/>
-                                <input type="button" onClick={execDaumPostcode} value="우편번호 찾기" />
-                                <br />
-                                <input type="text" name="roadAddress" id="roadAddress" placeholder="도로명주소" defaultValue={selectedMember.addr2}/>
-                                <span id="guide" style={{ color: "#999", display: "none" }}></span>
-                                <input type="text" name="detailAddress" id="detailAddress" placeholder="상세주소" defaultValue={selectedMember.addr3}/>
-                                <input type="text" name="extraAddress" id="extraAddress" placeholder="참고항목" defaultValue={selectedMember.addr4}/>
-                                <br/>
-
-                                <button onClick={closeModal}>닫기</button>
-                                <button type="reset">초기화</button>
-                                <button onClick={memberModifyConfirmBtnClick}>수정</button> 
-                            </form>
-                            
-                        </div>
-                    </div>
-                )}
-    </article>
+    <article className="user-mgt">
+  <div className="user-mgt-title">MEMBER MANAGEMENT</div>
+  <table className="user-mgt-table">
+    <thead>
+      <tr>
+        <th>회원 아이디</th>
+        <th>회원 이메일</th>
+        <th>회원 전화번호</th>
+        <th>회원 주소</th>
+        <th>회원 등록일</th>
+        <th>회원 수정일</th>
+        <th>수정</th>
+        <th>탈퇴</th>
+      </tr>
+    </thead>
+    <tbody>
+      {memberList.map((member) => (
+        <tr key={member.M_ID}>
+          <td>{member.M_ID}</td>
+          <td>{member.M_MAIL}</td>
+          <td>{member.M_PHONE}</td>
+          <td>{member.M_ADDR.split('/').join(' ')}</td>
+          <td>{member.M_REG_DATE}</td>
+          <td>{member.M_MOD_DATE}</td>
+          <td>
+            <button className="user-mgt-button" onClick={() => memberModifyBtn(member.M_ID)}>수정</button>
+          </td>
+          <td>
+            <button className="user-mgt-button" onClick={() => memberDeleteBtn(member.M_ID)}>탈퇴</button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  {modalVisible && (
+    <div className="user-mgt-modal">
+      <div className="user-mgt-modal-content">
+        <h2 className="user-mgt-modal-title">유저 정보 수정</h2>
+        <form className="user-mgt-modal-form" name="member_modify_form" method="post">
+          <label htmlFor="m_id">ID</label>
+          <input className="user-mgt-modal-input" type="text" name="m_id" id="m_id" defaultValue={selectedMember.M_ID} readOnly />
+          
+          <label>연락처</label>
+          <select className="user-mgt-modal-select" name="phone1" defaultValue={selectedMember.phone1}>
+            <option value="010">010</option>
+            <option value="011">011</option>
+            <option value="016">016</option>
+            <option value="017">017</option>
+            <option value="018">018</option>
+            <option value="019">019</option>
+          </select>
+          -
+          <input className="user-mgt-modal-input" type="number" name="phone2" defaultValue={selectedMember.phone2} />
+          -
+          <input className="user-mgt-modal-input" type="number" name="phone3" defaultValue={selectedMember.phone3} />
+          
+          <label>이메일</label>
+              {selectedMember.M_SOCIAL_ID ? (
+                <>
+                  <span className="user-mgt-modal-social-msg">소셜로그인한 사람은 MAIL 수정이 불가합니다</span>
+                  <br />
+                </>
+              ) : null}
+          <input className="user-mgt-modal-input" readOnly={selectedMember.M_SOCIAL_ID ? true : false} type="text" name="mail1" defaultValue={selectedMember.mail1} />
+          @
+          <input className="user-mgt-modal-input" readOnly={selectedMember.M_SOCIAL_ID ? true : false} type="text" name="mail2" defaultValue={selectedMember.mail2} />
+          
+          <label>주소</label>
+          <input className="user-mgt-modal-input" type="text" name="postcode" id="postcode" placeholder="우편번호" defaultValue={selectedMember.addr1} />
+          <input className="user-mgt-modal-button" type="button" onClick={execDaumPostcode} value="우편번호 찾기" />
+          <input className="user-mgt-modal-input" type="text" name="roadAddress" id="roadAddress" placeholder="도로명주소" defaultValue={selectedMember.addr2} />
+          <span className="user-mgt-modal-guide" id="guide"></span>
+          <input className="user-mgt-modal-input" type="text" name="detailAddress" id="detailAddress" placeholder="상세주소" defaultValue={selectedMember.addr3} />
+          <input className="user-mgt-modal-input" type="text" name="extraAddress" id="extraAddress" placeholder="참고항목" defaultValue={selectedMember.addr4} />
+          
+          <div className="user-mgt-modal-buttons">
+            <button className="user-mgt-modal-button" onClick={memberModifyConfirmBtnClick}>수정</button>
+            <button className="user-mgt-modal-button" type="reset">초기화</button>
+            <button className="user-mgt-modal-button" onClick={closeModal}>닫기</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )}
+</article>
   );
 }
 
