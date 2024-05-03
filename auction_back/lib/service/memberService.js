@@ -326,7 +326,7 @@ const memberService = {
 
                 DB.query(
                     `SELECT COUNT(*) as total
-                FROM TBL_AUCTION_RESULT AS AR
+                    FROM TBL_AUCTION_RESULT AS AR
                     LEFT JOIN TBL_GOODS_REGIST AS GR ON AR.GR_NO = GR.GR_NO
                     WHERE AR.AR_BUY_ID = ? AND AR.AR_IS_BID = 1 `,
                     [id],
@@ -382,6 +382,29 @@ const memberService = {
     logoutConfirm: (req, res) => {
         req.logout(() => {
             res.json('logout');
+        });
+    },
+
+    findId: (req, res) => {
+        let mail = req.query.mail;
+
+        DB.query('SELECT M_ID FROM TBL_MEMBER WHERE M_MAIL = ?', [id], (err, m_id) => {
+            if (err) {
+                console.log(err);
+                res.json('error');
+                return;
+            }
+
+            if (m_id.length === 0) {
+                res.json('not_found');
+                return;
+            }
+
+            if (m_id[0].slice(0, 2) === 'G_') {
+                res.json('google_id');
+            } else if (m_id[0].slice(0, 2) === 'N_') {
+                res.json('naver_id');
+            }
         });
     },
 };
