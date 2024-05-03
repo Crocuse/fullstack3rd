@@ -28,6 +28,10 @@ function PointAddForm() {
         setChargeAmount(e.target.value);
     }
 
+    const resetChargeAmount = () => {
+        setChargeAmount('');
+    }
+
     async function axios_get_my_point() {
         console.log('[POINT ADD FORM.JSX] axios_get_my_point()');
 
@@ -66,10 +70,10 @@ function PointAddForm() {
                             <span className="span_txt">포인트 충전 : </span>
                             <input type="text" className="poin_page_input" value={chargeAmount} onChange={(e) => chargeAmountHandler(e)} placeholder="포인트 충전 금액을 입력하세요." /><span className="span_txt">원</span> <br />
                         </div>
-                     </div>
+                    </div>
                     {/* <CertificationAPI /> */}
                     <div className="btn_wrap">
-                        <PayAPI chargeAmount={chargeAmount} />
+                        <PayAPI chargeAmount={chargeAmount} resetChargeAmount={resetChargeAmount} />
                     </div>
                 </div>
 

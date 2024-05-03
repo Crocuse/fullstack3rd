@@ -4,7 +4,7 @@ import { SERVER_URL } from "../../config/server_url";
 import axios from "axios";
 import "../../css/Point/point.css";
 
-function PayAPI({ chargeAmount }) {
+function PayAPI({ chargeAmount, resetChargeAmount }) {
     const IMP = window.IMP;
     const loginedId = useSelector(state => state.loginedInfos.loginedId.loginedId);
 
@@ -50,6 +50,7 @@ function PayAPI({ chargeAmount }) {
 
             if (response.data === "success") {
                 alert("충전되었습니다.");
+                resetChargeAmount();
             }
         } catch (error) {
             console.log(error);
