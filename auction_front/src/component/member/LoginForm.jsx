@@ -58,6 +58,15 @@ function LoginForm() {
         window.open('/member/find_id', '_blank', `width=${width}, height=${height}, left=${left}, top=${top}`);
     };
 
+    const findPwClick = () => {
+        const width = 400;
+        const height = 550;
+        const left = window.screen.width / 2 - width / 2;
+        const top = window.screen.height / 2 - height / 2;
+
+        window.open('/member/find_pw', '_blank', `width=${width}, height=${height}, left=${left}, top=${top}`);
+    };
+
     // Function -----------------------------------------------------------------------------------------------------------
 
     // Axios -----------------------------------------------------------------------------------------------------------
@@ -132,7 +141,9 @@ function LoginForm() {
                 <a href="#none" onClick={findIdClick}>
                     아이디 찾기
                 </a>
-                <a href="#none">비밀번호 찾기</a>
+                <a href="#none" onClick={findPwClick}>
+                    비밀번호 찾기
+                </a>
             </div>
 
             <div className="social_login_wrap">

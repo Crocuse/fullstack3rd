@@ -5,6 +5,10 @@ import { persistor, store } from './redux/store';
 
 import './App.css';
 
+// 폰트어썸
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+
 import AdminHome from './component/Admin/AdminHome';
 import AdminMgt from './component/Admin/AdminMgt';
 import AdminReg from './component/Admin/AdminReg';
@@ -39,11 +43,8 @@ import PayAPI from './component/point/PayAPI';
 import PointAddForm from './component/point/PointAddForm';
 import KakaoChat from './component/include/KakaoChat';
 import AuctionAlarm from './component/alarm/AuctionAlarm';
-
-// 폰트어썸
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
 import FindId from './component/member/FindId';
+import FindPw from './component/member/FindPw';
 
 function App() {
     // 폰트어썸 적용
@@ -55,7 +56,6 @@ function App() {
                 <PersistGate loading={null} persistor={persistor}>
                     <BrowserRouter>
                         <Routes>
-                            <Route path="/member/find_id" element={<FindId />} />
                             <Route
                                 path="*"
                                 element={
@@ -101,11 +101,14 @@ function App() {
                                             <Route path="/admin/user_mgt" element={<UserMgt />}></Route>
                                             <Route path="/admin/admin_mgt" element={<AdminMgt />}></Route>
                                         </Routes>
+
                                         <Footer />
                                         <KakaoChat />
                                     </>
                                 }
                             />
+                            <Route path="/member/find_id" element={<FindId />} />
+                            <Route path="/member/find_pw" element={<FindPw />} />
                         </Routes>
                     </BrowserRouter>
                 </PersistGate>

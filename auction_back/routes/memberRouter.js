@@ -78,8 +78,15 @@ router.post('/get_my_point_history', (req, res) => {
 });
 
 router.get('/logout_confirm', (req, res) => {
-    console.log('/logout_confirm');
     memberService.logoutConfirm(req, res);
+});
+
+router.post('/find_id', (req, res) => {
+    memberService.findId(req, res);
+});
+
+router.post('/find_pw', (req, res) => {
+    memberService.findPw(req, res);
 });
 
 module.exports = router;

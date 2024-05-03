@@ -429,9 +429,9 @@ const memberService = {
     },
 
     findId: (req, res) => {
-        let mail = req.query.mail;
+        let mail = req.body.mail;
 
-        DB.query('SELECT M_ID FROM TBL_MEMBER WHERE M_MAIL = ?', [id], (err, m_id) => {
+        DB.query('SELECT M_ID FROM TBL_MEMBER WHERE M_MAIL = ?', [mail], (err, m_id) => {
             if (err) {
                 console.log(err);
                 res.json('error');
@@ -440,13 +440,119 @@ const memberService = {
 
             if (m_id.length === 0) {
                 res.json('not_found');
+            } else if (m_id[0].M_ID.slice(0, 2) === 'G_') {
+                res.json('google_id');
+            } else if (m_id[0].M_ID.slice(0, 2) === 'N_') {
+                res.json('naver_id');
+            } else {
+                let subject = `[비드버드] 회원님의 아이디 정보입니다.`;
+                let html = `
+                <div
+                style="
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    background-color: #f5f5f5;
+                    border-radius: 5px;
+                    text-align: center;
+                "
+                >
+                    <img src="https://i.imgur.com/D3lJNvg.png" />
+                    <h3 style="font-size: 24px; margin-bottom: 20px">아이디 정보 안내</h3>
+                    <div style="font-size: 16px; line-height: 1.5; margin-bottom: 20px">
+                        안녕하세요. 비드버드를 이용해주셔서 감사드립니다. <br />
+                        회원님의 아이디 찾기 결과를 보내드립니다. <br />
+                        비밀번호를 잊어버린 경우 비밀번호 찾기를 이용해주세요.
+                    </div>
+                    <div
+                        style="
+                            background-color: #ffffff;
+                            border: 1px solid #dddddd;
+                            border-radius: 5px;
+                            padding: 20px;
+                            font-size: 20px;
+                            font-weight: bold;
+                        "
+                    >
+                        아이디: <span style="color: #ff6600">${m_id[0].M_ID}</span>
+                    </div>
+                </div>
+                `;
+
+                mailService.sendGmail(mail, subject, html);
+                res.json('mail_send');
+            }
+        });
+    },
+
+    findPw: (req, res) => {
+        let mail = req.body.mail;
+        let id = req.body.id;
+
+        DB.query('SELECT M_ID FROM TBL_MEMBER WHERE M_MAIL = ? AND M_ID = ?', [mail, id], (err, m_id) => {
+            if (err) {
+                console.log(err);
+                res.json('error');
                 return;
             }
 
-            if (m_id[0].slice(0, 2) === 'G_') {
+            if (m_id.length === 0) {
+                res.json('not_found');
+            } else if (m_id[0].M_ID.slice(0, 2) === 'G_') {
                 res.json('google_id');
-            } else if (m_id[0].slice(0, 2) === 'N_') {
+            } else if (m_id[0].M_ID.slice(0, 2) === 'N_') {
                 res.json('naver_id');
+            } else {
+                let newPw = shortId.generate();
+
+                DB.query(
+                    'UPDATE TBL_MEMBER SET M_PW = ? WHERE M_ID = ?',
+                    [bcrypt.hashSync(newPw, 10), id],
+                    (err, rst) => {
+                        if (err) {
+                            console.log(err);
+                            res.json('error');
+                            return;
+                        }
+
+                        let subject = `[비드버드] 회원님의 임시 비밀번호입니다.`;
+                        let html = `
+                    <div
+                    style="
+                        max-width: 600px;
+                        margin: 0 auto;
+                        padding: 20px;
+                        background-color: #f5f5f5;
+                        border-radius: 5px;
+                        text-align: center;
+                    "
+                    >
+                        <img src="https://i.imgur.com/D3lJNvg.png" />
+                        <h3 style="font-size: 24px; margin-bottom: 20px">임시 비밀번호 안내</h3>
+                        <div style="font-size: 16px; line-height: 1.5; margin-bottom: 20px">
+                            안녕하세요. 비드버드를 이용해주셔서 감사드립니다. <br />
+                            회원님의 계정 임시 비밀번호를 보내드립니다. <br />
+                            로그인 후 보안을 위해 마이페이지 - 비밀번호 변경에서 비밀번호를 변경해주세요.
+                        </div>
+                        <div
+                            style="
+                                background-color: #ffffff;
+                                border: 1px solid #dddddd;
+                                border-radius: 5px;
+                                padding: 20px;
+                                font-size: 20px;
+                                font-weight: bold;
+                            "
+                        >
+                            임시 비밀번호: <span style="color: #ff6600">${newPw}}</span>
+                        </div>
+                    </div>
+                    `;
+
+                        mailService.sendGmail(mail, subject, html);
+                        res.json('mail_send');
+                    }
+                );
             }
         });
     },
