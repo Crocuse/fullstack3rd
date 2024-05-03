@@ -1,20 +1,48 @@
 const DB = require('../db/db');
 
 module.exports = {
-    getAcPointInfo: (req, res) => {
+    getAcPointInfo: (loginedId, socket) => { // loginedId와 socket 매개변수 추가
         console.log("[ALARMSERVICE] getAcPointInfo()");
         DB.query(`SELECT AC_POINT FROM TBL_AUCTION_CURRENT WHERE M_ID = ?`,
-            [req.loginedId],
+            [loginedId],
             (err, result) => {
                 if (err) {
-                    res.json({ message: "err" });
-                    return;
+                    console.error("[ALARMSERVICE] DB error:", err);
+                    socket.emit('acPointInfoErrorInDB', { message: "ERROR 관리자에 문의하세요. <br />고객센터 : 031-1234-5678" });
                 }
 
                 if (result.length > 0) {
+                    console.log('여기');
                     const acPoint = result[0].AC_POINT;
-                    res.json({ acPoint });
+                    DB.query(`SELECT MAX(AC_POINT) AS max_bid
+                    FROM TBL_AUCTION_CURRENT
+                    WHERE AC_POINT > (
+                        SELECT AC_POINT 
+                        FROM TBL_AUCTION_CURRENT 
+                        WHERE M_ID = ? 
+                        ORDER BY AC_POINT DESC 
+                        LIMIT 1
+                    )
+                    GROUP BY GR_NO;
+                    `,
+                        [loginedId],
+                        (err, maxAcPoint) => {
+                            if (err) {
+                                socket.emit('maxAcPointError', { message: "ERROR 관리자에 문의하세요. <br />고객센터 : 031-1234-5678" });
+                            }
+                            if (maxAcPoint.length > 0) {
+                                console.log('이쪽');
+                                socket.emit('maxAcPoint', { maxAcPoint });
+
+                            } else {
+                                socket.emit('maxAcPointError', { message: "상회입찰자가 없습니다." });
+                            }
+                        })
+                    socket.emit('acPointInfo', { acPoint });
+
+                } else {
+                    socket.emit('acPointInfoError', { message: "입찰한 경매건이 없습니다." });
                 }
-            })
+            });
     },
-}
+};
