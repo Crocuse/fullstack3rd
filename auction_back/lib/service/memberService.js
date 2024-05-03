@@ -2,6 +2,8 @@ const DB = require('../db/db');
 const bcrypt = require('bcrypt');
 const google = require('../config/google.json');
 const naver = require('../config/naver.json');
+const mailService = require('./gmailService');
+const shortId = require('shortid');
 
 const memberService = {
     sessionCheck: (req, res) => {
@@ -42,6 +44,47 @@ const memberService = {
             if (rst[0].count > 0) res.json('is_mail');
             else res.json('not_mail');
         });
+    },
+
+    mailCodeSend: (req, res) => {
+        let mail = req.body.mail;
+        let subject = `[비드버드] 회원가입 이메일 인증 코드입니다.`;
+        let code = shortId.generate();
+
+        let html = `
+            <div
+                style="
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f5f5f5;
+                border-radius: 5px;
+                text-align: center;
+            "
+            >
+                <img src="https://i.imgur.com/D3lJNvg.png" />
+                <h3 style="font-size: 24px; margin-bottom: 20px">이메일 인증 안내</h3>
+                <div style="font-size: 16px; line-height: 1.5; margin-bottom: 20px">
+                    안녕하세요. 비드버드를 이용해주셔서 감사드립니다. <br />
+                    회원가입 화면에서 다음 코드를 이용하여 메일 인증을 완료해주세요.
+                </div>
+                <div
+                    style="
+                    background-color: #ffffff;
+                    border: 1px solid #dddddd;
+                    border-radius: 5px;
+                    padding: 20px;
+                    font-size: 20px;
+                    font-weight: bold;
+                "
+                >
+                    코드: <span style="color: #ff6600">${code}</span>
+                </div>
+            </div>
+        `;
+        mailService.sendGmail(mail, subject, html);
+
+        res.json(code);
     },
 
     signupConfirm: (req, res) => {
