@@ -25,8 +25,8 @@ if (os.version().includes('Windows')) {
 
 //SOCKET.IO -----------------------------------------------------------------------------------------------------------
 
-const AuctionAlarm = require('./lib/websocket/AuctionAlarm');
-AuctionAlarm(server);
+const initializeSocket = require('./lib/websocket/initializeSocket');
+initializeSocket(server);
 
 //SOCKET.IO END -----------------------------------------------------------------------------------------------------------
 
