@@ -87,7 +87,7 @@ function Nav() {
 
         m_menu =
             <>
-                <Link to="/alarm/AuctionAlarm"><img src="/img/bell.png" id="bell_img" /></Link>
+                <Link to="/alarm/AuctionAlarm" id="bell_wrap"><img src="/img/bell.png" id="bell_img" /></Link>
                 <Link to="/member/Mypage">마이페이지</Link>
                 <Link to="/member/logout_confirm">로그아웃</Link>
             </>
@@ -113,12 +113,13 @@ function Nav() {
         <nav>
             <ul>
                 <li>
-                    <span className="main_menu">
+                    <div></div>
+                    <div className="main_menu">
                         {mainMenu}
-                    </span>
-                    <span className="m_menu">
+                    </div>
+                    <div className="m_menu">
                         {m_menu}
-                    </span>
+                    </div>
                 </li>
             </ul>
         </nav>

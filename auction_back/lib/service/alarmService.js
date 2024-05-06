@@ -1,8 +1,9 @@
 const DB = require('../db/db');
 
 module.exports = {
-    getAcPointInfo: (loginedId, socket) => { // loginedId와 socket 매개변수 추가
+    getAcPointInfo: (loginedId, socket) => { 
         console.log("[ALARMSERVICE] getAcPointInfo()");
+        
         DB.query(`SELECT AC_POINT FROM TBL_AUCTION_CURRENT WHERE M_ID = ?`,
             [loginedId],
             (err, result) => {
