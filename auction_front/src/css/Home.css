@@ -1,24 +1,36 @@
 .first_sec {
     height: 500px;
-    display: flex;
-    align-items: center;
+    align-items: center; 
+    display: grid;
+    grid-template-areas: 
+        "title img"
+        "description img"
+        "button img";
     margin-bottom: 100px;
+}
+.definition_title {
+    grid-area: "title";
+
 }
 
 .home_wrap {
-    margin-top: 20px;
     text-align: center;
+    padding: 0 100px;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    align-items: center;
 }
 
 .definition_txt {
     margin-top: 20px;
     margin-bottom: 50px;
+    grid-area: "description";
 }
 
 .intro_company_sec {
-    width: 600px;
-    margin-left: 300px;
-    margin-top: 100px;
+    display: grid;
+    grid-template-rows: 150px 200px 100px;
+    align-items: center;
 }
 
 #definition {
@@ -48,6 +60,9 @@
     background-color: #e0e0e0;
 }
 
+.bid_btn_wrap {
+    grid-area: "button";
+}
 .bid_btn>div button {
     width: 100px;
     font-weight: bold;
@@ -73,14 +88,9 @@
 }
 
 .logo_img_sec {
-    margin-left: 200px;
-}
-
-.logo_img_sec>img {
-    flex-shrink: 0;
-    /* 크기 유지 */
-    width: 400px;
-
+    margin: 80px;
+    display: flex;
+    align-items: center;
 }
 
 .second_sec {
@@ -112,7 +122,6 @@
 .current_bid_img>div {
     flex: 1;
     text-align: center;
-    /* 이미지 중앙 정렬을 위해 */
 }
 
 .current_bid_img img {
