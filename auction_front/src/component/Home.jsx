@@ -32,7 +32,7 @@ function Home() {
                         </div>
                     </div>
                     <div className="logo_img_sec">
-                        <img src="/img/bid_bird_img.png" />
+                        <img src="/img/bid_bird_img.png" alt="비드버드 로고" id="bird_img" />
                     </div>
                 </div>
 
