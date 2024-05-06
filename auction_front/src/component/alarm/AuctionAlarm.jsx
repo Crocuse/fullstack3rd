@@ -12,7 +12,7 @@ function AuctionAlarm() {
     
     useEffect(() => {
         const socket = io(`${SERVER_URL.SERVER_URL()}`);
-        // 컴포넌트 마운트 시에 Socket.IO 이벤트를 수신할 수 있음
+        
         socket.on('connect', () => {
             console.log('connected to server성공 !!!');
         });
@@ -43,7 +43,6 @@ function AuctionAlarm() {
         
     
         return () => {
-          // 컴포넌트 언마운트 시에 Socket.IO 이벤트 리스너 정리
           socket.off("connect");
           socket.off("acPointInfoErrorInDB");
           socket.off("acPointInfo");
@@ -53,7 +52,7 @@ function AuctionAlarm() {
           socket.off("maxAcPointError");
           socket.disconnect();
         };
-      }, [loginedId]);
+      }, []);
 
    
 
