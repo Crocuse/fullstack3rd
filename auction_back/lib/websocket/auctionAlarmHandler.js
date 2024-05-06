@@ -9,7 +9,7 @@ function auctionAlarmHandler(socket, io) {
 
     socket.on('overbidding', ({ loginedId }) => {
         console.log("loginedId====>", loginedId);
-        alarmService.getAcPointInfo(loginedId, socket);
+        alarmService.getAcPointInfo(loginedId, socket,io);
 
     });
 
