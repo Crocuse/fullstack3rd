@@ -56,7 +56,7 @@ function PointAddForm() {
 
     return (
         <>
-            <article className="p_article">
+            <article className="point_article">
                 <div className="add_point_wrap">
                     <div className="add_point_title">
                         <p>포인트 충전</p>
