@@ -13,10 +13,10 @@ function PointAddForm() {
     const navigate = useNavigate();
 
     const loginedId = useSelector(state => state.loginedInfos.loginedId.loginedId);
-
+    // const currentPoint = useSelector(state => state.currentPoint.currentPoint);
     const dispatch = useDispatch();
     const [chargeAmount, setChargeAmount] = useState('');
-    const [currenPoint, setCurrentPoint] = useState('');
+    const [currentPoint, setCurrentPoint] = useState('');
 
     useEffect(() => {
         sessionCheck(sessionId, navigate);
@@ -39,8 +39,11 @@ function PointAddForm() {
             const response = await axios.post(`${SERVER_URL.SERVER_URL()}/point/getMyPoint`, {
                 loginedId: loginedId,
             });
+            if (response.data == "err") {
+                setCurrentPoint('ERROR');
+            }
 
-            if (response.data.message == "error") {
+            if (response.data.message == "0") {
                 setCurrentPoint('0');
             }
 
@@ -64,7 +67,7 @@ function PointAddForm() {
                     <div className="add_point_content">
                         <div>
                             <span className="span_txt">현재 포인트 : </span>
-                            <input type="text" className="poin_page_input" readOnly value={currenPoint} /><span className="span_txt">P</span> <br />
+                            <input type="text" className="poin_page_input" readOnly value={currentPoint} /><span className="span_txt">P</span> <br />
                         </div>
                         <div>
                             <span className="span_txt">포인트 충전 : </span>
