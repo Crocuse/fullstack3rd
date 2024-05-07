@@ -5,6 +5,7 @@ import { sessionCheck } from '../../../util/sessionCheck';
 import axios from 'axios';
 import { SERVER_URL } from '../../../config/server_url';
 import $ from 'jquery';
+import '../../../css/member/mypage/ModifyPassword.css';
 
 function ModifyPassword() {
     // Hook -----------------------------------------------------------------------------------------------------------
@@ -59,13 +60,14 @@ function ModifyPassword() {
     // Fucntion -----------------------------------------------------------------------------------------------------------
     function changeDisplayModufyWrap() {
         let socialIdMark = loginedId.substring(0, 2);
+        console.log('🚀 ~ changeDisplayModufyWrap ~ socialIdMark:', socialIdMark);
 
         if (socialIdMark == 'G_' || socialIdMark == 'N_') {
-            $('.modify_wrap').css('display', 'none');
-            $('.social_id_true').css('display', 'block');
+            $('.modify_password_wrap').css('display', 'none');
+            $('.modify_password_wrap_social').css('display', 'block');
         } else {
-            $('.modify_wrap').css('display', 'block');
-            $('.social_id_true').css('display', 'none');
+            $('.modify_password_wrap').css('display', 'block');
+            $('.modify_password_wrap_social').css('display', 'none');
         }
     }
 
@@ -107,22 +109,47 @@ function ModifyPassword() {
     // View -----------------------------------------------------------------------------------------------------------
     return (
         <article>
-            <div className="title">
-                <h2>비밀번호 변경</h2>
-            </div>
-
-            <div className="modify_wrap">
-                현재 비밀번호 <input type="password" name="current_pw" /> <br />
-                수정할 비밀번호 <input type="password" name="modify_pw" /> <br />
-                비밀번호 확인 <input type="password" name="modify_pw_check" /> <br />
-                <div className="check_rst">
-                    <span></span>
+            <div className="modify_password_wrap">
+                <div className="title">
+                    <h2>비밀번호 변경</h2>
                 </div>
-                <button onClick={modifyPwBtnClick}>변경</button>
+
+                <div className="modify_wrap">
+                    <div>
+                        <div className="input_title">현재 비밀번호</div>
+                        <div className="input">
+                            <input type="password" name="current_pw" />
+                        </div>
+                    </div>
+                    <div>
+                        <div className="input_title">수정할 비밀번호</div>
+                        <div className="input">
+                            <input type="password" name="modify_pw" />
+                        </div>
+                    </div>
+                    <div>
+                        <div className="input_title">비밀번호 확인</div>
+                        <div className="input">
+                            <input type="password" name="modify_pw_check" />
+                        </div>
+                    </div>
+
+                    <div className="check_rst">
+                        <span></span>
+                    </div>
+                    <div className="btn_wrap">
+                        <button onClick={modifyPwBtnClick}>비밀번호 변경</button>
+                    </div>
+                </div>
             </div>
 
-            <div className="social_id_true">
-                <p>소셜 로그인으로 가입한 아이디는 비밀번호를 변경할 수 없습니다.</p>
+            <div className="modify_password_wrap_social">
+                <div className="title">
+                    <h2>비밀번호 변경</h2>
+                </div>
+                <div className="social_id_true">
+                    <p>소셜 로그인으로 가입한 아이디는 비밀번호를 변경할 수 없습니다.</p>
+                </div>
             </div>
         </article>
     );

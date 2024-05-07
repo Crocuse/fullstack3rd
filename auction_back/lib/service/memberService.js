@@ -159,7 +159,6 @@ const memberService = {
                 res.json('error');
                 return;
             }
-
             DB.query(
                 'SELECT P_CURRENT FROM TBL_POINT WHERE M_ID = ? ORDER BY P_REG_DATE DESC LIMIT 1',
                 [id],
@@ -169,15 +168,26 @@ const memberService = {
                         res.json('error');
                         return;
                     }
-
                     const selectedMember = {
                         ...member[0],
                         M_ADDR: member[0].M_ADDR.replace(/\//g, ' '),
+                        M_ID:
+                            member[0].M_ID.slice(0, 2) === 'N_'
+                                ? '네이버 로그인 회원입니다.'
+                                : member[0].M_ID.slice(0, 2) === 'G_'
+                                ? '구글 로그인 회원입니다.'
+                                : member[0].M_ID,
+                        M_SOCIAL_ID:
+                            member[0].M_SOCIAL_ID === null
+                                ? '소셜 로그인 회원이 아닙니다.'
+                                : member[0].M_SOCIAL_ID.slice(0, 2) === 'N_'
+                                ? '네이버 로그인 회원입니다.'
+                                : member[0].M_SOCIAL_ID.slice(0, 2) === 'G_'
+                                ? '구글 로그인 회원입니다.'
+                                : '소셜 로그인 회원이 아닙니다.',
                     };
-
                     let currentPoint = 0;
-                    if (point.length != 0) currentPoint = point[0];
-
+                    if (point.length != 0) currentPoint = point[0].P_CURRENT;
                     res.json({ selectedMember, currentPoint });
                 }
             );

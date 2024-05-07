@@ -1,17 +1,24 @@
+html,
+body {
+    font-family: 'LINESeedKR-Rg';
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
 a {
     text-decoration: none;
 }
 
 li {
     list-style-type: none;
-}
-
-body {
-    font-family: 'Noto Sans KR', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
-    color: #333;
 }
 
 header {
@@ -22,6 +29,7 @@ header {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
+    flex-shrink: 0;
 }
 
 header img {
@@ -36,45 +44,42 @@ header h1 {
 }
 
 header a {
-    text-decoration: none;
     color: #ece6e6;
-}
-
-header a:active {
-    outline: none;
-    background-color: initial;
 }
 
 nav {
     background-color: #f7f7f7;
-    padding: 10px 20px;
+    padding: 10px 50px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
 }
 
 nav ul {
-    list-style-type: none;
     margin: 0;
     padding: 0;
-    /* display: flex;
-    justify-content: flex-start;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    text-align: center; */
 }
 
 nav ul li {
-    /* margin-left: 20px; */
     display: flex;
     justify-content: space-between;
-    height: 34px;
+    width: 100%;
 }
-nav ul li > * {
+
+.main_menu {
     display: flex;
-    align-items: center;
+    justify-content: center;
+}
+
+.m_menu {
+    display: flex;
+    justify-content: flex-end;
 }
 
 nav ul li div a {
     color: #242424;
-    text-decoration: none;
     font-size: 1.1rem;
     font-weight: bold;
     padding: 10px 15px;
@@ -82,26 +87,23 @@ nav ul li div a {
     transition: background-color 0.3s ease;
 }
 
-nav ul li div #bell_img {
-    padding: 0;
-    margin: 0;
-    width: 40px;
-    vertical-align: middle;
-    margin-bottom: 10px;
-}
-#bell_wrap {
-    height: 42px;
-    color: #242424;
-    padding: 1px 1px;
-    border-radius: 3px;
-    transition: background-color 0.3s ease;
-}
-
 nav ul li a:hover {
     background-color: #e0e0e0;
 }
 
+nav #bell_wrap {
+    padding: 0;
+    padding-right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+nav img {
+    max-height: 30px;
+}
+
 main {
+    flex: 1 0 auto;
     max-width: 1200px;
     margin: 30px auto;
     padding: 20px;
@@ -110,43 +112,12 @@ main {
     gap: 30px;
 }
 
-.main_menu {
-    /* margin-left: 450px; */
-}
-
-.m_menu {
-    /* margin-left: 500px; */
-}
-
-section {
-    background-color: #ffffff;
-    padding: 30px;
+footer {
+    background-color: #333;
+    color: #ffffff;
+    padding: 20px;
     text-align: center;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.3s ease;
-}
-
-section:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
-}
-
-.highlight {
-    background-color: #ffca28;
-    color: #333;
-    font-weight: bold;
-}
-
-.thumbnail {
-    width: 100%;
-    height: auto;
-    border-radius: 5px;
-    margin-bottom: 15px;
+    flex-shrink: 0;
 }
 
 @font-face {
@@ -168,19 +139,4 @@ section:hover {
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
-}
-
-body {
-    font-family: 'LINESeedKR-Rg';
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-footer {
-    flex-shrink: 0;
-    background-color: #333;
-    color: #ffffff;
-    padding: 20px;
-    text-align: center;
 }

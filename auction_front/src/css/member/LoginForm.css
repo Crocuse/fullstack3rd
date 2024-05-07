@@ -1,50 +1,50 @@
 .login_wrap {
     max-width: 400px;
-    margin: 50px auto;
+    margin: 100px auto;
     padding: 40px;
     background-color: #f5f5f5;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .login_wrap h2 {
+}
+
+.login_wrap h2 {
     text-align: center;
     margin-bottom: 30px;
     color: #333;
-  }
-  
-  .login_wrap .input_wrap {
+}
+
+.login_wrap .input_wrap {
     margin-bottom: 20px;
-  }
-  
-  .login_wrap .input_wrap p {
+}
+
+.login_wrap .input_wrap p {
     margin-bottom: 5px;
     color: #666;
-  }
-  
-  .login_wrap .input_wrap input[type="text"],
-  .login_wrap .input_wrap input[type="password"] {
+}
+
+.login_wrap .input_wrap input[type='text'],
+.login_wrap .input_wrap input[type='password'] {
     width: 100%;
     box-sizing: border-box;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-  }
-  
-  .login_wrap .massage_wrap {
+}
+
+.login_wrap .massage_wrap {
     margin-bottom: 20px;
-  }
-  
-  .login_wrap .massage_wrap p {
+}
+
+.login_wrap .massage_wrap p {
     text-align: center;
     color: red;
-  }
-  
-  .login_wrap .btns {
+}
+
+.login_wrap .btns {
     text-align: center;
-  }
-  
-  .login_wrap .btns input[type="button"] {
+}
+
+.login_wrap .btns input[type='button'] {
     width: 100%;
     padding: 10px 20px;
     background-color: #007bff;
@@ -52,26 +52,26 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
-  }
-  
-  .login_wrap .find_member {
+}
+
+.login_wrap .find_member {
     margin-top: 20px;
     text-align: center;
-  }
-  
-  .login_wrap .find_member a {
+}
+
+.login_wrap .find_member a {
     margin: 0 10px;
     color: #666;
     text-decoration: none;
-  }
-  
-  .login_wrap .social_login_wrap {
+}
+
+.login_wrap .social_login_wrap {
     margin-top: 30px;
     display: flex;
     justify-content: space-between;
-  }
-  
-  .login_wrap .social_login_wrap > div {
+}
+
+.login_wrap .social_login_wrap > div {
     flex: 0 0 180px;
     padding: 6px;
     background-color: #fff;
@@ -82,19 +82,19 @@
     align-items: center;
     justify-content: center;
     line-height: 16px;
-  }
-  
-  .login_wrap .social_login_wrap .icon {
+}
+
+.login_wrap .social_login_wrap .icon {
     margin-right: 10px;
-  }
-  
-  .login_wrap .social_login_wrap .icon img {
+}
+
+.login_wrap .social_login_wrap .icon img {
     width: 20px;
     height: 20px;
-  }
-  
-  .login_wrap .social_login_wrap .login_txt {
+}
+
+.login_wrap .social_login_wrap .login_txt {
     font-size: 16px;
     color: #333;
     margin: 0 15px;
-  }
+}
