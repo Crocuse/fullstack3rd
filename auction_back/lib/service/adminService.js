@@ -1,5 +1,7 @@
 const DB = require("../db/db");
 const bcrypt = require('bcrypt');
+const generateTemp = require("../util/uuidGenerator");
+
 
 const adminService = {
     
@@ -98,11 +100,19 @@ const adminService = {
     },
     memberDelete:(req,res)=>{
         let m_id = req.body.id;
+        let shortId = generateTemp(6);
 
         console.log('m_id============>',m_id);
 
-        DB.query(`DELETE FROM TBL_MEMBER WHERE M_ID =?`,[m_id],(err,result)=>{
+        DB.query(`UPDATE TBL_MEMBER SET M_STATUS = 1,
+                  M_PW = 'Withdrawal member_${shortId}',
+                  M_MAIL='Withdrawal member_${shortId}',
+                  M_PHONE='Withdrawal member_${shortId}',
+                  M_ADDR='Withdrawal member_${shortId}', 
+                  M_MOD_DATE = NOW() 
+                  WHERE M_ID =?`,[m_id],(err,result)=>{
             if(err){
+              console.log(err)
                 res.json(null);
             } else {
                 res.json(result.affectedRows);
@@ -180,10 +190,10 @@ const adminService = {
         })
     },
     memberModifyConfirm:(req,res)=>{
-        let post = req.body;
-        console.log(req.body);
+        let post = req.body.data;
+        console.log('---------------------------->',post);
         DB.query(`UPDATE TBL_MEMBER SET M_MAIL =?,M_PHONE=?,M_ADDR=?, M_MOD_DATE = NOW() WHERE M_ID =?`
-                ,[post.m_mail,post.m_phone,post.m_addr,post.m_id],
+                ,[post.M_MAIL,post.M_PHONE,post.M_ADDR,post.M_ID],
                 (error,result)=>{
                     if(error){
                         console.log(error);
