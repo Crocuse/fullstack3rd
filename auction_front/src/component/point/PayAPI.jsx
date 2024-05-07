@@ -4,7 +4,7 @@ import { SERVER_URL } from "../../config/server_url";
 import axios from "axios";
 import "../../css/Point/point.css";
 
-function PayAPI({ chargeAmount, resetChargeAmount }) {
+function PayAPI({ chargeAmount, resetChargeAmount, chargeInputRef, axios_get_my_point }) {
     const IMP = window.IMP;
     const loginedId = useSelector(state => state.loginedInfos.loginedId.loginedId);
 
@@ -18,6 +18,7 @@ function PayAPI({ chargeAmount, resetChargeAmount }) {
 
         if (!chargeAmount || chargeAmount === '0') {
             alert("포인트 충전 금액을 입력하세요.");
+            chargeInputRef.current.focus();
             return;
         }
         IMP.request_pay(
@@ -51,6 +52,7 @@ function PayAPI({ chargeAmount, resetChargeAmount }) {
             if (response.data === "success") {
                 alert("충전되었습니다.");
                 resetChargeAmount();
+                axios_get_my_point();
             }
         } catch (error) {
             console.log(error);
