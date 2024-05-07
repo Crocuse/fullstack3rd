@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const google = require('../config/google.json');
 const naver = require('../config/naver.json');
 const mailService = require('./gmailService');
-const shortId = require('shortid');
+const generateTemp = require('../util/uuidGenerator');
 
 const memberService = {
     sessionCheck: (req, res) => {
@@ -49,7 +49,7 @@ const memberService = {
     mailCodeSend: (req, res) => {
         let mail = req.body.mail;
         let subject = `[비드버드] 회원가입 이메일 인증 코드입니다.`;
-        let code = shortId.generate().slice(0, 6);
+        let code = generateTemp(6);
 
         let html = `
             <div
@@ -196,22 +196,28 @@ const memberService = {
 
     modifyPhone: (req, res) => {
         let m_phone = req.body.m_phone;
+        let m_id = req.body.id;
 
-        DB.query('UPDATE TBL_MEMBER SET M_PHONE = ?', [m_phone], (err, rst) => {
-            if (err || rst.affectedRows == 0) {
-                console.log(err);
-                res.json('error');
-                return;
+        DB.query(
+            'UPDATE TBL_MEMBER SET M_PHONE = ?, M_MOD_DATE = NOW() WHERE M_ID = ?',
+            [m_phone, m_id],
+            (err, rst) => {
+                if (err || rst.affectedRows == 0) {
+                    console.log(err);
+                    res.json('error');
+                    return;
+                }
+
+                res.json('modify success');
             }
-
-            res.json('modify success');
-        });
+        );
     },
 
     modifyAddr: (req, res) => {
         let m_addr = req.body.m_addr;
+        let m_id = req.body.m_id;
 
-        DB.query('UPDATE TBL_MEMBER SET M_ADDR = ?', [m_addr], (err, rst) => {
+        DB.query('UPDATE TBL_MEMBER SET M_ADDR = ?, M_MOD_DATE = NOW() WHERE M_ID = ?', [m_addr, m_id], (err, rst) => {
             if (err || rst.affectedRows == 0) {
                 console.log(err);
                 res.json('error');
@@ -225,7 +231,6 @@ const memberService = {
     checkPassword: (req, res) => {
         let id = req.body.id;
         let pw = req.body.pw;
-        console.log('🚀 ~ pw:', pw);
         DB.query('SELECT M_PW FROM TBL_MEMBER WHERE M_ID = ?', [id], (err, member) => {
             if (err || member.affectedRows == 0) {
                 console.log(err);
@@ -254,20 +259,20 @@ const memberService = {
 
     modifyPassword: (req, res) => {
         let id = req.body.id;
-        console.log('🚀 ~ id:', id);
         let pw = req.body.pw;
-        console.log('🚀 ~ pw:', pw);
+        DB.query(
+            'UPDATE TBL_MEMBER SET M_PW = ?, M_MOD_DATE = NOW() WHERE M_ID = ?',
+            [bcrypt.hashSync(pw, 10), id],
+            (err, member) => {
+                if (err || member.affectedRows == 0) {
+                    console.log('err: ', err);
+                    res.json('error');
+                    return;
+                }
 
-        DB.query('UPDATE TBL_MEMBER SET M_PW = ? WHERE M_ID = ?', [bcrypt.hashSync(pw, 10), id], (err, member) => {
-            if (err || member.affectedRows == 0) {
-                console.log('🚀 ~ DB.query ~ member.affectedRows:', member.affectedRows);
-                console.log('err: ', err);
-                res.json('error');
-                return;
+                res.json('modified');
             }
-
-            res.json('modified');
-        });
+        );
     },
 
     getMyRegistList: (req, res) => {
@@ -515,10 +520,11 @@ const memberService = {
             } else if (m_id[0].M_ID.slice(0, 2) === 'N_') {
                 res.json('naver_id');
             } else {
-                let newPw = shortId.generate();
+                // 임시 비밀번호 생성 (10자리)
+                let newPw = generateTemp(10);
 
                 DB.query(
-                    'UPDATE TBL_MEMBER SET M_PW = ? WHERE M_ID = ?',
+                    'UPDATE TBL_MEMBER SET M_PW = ?, M_MOD_DATE = NOW() WHERE M_ID = ?',
                     [bcrypt.hashSync(newPw, 10), id],
                     (err, rst) => {
                         if (err) {
@@ -556,7 +562,7 @@ const memberService = {
                                 font-weight: bold;
                             "
                         >
-                            임시 비밀번호: <span style="color: #ff6600">${newPw}}</span>
+                            임시 비밀번호: <span style="color: #ff6600">${newPw}</span>
                         </div>
                     </div>
                     `;
@@ -567,6 +573,27 @@ const memberService = {
                 );
             }
         });
+    },
+
+    memberDelete: (req, res) => {
+        let id = req.query.id;
+        let shortId = generateTemp(6);
+
+        DB.query(
+            `UPDATE TBL_MEMBER SET M_PW = 'Withdrawal member_${shortId}', M_MAIL = 'Withdrawal member_${shortId}', M_PHONE ='Withdrawal member_${shortId}', M_ADDR = 'Withdrawal member_${shortId}', M_STATUS = 0, M_MOD_DATE = NOW() WHERE M_ID = ?`,
+            [id],
+            (err, rst) => {
+                if (err) {
+                    console.log(err);
+                    res.json('error');
+                    return;
+                }
+
+                req.logout(() => {
+                    res.json('deleted');
+                });
+            }
+        );
     },
 };
 
