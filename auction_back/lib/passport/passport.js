@@ -41,8 +41,7 @@ exports.passport = (app) => {
                                 return done(null, admin[0].A_ID);
                             }
                         });
-                    }
-                    if (!bcrypt.compareSync(password, member[0].M_PW))
+                    } else if (!bcrypt.compareSync(password, member[0].M_PW))
                         return done(null, false, { message: '비밀번호가 일치하지 않습니다.' });
                     else {
                         return done(null, member[0].M_ID);
