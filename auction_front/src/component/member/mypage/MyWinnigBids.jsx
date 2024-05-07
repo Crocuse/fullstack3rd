@@ -79,8 +79,8 @@ function MyWinnigBids() {
                                                 : winnig.GR_NAME}
                                         </td>
                                         <td>이미지들어갈거임</td>
-                                        <td>{winnig.GR_PRICE}</td>
-                                        <td>{winnig.AR_POINT}</td>
+                                        <td>{winnig.GR_PRICE.toLocaleString()}원</td>
+                                        <td>{winnig.AR_POINT.toLocaleString()}원</td>
                                         <td>{winnig.AR_REG_DATE.slice(0, 10)}</td>
                                     </tr>
                                 ))}
