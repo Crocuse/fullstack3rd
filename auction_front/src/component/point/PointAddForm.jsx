@@ -72,7 +72,7 @@ function PointAddForm() {
                         </div>
                     </div>
                     {/* <CertificationAPI /> */}
-                    <div className="btn_wrap">
+                    <div className="point_btn_wrap">
                         <PayAPI chargeAmount={chargeAmount} resetChargeAmount={resetChargeAmount} />
                     </div>
                 </div>

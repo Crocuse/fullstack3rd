@@ -12,15 +12,15 @@
 
 .add_point_wrap {
     text-align: center;
-    
+
 }
 
-.add_point_title > p {
-  color: #333;
-  font-size: 2.0em;
-  margin-bottom: 40px;
-  text-align: center;
-  font-weight: bold;
+.add_point_title>p {
+    color: #333;
+    font-size: 2.0em;
+    margin-bottom: 40px;
+    text-align: center;
+    font-weight: bold;
 }
 
 .charge_amount_btn {
@@ -33,6 +33,7 @@
     margin-left: 10px;
     padding: 10px 15px;
 }
+
 .charge_amount_btn:hover {
     background-color: #1565c0;
 
@@ -61,10 +62,10 @@
     border-radius: 8px;
 }
 
-.poin_page_input::placeholder{
+.poin_page_input::placeholder {
     font-size: 0.7em;
 }
 
-.btn_wrap {
+.point_btn_wrap {
     margin-top: 20px;
 }
