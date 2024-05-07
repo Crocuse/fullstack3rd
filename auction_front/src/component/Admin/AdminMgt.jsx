@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useMemo } from "react";
 import { SERVER_URL } from "../../config/server_url";
 import axios from "axios";
 import '../../css/Admin/modify_modal.css';
@@ -6,234 +6,180 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { sessionCheck } from "../../util/sessionCheck";
 import '../../css/Admin/AdminMgt.css';
+import { AgGridReact } from 'ag-grid-react';
+import { ModuleRegistry } from 'ag-grid-community';
+import { ClientSideRowModelModule } from 'ag-grid-community';
+import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
+import { FiltersToolPanelModule } from 'ag-grid-enterprise';
+import { SetFilterModule } from 'ag-grid-enterprise';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-quartz.css';
+
+
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    MenuModule,
+    ColumnsToolPanelModule,
+    FiltersToolPanelModule,
+    SetFilterModule,
+  ]);
+
 function AdminMgt() {
-    
-    const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);   
+    const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
     const navigate = useNavigate();
 
-    //hook
-    const [adminList, setAdminList] = useState([]);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [selectedAdmin, setSelectedAdmin] = useState(null);
-
+    const [rowData, setRowData] = useState([]);
+    const [colDefs, setColDefs] = useState([]);
+    const [editModeRows, setEditModeRows] = useState({});
 
     useEffect(() => {
-
         sessionCheck(sessionId, navigate);
         axios_admin_list();
-    }, [sessionId, navigate]);
 
-    //function
+        setColDefs([
+            
+            {
+                field: 'A_ID',
+                headerName: '관리자 아이디',
+            },
+            {
+                field: 'A_NAME',
+                headerName: '관리자 이름',
+                editable: (params) => editModeRows[params.data.A_ID] || false,
 
-    function openModal(admin) {
-        setSelectedAdmin(admin);
-        setModalVisible(true);
-        }
-    
-    function closeModal() {
-        setSelectedAdmin(null);
-        setModalVisible(false);
-        }
-  
-    const adminModifyConfirmBtnClick = (e) => {
-        e.preventDefault()
-        // const form = this;
-        let form = document.admin_modify_form;
+            },
+            {
+                field: 'A_PHONE',
+                headerName: '관리자 전화번호',
+                editable: (params) => editModeRows[params.data.A_ID] || false,
+                onCellDoubleClicked: axios_admin_modify_confirm,
+            },
+            {
+                field: 'A_MAIL',
+                headerName: '관리자 이메일',
+                editable: (params) => editModeRows[params.data.A_ID] || false,
+                onCellDoubleClicked: axios_admin_modify_confirm,
+            },
+            { field: 'A_REG_DATE', headerName: '관리자 등록일' },
+            { field: 'A_MOD_DATE', headerName: '관리자 수정일' },
+            {
+                field: 'edit',
+                headerName: '수정',
+                width: 80,            
+                filter: false,
+                floatingFilter: false,
 
-        if (form.a_name.value == '') {
-            alert('이름를 입력해주세요.');
-            form.a_name.focus();
-        }
-        else if (form.mail1.value == '') {
-            alert('메일 주소를 입력해주세요.');
-            form.mail1.focus();
-        }
-        else if (form.mail2.value == '') {
-            alert('메일 주소를 입력해주세요.');
-            form.mail2.focus();
-        }
-        else if (form.phone2.value == '') {
-            alert('연락처를 입력해주세요.');
-            form.phone2.focus();
-        }
-        else if (form.phone3.value == '') {
-            alert('연락처를 입력해주세요.');
-            form.phone3.focus();
-        }
-        else {
-            let a_id = form.a_id.value;
-            let a_name = form.a_name.value;
-            let a_mail = `${form.mail1.value}@${form.mail2.value}`;
-            let a_phone = `${form.phone1.value}-${form.phone2.value}-${form.phone3.value}`;
+                cellRenderer: (params) => (
+                    editModeRows[params.data.A_ID] ? (
+                        <button onClick={() => handleSave(params.data)}>저장</button>
+                    ) : (
+                        <input
+                            type="checkbox"
+                            checked={editModeRows[params.data.A_ID] || false}
+                            onChange={() =>
+                                setEditModeRows({
+                                    ...editModeRows,
+                                    [params.data.A_ID]: !editModeRows[params.data.A_ID],
+                                })
+                            }
+                        />
+                    )
+                ),
+            },
+            {
+                field: 'delete',
+                headerName: '탈퇴',
+                width: 80,
+                cellRenderer: (params) => (
+                    <button onClick={() => adminDeleteBtn(params.data)}>탈퇴</button>
+                ),
+                filter: false,
+                floatingFilter: false,
+            },
+        ]);
+    }, [sessionId, editModeRows]);
 
-            axios_admin_modify_confirm(a_id, a_name, a_mail, a_phone);
-        }
-    }
-    //axios
-    async function adminDeleteBtn(id) {
-    
-    if (window.confirm("정말로 탈퇴시키겠습니까?")){
-        try {
-            const response = await axios.delete(`${SERVER_URL.SERVER_URL()}/admin/admin_delete`,{
-              data:{
-                  id
-              }
-            });
-            if(response.data > 0){
-                alert('삭제가 완료되었습니다.')
-                axios_admin_list();
-            } else {
-                alert('삭제에 실패했습니다.')
-            }
-            } catch (error) {
-            console.log(error);
-            alert('삭제에 실패했습니다.')
-            }
-        }
-        
-    }
-
-    async function adminModifyBtn(id){
-        try{
-            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/admin/admin_modify`,{
-                params:{
-                    id
-                }
-            });
-            if(response.data != null){
-                openModal(response.data)
-            } else {
-                alert('데이터를 불러올수 없습니다.')
-            }
-        } catch (error){
-            console.log(error)
-            alert('통신 오류가 발생했습니다.')
-        }
-    }
+    const defaultColDef = useMemo(() => {
+        return {
+            filter: 'agTextColumnFilter',
+            floatingFilter: true,
+            resizable: true,
+        };
+    }, []);
 
     async function axios_admin_list() {
         try {
-        const response = await axios.get(`${SERVER_URL.SERVER_URL()}/admin/admin_list`);
-        setAdminList(response.data);
+            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/admin/admin_list`);
+            setRowData(response.data);
         } catch (error) {
-        console.log(error);
+            console.log(error);
         }
     }
 
-    async function axios_admin_modify_confirm(a_id,a_name, a_mail, a_phone) {
-        try {
-        const response = await axios.post(`${SERVER_URL.SERVER_URL()}/admin/admin_modify_confirm`,{
-            a_id, a_name, a_mail, a_phone
-        });
-        if(response.data == null){
-            alert('데이터베이스 오류가 발생했습니다.');
-        } else if(response.data >0){
-            alert('관리자 수정에 성공하였습니다.');
-            axios_admin_list();
-            closeModal();
-        }
-        } catch (error) {
-        console.log(error);
+    async function adminDeleteBtn(id) {
+        if (window.confirm("정말로 탈퇴시키겠습니까?")) {
+            try {
+                const response = await axios.delete(`${SERVER_URL.SERVER_URL()}/admin/admin_delete`, {
+                    data: {
+                        id: id.A_ID
+                    }
+                });
+                if (response.data > 0) {
+                    alert('삭제가 완료되었습니다.');
+                    axios_admin_list();
+                } else {
+                    alert('삭제에 실패했습니다.');
+                }
+            } catch (error) {
+                console.log(error);
+                alert('삭제에 실패했습니다.');
+            }
         }
     }
-    
+
+    const handleSave = (admin) => {
+
+        console.log("저장할 관리자 정보:", admin);
+
+        axios_admin_modify_confirm(admin.A_ID, admin.A_NAME, admin.A_MAIL, admin.A_PHONE);
+        setEditModeRows({
+            ...editModeRows,
+            [admin.A_ID]: false,
+        });
+    };
+
+    async function axios_admin_modify_confirm(a_id, a_name, a_mail, a_phone) {
+        try {
+            const response = await axios.post(`${SERVER_URL.SERVER_URL()}/admin/admin_modify_confirm`, {
+                a_id,
+                a_name,
+                a_mail,
+                a_phone
+            });
+            if (response.data == null) {
+                alert('데이터베이스 오류가 발생했습니다.');
+            } else if (response.data > 0) {
+                alert('관리자 수정에 성공하였습니다.');
+                axios_admin_list();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <article className="admin-mgt">
             <div className="admin-mgt-title">ADMIN MANAGEMENT</div>
-            <table className="admin-mgt-table">
-                <thead>
-                    <tr>
-                        <th>관리자 아이디</th>
-                        <th>관리자 이름</th>
-                        <th>관리자 전화번호</th>
-                        <th>관리자 이메일</th>
-                        <th>관리자 등록일</th>
-                        <th>관리자 수정일</th>
-                        <th>수정</th>
-                        <th>탈퇴</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {adminList.filter((admin) => admin.A_ID !== "super")
-                              .map((admin) => (
-                                <tr key={admin.A_ID}>
-                                    <td>{admin.A_ID}</td>
-                                    <td>{admin.A_NAME}</td>
-                                    <td>{admin.A_PHONE}</td>
-                                    <td>{admin.A_MAIL}</td>
-                                    <td>{admin.A_REG_DATE}</td>
-                                    <td>{admin.A_MOD_DATE}</td>
-                                    <td>
-                                        <button className="admin-mgt-button" onClick={() => adminModifyBtn(admin.A_ID)}>수정</button>
-                                    </td>
-                                    <td>
-                                        <button className="admin-mgt-button" onClick={() => adminDeleteBtn(admin.A_ID)}>탈퇴</button>
-                                    </td>
-                                </tr>
-                              ))}
-                </tbody>
-            </table>
-
-            {modalVisible && (
-                <div className="admin-mgt-modal">
-                    <div className="admin-mgt-modal-content">
-                        <h2 className="admin-mgt-modal-title">관리자 정보 수정</h2>
-                        <form className="admin-mgt-modal-form" name="admin_modify_form" method="post">
-                            ID<br/>
-                            <input className="admin-mgt-modal-input" type="text" name="a_id" defaultValue={selectedAdmin.A_ID} readOnly/><br/>
-                            이름<br/>
-                            <input className="admin-mgt-modal-input" type="text" name="a_name" defaultValue={selectedAdmin.A_NAME}/><br/>
-                            연락처<br/>
-                            <select className="admin-mgt-modal-select" name="phone1" defaultValue={selectedAdmin.phone1}>
-                                <option defaultValue="010">010</option>
-                                <option defaultValue="011">011</option>
-                                <option defaultValue="016">016</option>
-                                <option defaultValue="017">017</option>
-                                <option defaultValue="018">018</option>
-                                <option defaultValue="019">019</option>
-                            </select>
-                            -
-                            <input
-                                className="admin-mgt-modal-input"
-                                type="number"
-                                name="phone2"
-                                defaultValue={selectedAdmin.phone2}
-                            />
-                            -
-                            <input
-                                className="admin-mgt-modal-input"
-                                type="number"
-                                name="phone3"
-                                defaultValue={selectedAdmin.phone3}
-                            />
-                            <br />
-                            이메일
-                            <br />
-                            <input
-                                className="admin-mgt-modal-input"
-                                type="text"
-                                name="mail1"
-                                defaultValue={selectedAdmin.mail1}
-                            />
-                            @
-                            <input
-                                className="admin-mgt-modal-input"
-                                type="text"
-                                name="mail2"
-                                defaultValue={selectedAdmin.mail2}
-                            />
-                            <br />
-
-                            <div className="admin-mgt-modal-buttons">
-                                <button className="admin-mgt-modal-button" onClick={adminModifyConfirmBtnClick}>수정</button>
-                                <button className="admin-mgt-modal-button" type="reset">초기화</button>
-                                <button className="admin-mgt-modal-button" onClick={closeModal}>닫기</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+            <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }}>
+                <AgGridReact
+                    rowData={rowData}
+                    columnDefs={colDefs}
+                    defaultColDef={defaultColDef}
+                    pagination={true}
+                    paginationPageSize={10}
+                />
+            </div>
         </article>
     );
 }

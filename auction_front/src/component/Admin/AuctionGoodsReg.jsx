@@ -1,202 +1,234 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { SERVER_URL } from "../../config/server_url";
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { sessionCheck } from "../../util/sessionCheck";
-import '../../css/Admin/AuctionGoodsReg.css';
+import "../../css/Admin/AuctionGoodsReg.css";
+
+import { AgGridReact } from 'ag-grid-react';
+import { ModuleRegistry } from 'ag-grid-community';
+import { ClientSideRowModelModule } from 'ag-grid-community';
+import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
+import { FiltersToolPanelModule } from 'ag-grid-enterprise';
+import { SetFilterModule } from 'ag-grid-enterprise';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-quartz.css';
+
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    MenuModule,
+    ColumnsToolPanelModule,
+    FiltersToolPanelModule,
+    SetFilterModule,
+]);
 
 function AuctionGoodsReg() {
-    
-    const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);   
+    const gridRef = useRef();
+    const sessionId = useSelector((state) => state["loginedInfos"]["loginedId"]["sessionId"]);
     const navigate = useNavigate();
 
     const [goodsRegList, setGoodsRegList] = useState([]);
-    const [goodsState, setGoodsState] = useState(false);
-    const [selectedGoods, setSelectedGoods] = useState(null);
+    const [rowData, setRowData] = useState([]);
+    const [editModeRows, setEditModeRows] = useState({});
+    const [colDefs, setColDefs] = useState([]);
 
-    useEffect(()=>{
+    useEffect(() => {
         sessionCheck(sessionId, navigate);
         axios_goods_reg_list();
-        console.log(goodsState);
-    },[sessionId, navigate])
+    }, [sessionId]);
+
+    useEffect(() => {
+        setColDefs([
+            {
+                field: 'GR_NO',
+                headerName: '상품번호',
+                pinned: 'left',
+                width: 110,
+                filter: 'agNumberColumnFilter',
+            },
+            {
+                field: 'M_ID',
+                headerName: '등록자ID',
+                width: 130,
+                filter: 'agTextColumnFilter',
+            },
+            {
+                field: 'GR_NAME',
+                headerName: '상품명',
+                filter: 'agTextColumnFilter',
+            },
+            {
+                field: 'GR_PRICE',
+                headerName: '경매시작가',
+                width: 130,
+                filter: 'agNumberColumnFilter',
+            },
+            {
+                field: 'AS_STATUS',
+                headerName: '대기상태',
+                cellRenderer: (params) => {
+                    const { AS_START_DATE, AS_STATUS } = params.data;
+                    if (AS_START_DATE === getTodayDate()) {
+                        return "경매 진행중";
+                    } else if (AS_START_DATE < getTodayDate()) {
+                        return "경매 종료";
+                    } else if (AS_STATUS === 0) {
+                        return "등록 대기";
+                    } else if (AS_STATUS === 1) {
+                        return "재경매 미승인";
+                    } else if (AS_STATUS === 2) {
+                        return "경매 대기중";
+                    } else {
+                        return "오류";
+                    }
+                },
+                filter: 'agTextColumnFilter',
+            },
+            {
+                field: "AS_LOCATION_NUM",
+                headerName: "자리위치번호",
+                cellEditor: "agSelectCellEditor",
+                cellEditorParams: {
+                    values: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                },
+                editable: (params) => editModeRows[params.data.GR_NO] || false,
+                filter: 'agNumberColumnFilter',
+            },
+            {
+                field: "AS_START_DATE",
+                headerName: "경매시작날",
+                cellEditor: "agDateStringCellEditor",
+                editable: (params) => editModeRows[params.data.GR_NO] || false,
+                cellEditorParams: {
+                    minValidDate: getTodayDate(),
+                },
+                filter: "agDateColumnFilter",
+                filterParams: {
+                    comparator: (filterLocaleDate, cellValue) => {
+                        if (!cellValue) return -1;
+                        const cellDate = new Date(cellValue);
+                        if (cellDate < filterLocaleDate) return -1;
+                        else if (cellDate > filterLocaleDate) return 1;
+                        else return 0;
+                    },
+                },
+            },
+            {
+                field: "edit",
+                headerName: "경매등록",
+                width: 120,
+                cellRenderer: (params) => {
+                    if (params.data.AS_STATUS === 1) return null;
+                    return editModeRows[params.data.GR_NO] ? (
+                        <button onClick={() => axios_goods_reg_state_change(params.data)}>저장</button>
+                    ) : (
+                        <input
+                            type="checkbox"
+                            checked={editModeRows[params.data.GR_NO] || false}
+                            onChange={() =>
+                                setEditModeRows({
+                                    ...editModeRows,
+                                    [params.data.GR_NO]: !editModeRows[params.data.GR_NO],
+                                })
+                            }
+                        />
+                    );
+                },
+                filter: false,
+            },
+        ]);
+    }, [editModeRows]);
+
+    const defaultColDef = useMemo(() => ({
+        filter: true,
+        floatingFilter: true,
+        resizable: true,
+    }), []);
 
     function getTodayDate() {
         const today = new Date();
         const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
-        
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const day = String(today.getDate()).padStart(2, "0");
+
         return `${year}-${month}-${day}`;
-      }
-    
+    }
 
-    const goodsStateclickBtn = (goods) => {
-        setGoodsState(!goodsState);
-        if (!goodsState) {
-          setSelectedGoods(goods);
-        } else {
-          axios_goods_reg_state_change(goods.GR_NO);
-        }
-      };
-
-    async function axios_goods_reg_list(){
+    async function axios_goods_reg_list() {
         try {
             const response = await axios.get(`${SERVER_URL.SERVER_URL()}/admin/goods_reg_list`);
-            setGoodsRegList(response.data);
+            setRowData(response.data);
         } catch (error) {
             console.log(error);
         }
     }
-    async function axios_goods_reg_state_change(gr_no){
+
+    async function axios_goods_reg_state_change(data) {
         try {
-            const locationNum = document.querySelector(`select[name="goods_location_num_${gr_no}"]`).value;
-            const asState = document.querySelector(`select[name="goods_state_${gr_no}"]`).value;
-            const startDate = document.querySelector(`input[name="as_start_date_${gr_no}"]`).value;
+            const { GR_NO, AS_LOCATION_NUM, AS_STATUS, AS_START_DATE } = data;
+            const startDate = new Date(AS_START_DATE).toISOString().split("T")[0];
 
-        
-
-            if(startDate <= getTodayDate()){
-                alert('당일이나 오늘 이전으로는 등록할 수 없습니다.');
+            if (startDate <= getTodayDate()) {
+                alert("당일이나 오늘 이전으로는 등록할 수 없습니다.");
                 return;
             }
-            
 
             const response = await axios.post(`${SERVER_URL.SERVER_URL()}/admin/goods_reg_state_change`, {
-              gr_no,
-              as_location_num: locationNum,
-              as_state: asState,
-              as_start_date : startDate
+                gr_no: GR_NO,
+                as_location_num: AS_LOCATION_NUM,
+                as_state: AS_STATUS,
+                as_start_date: startDate,
             });
-            
-            console.log(response.data);
-            if(response.data==='fail'){
-                alert('상태변경에 실패했습니다.')
-                return;
-            } else if(response.data === 'already'){
-                alert('한 날짜에 자리는 중복될 수 없습니다.')
-                return;
-            } else if(response.data === 'success'){
-                axios_goods_reg_list();
-            }
 
-            axios_goods_reg_list();
-          } catch (error) {
+            console.log(response.data);
+            if (response.data === "fail") {
+                alert("상태변경에 실패했습니다.");
+            } else if (response.data === "already") {
+                alert("한 날짜에 자리는 중복될 수 없습니다.");
+            } else if (response.data === "success") {
+                axios_goods_reg_list();
+                setEditModeRows({});
+            }
+        } catch (error) {
             console.log(error);
-          }
+        }
     }
 
-
     return (
-        
         <article className="auction-goods-reg">
-            <div className="auction-goods-reg-title">AuctionGoodsReg</div>    
-
-            <table className="auction-goods-reg-table">
-                <thead>
-                    <tr>
-                        <th>상품번호</th>
-                        <th>등록자ID</th>
-                        <th>상품명</th>
-                        <th>시작가격</th>
-                        <th>대기상태</th>
-                        <th>자리위치번호</th>
-                        <th>경매시작날</th>
-                        <th>경매등록</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {goodsRegList.length == 0 ? (
-                        <tr>
-                        <td colSpan="8" className="auction-goods-reg-empty">등록 대기중인 상품이 없습니다.</td>
-                        </tr>
-                    ) : (
-                        goodsRegList.map((goods) => (
-                        <tr key={goods.GR_NO} className="auction-goods-reg-row">
-                            <td>{goods.GR_NO}</td>
-                            <td>{goods.M_ID}</td>
-                            <td>{goods.GR_NAME}</td>
-                            <td>{goods.GR_PRICE}</td>
-                            <td className="auction-goods-reg-status">
-                                {goodsState && selectedGoods.GR_NO === goods.GR_NO ?
-                                
-                                
-                                    
-                                    <select name={`goods_state_${goods.GR_NO}`} defaultValue={goods.AS_STATUS}>
-                                        <option value="0">등록대기</option>
-                                        <option value="2">등록완료</option>
-                                    </select>
-                                
-                                :
-                                    (
-
-                                    goods.AS_START_DATE == getTodayDate() ?
-                                    "경매 진행중"
-                                    :
-                                    goods.AS_START_DATE < getTodayDate() ?
-                                    "경매 종료"
-                                    :
-                                    goods.AS_STATUS == 0 ? 
-                                    "등록 대기"
-                                    : 
-                                    goods.AS_STATUS == 1 ? 
-                                    "재경매 미승인" 
-                                    : 
-                                    goods.AS_STATUS == 2 ? 
-                                    "경매 대기중"
-                                    :
-                                    
-                                    "오류"
-                                    )
-                                }
-
-                            </td>
-                            <td className="auction-goods-reg-location">
-                                {goodsState && selectedGoods.GR_NO === goods.GR_NO ?
-                                
-                                <select name={`goods_location_num_${goods.GR_NO}`} defaultValue={goods.AS_LOCATION_NUM}>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                </select>
-
-                                :
-                                
-                                (
-                                    goods.AS_LOCATION_NUM === null ? 
-                                    "자리 미정"
-                                    :
-                                    `${goods.AS_LOCATION_NUM}번 자리`
-                                )
-                                }
-                            </td>
-
-                            <td className="auction-goods-reg-date">
-                                {goodsState && selectedGoods.GR_NO === goods.GR_NO ?
-                                
-                                    <input type="date" name={`as_start_date_${goods.GR_NO}`} defaultValue={goods.AS_START_DATE}/>
-
-                                :
-                                
-                                (
-                                    goods.AS_START_DATE === null ? "시작날 미정" : goods.AS_START_DATE
-                                )}
-                                </td>
-                            <td>
-                                <button className="auction-goods-reg-button" onClick={()=>goodsStateclickBtn(goods)}>등록수정</button>
-                            </td>
-                        </tr>
-                        ))
-                    )}
-                </tbody>
-            </table>
+            <div className="auction-goods-reg-title">AuctionGoodsReg</div>
+            <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }}>
+                <AgGridReact
+                    ref={gridRef}
+                    rowData={rowData}
+                    columnDefs={colDefs}
+                    defaultColDef={defaultColDef}
+                    pagination={true}
+                    paginationPageSize={10}
+                    sideBar={{
+                        toolPanels: [
+                            {
+                                id: 'columns',
+                                labelDefault: 'Columns',
+                                labelKey: 'columns',
+                                iconKey: 'columns',
+                                toolPanel: 'agColumnsToolPanel',
+                            },
+                            {
+                                id: 'filters',
+                                labelDefault: 'Filters',
+                                labelKey: 'filters',
+                                iconKey: 'filter',
+                                toolPanel: 'agFiltersToolPanel',
+                            },
+                        ],
+                    }}
+                />
+            </div>
         </article>
     );
 }
+
 export default AuctionGoodsReg;
