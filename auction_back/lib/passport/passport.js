@@ -29,11 +29,7 @@ exports.passport = (app) => {
                 passwordField: 'm_pw',
             },
             function (username, password, done) {
-                console.log('🚀 ~ password:', password);
-                console.log('🚀 ~ username:', username);
-
                 DB.query('SELECT * FROM TBL_MEMBER WHERE M_ID = ?', [username], (err, member) => {
-                    console.log('🚀 ~ DB.query ~ member:', member);
                     if (member.length == 0) {
                         DB.query('SELECT * FROM TBL_ADMIN WHERE A_ID = ?', [username], (err, admin) => {
                             if (admin.length == 0) return done(null, false, { message: '아이디를 찾을 수 없습니다.' });
@@ -46,11 +42,6 @@ exports.passport = (app) => {
                             }
                         });
                     }
-                    console.log(
-                        '🚀 ~ DB.query ~ bcrypt.compareSync(password, member[0].M_PW):',
-                        bcrypt.compareSync(password, member[0].M_PW)
-                    );
-
                     if (!bcrypt.compareSync(password, member[0].M_PW))
                         return done(null, false, { message: '비밀번호가 일치하지 않습니다.' });
                     else {
