@@ -1,14 +1,16 @@
 import axios from 'axios';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { SERVER_URL } from '../../config/server_url';
+import AuctionAlarm from "../alarm/AuctionAlarm";
 
 function Nav() {
     // Hook -----------------------------------------------------------------------------------------------------------------
     const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
     const loginedAdmin = useSelector((state) => state['loginedInfos']['loginedId']['loginedAdmin']);
     const loginedUser = useSelector((state) => state['loginedInfos']['loginedId']['loginedId']);
+    const [alarm, setAlarm] = useState(false);
 
     useEffect(() => {
         axios_session_check();
@@ -85,9 +87,16 @@ function Nav() {
 
         m_menu = (
             <>
-                <Link to="/alarm/AuctionAlarm" id="bell_wrap">
-                    <img src="/img/bell.png" id="bell_img" />
-                </Link>
+                <div className='drop_down_wrap'>
+                    <Link to="#" id="bell_wrap" onClick={() => { setAlarm(!alarm) }}>
+                        {alarm && (
+                            <div className='drop_down_content'>
+                                <AuctionAlarm />
+                            </div>
+                        )}
+                        <img src="/img/bell.png" id="bell_img" />
+                    </Link>
+                </div>
                 <Link to="/member/my_page/modify_info">마이페이지</Link>
                 <Link to="/member/logout_confirm">로그아웃</Link>
             </>
