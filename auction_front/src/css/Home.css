@@ -1,16 +1,15 @@
-.first_sec {
+.home_wrap .first_sec {
     height: 500px;
-    align-items: center; 
+    align-items: center;
     display: grid;
-    grid-template-areas: 
-        "title img"
-        "description img"
-        "button img";
+    grid-template-areas:
+        'title img'
+        'description img'
+        'button img';
     margin-bottom: 100px;
 }
-.definition_title {
-    grid-area: "title";
-
+.home_wrap .definition_title {
+    grid-area: 'title';
 }
 
 .home_wrap {
@@ -21,32 +20,37 @@
     align-items: center;
 }
 
-.definition_txt {
+.home_wrap .definition_txt {
     margin-top: 20px;
     margin-bottom: 50px;
-    grid-area: "description";
+    grid-area: 'description';
 }
 
-.intro_company_sec {
+.home_wrap .definition_txt div:nth-child(1) {
+    font-size: 1.5em;
+    margin-bottom: 30px;
+}
+
+.home_wrap .intro_company_sec {
     display: grid;
     grid-template-rows: 150px 200px 100px;
     align-items: center;
 }
 
-#definition {
+.home_wrap #definition {
     font-size: 2.2em;
 }
 
-.definition_title div {
+.home_wrap .definition_title div {
     font-size: 1.8em;
     font-weight: bold;
 }
 
-.bid_btn_wrap {
+.home_wrap .bid_btn_wrap {
     margin-top: 50px;
 }
 
-.bid_btn a {
+.home_wrap .bid_btn a {
     border: 1px solid #242424;
     padding: 15px;
     margin-left: 20px;
@@ -56,75 +60,75 @@
     color: black;
 }
 
-.bid_btn a:hover {
+.home_wrap .bid_btn a:hover {
     background-color: #e0e0e0;
 }
 
-.bid_btn_wrap {
-    grid-area: "button";
+.home_wrap .bid_btn_wrap {
+    grid-area: 'button';
 }
-.bid_btn>div button {
+.home_wrap .bid_btn > div button {
     width: 100px;
     font-weight: bold;
     font-size: 1.1em;
     margin-right: 20px;
 }
 
-.bid_btn a {
+.home_wrap .bid_btn a {
     background-color: #1e88e5;
     color: #fff;
 }
 
-.bid_btn a:hover {
+.home_wrap .bid_btn a:hover {
     background-color: #1565c0;
 }
 
-.bid_btn>div button:hover {
+.home_wrap .bid_btn > div button:hover {
     cursor: pointer;
 }
 
-.definition_txt div {
+.home_wrap .definition_txt div {
     word-break: keep-all;
 }
 
-.logo_img_sec {
+.home_wrap .logo_img_sec {
     margin: 80px;
     display: flex;
     align-items: center;
 }
 
-.second_sec {
+.home_wrap .second_sec {
     height: 400px;
     margin-bottom: 50px;
 }
 
-.current_bid_sec>div {
+.home_wrap .current_bid_sec > div {
     font-size: 1.8em;
     font-weight: bold;
     margin-bottom: 30px;
 }
 
-.bid_list_btn {
+.home_wrap .bid_list_btn {
     width: 50px;
 }
 
-.bid_list_btn:hover {
+.home_wrap .bid_list_btn:hover {
     background-color: #1565c0;
     border-radius: 28px;
 }
 
-.current_bid_img {
+.home_wrap .current_bid_img {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.current_bid_img>div {
+.home_wrap .current_bid_img > div {
     flex: 1;
     text-align: center;
 }
 
-.current_bid_img img {
+.home_wrap .current_bid_img img {
     max-width: 100%;
     height: auto;
 }

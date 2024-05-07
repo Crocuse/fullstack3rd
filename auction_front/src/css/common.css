@@ -21,18 +21,18 @@ header {
     text-align: left;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
-    justify-content: space-between;
     align-items: center;
 }
 
 header img {
-    width: 30px;
+    width: 50px;
 }
 
 header h1 {
     margin: 0;
     font-size: 2rem;
     text-transform: uppercase;
+    margin-left: 10px;
 }
 
 header a {
@@ -66,12 +66,11 @@ nav ul li {
     display: flex;
     justify-content: space-between;
     height: 34px;
-
 }
-nav ul li> * {
+nav ul li > * {
     display: flex;
     align-items: center;
-} 
+}
 
 nav ul li div a {
     color: #242424;
@@ -84,7 +83,8 @@ nav ul li div a {
 }
 
 nav ul li div #bell_img {
-    padding: 0; margin: 0;
+    padding: 0;
+    margin: 0;
     width: 40px;
     vertical-align: middle;
     margin-bottom: 10px;
@@ -96,7 +96,6 @@ nav ul li div #bell_img {
     border-radius: 3px;
     transition: background-color 0.3s ease;
 }
-
 
 nav ul li a:hover {
     background-color: #e0e0e0;
@@ -155,28 +154,28 @@ section:hover {
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Th.woff2') format('woff2');
     font-weight: 100;
     font-style: normal;
-  }
-  
-  @font-face {
+}
+
+@font-face {
     font-family: 'LINESeedKR-Rg';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
-  }
-  
-  @font-face {
+}
+
+@font-face {
     font-family: 'LINESeedKR-Bd';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
-  }
-  
-  body {
+}
+
+body {
     font-family: 'LINESeedKR-Rg';
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-  }
+}
 
 footer {
     flex-shrink: 0;

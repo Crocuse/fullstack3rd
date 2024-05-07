@@ -3,8 +3,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from './redux/store';
 
-import './App.css';
-
 // 폰트어썸
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -95,7 +93,7 @@ function App() {
                                                 element={<AuctionGoodsReg />}
                                             ></Route>
                                             <Route path="/admin/auction_result" element={<AuctionResult />}></Route>
-                                            
+
                                             <Route path="/admin/sales_mgt" element={<SalesMgt />}></Route>
                                             <Route path="/admin/user_mgt" element={<UserMgt />}></Route>
                                             <Route path="/admin/admin_mgt" element={<AdminMgt />}></Route>
