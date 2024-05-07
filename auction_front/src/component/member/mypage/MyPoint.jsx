@@ -47,7 +47,9 @@ function MyPoint() {
                 setLoaingModalShow(false);
             } else {
                 setPointHistory(response.data.history || []);
-                setTotalPoint(response.data.history[0].P_CURRENT || 0);
+                if (response.data.history.length !== 0) {
+                    setTotalPoint(response.data.history[0].P_CURRENT);
+                }
                 setTotalPages(response.data.totalPages);
                 setLoaingModalShow(false);
             }
