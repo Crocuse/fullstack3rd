@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from './redux/store';
 
+import './App.css';
+
 // 폰트어썸
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -48,69 +50,61 @@ function App() {
     library.add(fas);
 
     return (
-        <>
-            <Provider store={store}>
-                <PersistGate loading={null} persistor={persistor}>
-                    <BrowserRouter>
-                        <Routes>
-                            <Route
-                                path="*"
-                                element={
-                                    <>
-                                        <Header />
-                                        <Nav />
-                                        <Routes>
-                                            <Route path="/" element={<Home />}></Route>
-                                            <Route path="/auction/current_list" element={<CurList />}></Route>
-                                            <Route path="/auction/regist_form" element={<RegForm />}></Route>
-                                            <Route path="/auction/auction_page" element={<AuctionPage />}></Route>
-                                            <Route path="/member/Signup_form" element={<SignUp />}></Route>
-                                            <Route path="/member/Login_form" element={<Login />}></Route>
-                                            <Route path="/member/Logout_confirm" element={<Logout />}></Route>
-                                            <Route path="/member/member/my_page" element={<MyPageMenubar />}>
-                                                <Route path="modify_info" element={<ModifyInfo />} />
-                                                <Route path="modify_password" element={<ModifyPassword />} />
-                                                <Route path="mysells" element={<MySells />} />
-                                                <Route path="mywinnigbids" element={<MyWinnigBids />} />
-                                                <Route path="myregist" element={<MyRegist />} />
-                                                <Route path="mypoint" element={<MyPoint />} />
-                                            </Route>
-                                            <Route path="/auth/google/callback" element={<GoogleLogin />}></Route>
-                                            <Route path="/auth/naver/callback" element={<NaverLogin />}></Route>
-                                            <Route path="/point/Point_add_form" element={<PointAddForm />}></Route>
-                                            <Route path="/point/PayAPI" element={<PayAPI />} />
-                                            <Route path="/alarm/AuctionAlarm" element={<AuctionAlarm />} />
-                                            <Route path="/member/MyPage" element={<MyPage />}></Route>
-                                            <Route path="/Customer_center" element={<CstCT />}></Route>
-                                            <Route path="/admin/home" element={<AdminHome />}></Route>
-                                            <Route path="/admin/AdminReg" element={<AdminReg />}></Route>
-                                            <Route
-                                                path="/admin/auction_goods_mgt"
-                                                element={<AuctionGoodsMgt />}
-                                            ></Route>
-                                            <Route
-                                                path="/admin/auction_goods_reg"
-                                                element={<AuctionGoodsReg />}
-                                            ></Route>
-                                            <Route path="/admin/auction_result" element={<AuctionResult />}></Route>
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+                <BrowserRouter>
+                    <Routes>
+                        <Route
+                            path="*"
+                            element={
+                                <>
+                                    <Header />
+                                    <Nav />
+                                    <Routes>
+                                        <Route path="/" element={<Home />}></Route>
+                                        <Route path="/auction/current_list" element={<CurList />}></Route>
+                                        <Route path="/auction/regist_form" element={<RegForm />}></Route>
+                                        <Route path="/auction/auction_page" element={<AuctionPage />}></Route>
+                                        <Route path="/member/Signup_form" element={<SignUp />}></Route>
+                                        <Route path="/member/Login_form" element={<Login />}></Route>
+                                        <Route path="/member/Logout_confirm" element={<Logout />}></Route>
+                                        <Route path="/member/my_page" element={<MyPageMenubar />}>
+                                            <Route path="modify_info" element={<ModifyInfo />} />
+                                            <Route path="modify_password" element={<ModifyPassword />} />
+                                            <Route path="mysells" element={<MySells />} />
+                                            <Route path="mywinnigbids" element={<MyWinnigBids />} />
+                                            <Route path="myregist" element={<MyRegist />} />
+                                            <Route path="mypoint" element={<MyPoint />} />
+                                        </Route>
+                                        <Route path="/auth/google/callback" element={<GoogleLogin />}></Route>
+                                        <Route path="/auth/naver/callback" element={<NaverLogin />}></Route>
+                                        <Route path="/point/Point_add_form" element={<PointAddForm />}></Route>
+                                        <Route path="/point/PayAPI" element={<PayAPI />} />
+                                        <Route path="/alarm/AuctionAlarm" element={<AuctionAlarm />} />
+                                        <Route path="/member/MyPage" element={<MyPage />}></Route>
+                                        <Route path="/Customer_center" element={<CstCT />}></Route>
+                                        <Route path="/admin/home" element={<AdminHome />}></Route>
+                                        <Route path="/admin/AdminReg" element={<AdminReg />}></Route>
+                                        <Route path="/admin/auction_goods_mgt" element={<AuctionGoodsMgt />}></Route>
+                                        <Route path="/admin/auction_goods_reg" element={<AuctionGoodsReg />}></Route>
+                                        <Route path="/admin/auction_result" element={<AuctionResult />}></Route>
 
-                                            <Route path="/admin/sales_mgt" element={<SalesMgt />}></Route>
-                                            <Route path="/admin/user_mgt" element={<UserMgt />}></Route>
-                                            <Route path="/admin/admin_mgt" element={<AdminMgt />}></Route>
-                                        </Routes>
+                                        <Route path="/admin/sales_mgt" element={<SalesMgt />}></Route>
+                                        <Route path="/admin/user_mgt" element={<UserMgt />}></Route>
+                                        <Route path="/admin/admin_mgt" element={<AdminMgt />}></Route>
+                                    </Routes>
 
-                                        <Footer />
-                                        <KakaoChat />
-                                    </>
-                                }
-                            />
-                            <Route path="/member/find_id" element={<FindId />} />
-                            <Route path="/member/find_pw" element={<FindPw />} />
-                        </Routes>
-                    </BrowserRouter>
-                </PersistGate>
-            </Provider>
-        </>
+                                    <Footer />
+                                    <KakaoChat />
+                                </>
+                            }
+                        />
+                        <Route path="/member/find_id" element={<FindId />} />
+                        <Route path="/member/find_pw" element={<FindPw />} />
+                    </Routes>
+                </BrowserRouter>
+            </PersistGate>
+        </Provider>
     );
 }
 

@@ -5,6 +5,7 @@ import { sessionCheck } from '../../../util/sessionCheck';
 import axios from 'axios';
 import { SERVER_URL } from '../../../config/server_url';
 import $ from 'jquery';
+import '../../../css/member/mypage/ModifyInfo.css';
 
 axios.defaults.withCredentials = true;
 
@@ -172,69 +173,109 @@ function ModifyInfo() {
     // View -----------------------------------------------------------------------------------------------------------
     return (
         <article>
-            <div className="title">
-                <h2>내 정보</h2>
-            </div>
-
-            <div className="my_infos">
-                <div className="id">아이디 : {memberInfo.M_ID}</div>
-
-                <div className="mail">메일 {memberInfo.M_MAIL}</div>
-
-                <div className="phone">
-                    {phoneModify === false ? (
-                        <>
-                            연락처 {memberInfo.M_PHONE}
-                            <button onClick={modifyPhoneBtnClick}>수정</button>
-                        </>
-                    ) : (
-                        <>
-                            <select name="phone1">
-                                <option value="010">010</option>
-                                <option value="011">011</option>
-                                <option value="016">016</option>
-                                <option value="017">017</option>
-                                <option value="018">018</option>
-                                <option value="019">019</option>
-                            </select>
-                            -
-                            <input type="number" name="phone2" />
-                            -
-                            <input type="number" name="phone3" />
-                            <button onClick={modifyPhoneConfirmClick}>수정</button>
-                            <button onClick={modifyPhoneBtnClick}>수정 취소</button>
-                        </>
-                    )}
+            <div className="member_modify_wrap">
+                <div className="title">
+                    <h2>내 정보</h2>
                 </div>
 
-                <div className="adress">
-                    {addrModify === false ? (
-                        <>
-                            주소 {memberInfo.M_ADDR}
-                            <button onClick={modifyAddrBtnClick}>수정</button>
-                        </>
-                    ) : (
-                        <>
-                            <input type="text" name="postcode" id="postcode" placeholder="우편번호" />
-                            <input type="button" onClick={execDaumPostcode} value="우편번호 찾기" />
-                            <br />
-                            <input type="text" name="roadAddress" id="roadAddress" placeholder="도로명주소" />
-                            <span id="guide" style={{ color: '#999', display: 'none' }}></span>
-                            <input type="text" name="detailAddress" id="detailAddress" placeholder="상세주소" />
-                            <input type="text" name="extraAddress" id="extraAddress" placeholder="참고항목" />
-                            <button onClick={modifyAddrConfirmClick}>수정</button>
-                            <button onClick={modifyAddrBtnClick}>수정 취소</button>
-                        </>
-                    )}
-                </div>
+                <div className="my_infos">
+                    <div className="id">
+                        <div className="info_title">아이디</div>
+                        <div>{memberInfo.M_ID}</div>
+                    </div>
 
-                <div className="social_id">소셜 아이디 {memberInfo.M_SOCIAL_ID || '소셜 로그인 회원이 아닙니다.'}</div>
+                    <div className="mail">
+                        <div className="info_title">메일</div>
+                        <div>{memberInfo.M_MAIL}</div>
+                    </div>
 
-                <div className="point">내 포인트 {memberPoint.toLocaleString()}</div>
+                    <div className="phone">
+                        {phoneModify === false ? (
+                            <>
+                                <div className="info_title">연락처</div>
+                                <div>{memberInfo.M_PHONE}</div>
+                                <button onClick={modifyPhoneBtnClick}>수정</button>
+                            </>
+                        ) : (
+                            <>
+                                <div className="info_title">연락처</div>
+                                <div>
+                                    <select name="phone1">
+                                        <option value="010">010</option>
+                                        <option value="011">011</option>
+                                        <option value="016">016</option>
+                                        <option value="017">017</option>
+                                        <option value="018">018</option>
+                                        <option value="019">019</option>
+                                    </select>
+                                    -
+                                    <input type="number" name="phone2" />
+                                    -
+                                    <input type="number" name="phone3" />
+                                </div>
 
-                <div className="reg_mod_date">
-                    가입일 {memberInfo.M_REG_DATE} <br />
-                    최근 수정일 {memberInfo.M_MOD_DATE}
+                                <button onClick={modifyPhoneConfirmClick}>수정</button>
+                                <button onClick={modifyPhoneBtnClick}>수정 취소</button>
+                            </>
+                        )}
+                    </div>
+
+                    <div className="adress">
+                        {addrModify === false ? (
+                            <>
+                                <div className="info_title">주소</div>
+                                <div>{memberInfo.M_ADDR}</div>
+
+                                <button onClick={modifyAddrBtnClick}>수정</button>
+                            </>
+                        ) : (
+                            <>
+                                <div className="info_title">주소</div>
+                                <div>
+                                    <input type="text" name="postcode" id="postcode" placeholder="우편번호" />
+                                    <input type="button" onClick={execDaumPostcode} value="우편번호 찾기" />
+                                </div>
+                                <div>
+                                    <input type="text" name="roadAddress" id="roadAddress" placeholder="도로명주소" />{' '}
+                                    <span id="guide" style={{ color: '#999', display: 'none' }}></span>
+                                </div>
+                                <div>
+                                    {' '}
+                                    <input
+                                        type="text"
+                                        name="detailAddress"
+                                        id="detailAddress"
+                                        placeholder="상세주소"
+                                    />{' '}
+                                </div>
+                                <div>
+                                    <input type="text" name="extraAddress" id="extraAddress" placeholder="참고항목" />
+                                </div>
+                                <button onClick={modifyAddrConfirmClick}>수정</button>
+                                <button onClick={modifyAddrBtnClick}>수정 취소</button>
+                            </>
+                        )}
+                    </div>
+
+                    <div className="social_id">
+                        <div className="info_title">소셜 아이디</div>
+                        <div>{memberInfo.M_SOCIAL_ID}</div>
+                    </div>
+
+                    <div className="point">
+                        <div className="info_title">내 포인트</div>
+                        <div>{memberPoint.toLocaleString()}</div>{' '}
+                    </div>
+
+                    <div className="reg_date">
+                        <div className="info_title">가입일</div>
+                        <div>{memberInfo.M_REG_DATE}</div>
+                    </div>
+
+                    <div className="mod_date">
+                        <div className="info_title">최근 수정일</div>
+                        <div>{memberInfo.M_MOD_DATE}</div>
+                    </div>
                 </div>
             </div>
         </article>
