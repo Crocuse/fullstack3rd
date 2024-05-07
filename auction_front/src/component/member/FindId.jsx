@@ -3,6 +3,7 @@ import LoadingModal from '../include/LoadingModal';
 import $ from 'jquery';
 import axios from 'axios';
 import { SERVER_URL } from '../../config/server_url';
+import '../../css/member/FindId.css';
 
 const FindId = () => {
     // Hook -----------------------------------------------------------------------------------------------------------
@@ -50,8 +51,10 @@ const FindId = () => {
                     `네이버 계정으로 가입한 회원님은 별도의 아이디 찾기가 필요하지 않습니다. <br /> 네이버 로그인을 통해 서비스를 이용해주세요.`
                 );
             } else if (response.data === 'mail_send') {
-                $('.wrong').html('');
                 $('.finded').css('display', 'block');
+                $('.input_mail').css('display', 'none');
+                $('.wrong').css('display', 'none');
+                $('.find_btn').css('display', 'none');
             }
             setLoaingModalShow(false);
         } catch (error) {
@@ -71,13 +74,12 @@ const FindId = () => {
                 <div className="find">
                     <div className="find_txt">회원가입시 등록한 메일 주소로 아이디가 발송됩니다.</div>
                     <div className="input_mail">
-                        이메일
-                        <input type="text" name="m_mail" />
+                        <input type="text" name="m_mail" placeholder="가입시 등록한 이메일을 입력해주세요." />
                     </div>
                     <div className="wrong"></div>
                     <div className="finded" style={{ display: 'none' }}>
                         <div className="find_txt">
-                            아이디 정보가 메일로 전송됐습니다. 메일 수신까지 2 ~ 3분 소요될 수 있습니다.
+                            아이디 정보가 메일로 전송됐습니다. <br /> 메일 수신까지 2 ~ 3분 소요될 수 있습니다.
                         </div>
                         <button onClick={pageCloseBtnClick}>창닫기</button>
                     </div>

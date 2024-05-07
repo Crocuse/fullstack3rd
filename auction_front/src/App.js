@@ -44,6 +44,7 @@ import KakaoChat from './component/include/KakaoChat';
 import AuctionAlarm from './component/alarm/AuctionAlarm';
 import FindId from './component/member/FindId';
 import FindPw from './component/member/FindPw';
+import MemberDelete from './component/member/mypage/MemberDelete';
 
 function App() {
     // 폰트어썸 적용
@@ -75,6 +76,7 @@ function App() {
                                             <Route path="mywinnigbids" element={<MyWinnigBids />} />
                                             <Route path="myregist" element={<MyRegist />} />
                                             <Route path="mypoint" element={<MyPoint />} />
+                                            <Route path="member_delete" element={<MemberDelete />} />
                                         </Route>
                                         <Route path="/auth/google/callback" element={<GoogleLogin />}></Route>
                                         <Route path="/auth/naver/callback" element={<NaverLogin />}></Route>

@@ -50,8 +50,8 @@ function LoginForm() {
     };
 
     const findIdClick = () => {
-        const width = 400;
-        const height = 550;
+        const width = 450;
+        const height = 350;
         const left = window.screen.width / 2 - width / 2;
         const top = window.screen.height / 2 - height / 2;
 
@@ -59,8 +59,8 @@ function LoginForm() {
     };
 
     const findPwClick = () => {
-        const width = 400;
-        const height = 550;
+        const width = 450;
+        const height = 350;
         const left = window.screen.width / 2 - width / 2;
         const top = window.screen.height / 2 - height / 2;
 
@@ -73,6 +73,7 @@ function LoginForm() {
     async function axios_login_confirm(m_id, m_pw) {
         try {
             const response = await axios.post(`${SERVER_URL.SERVER_URL()}/member/login_confirm`, { m_id, m_pw });
+            console.log('🚀 ~ axios_login_confirm ~ response.data:', response.data);
             if (response.data.error) {
                 $('#fail_massage').text(response.data.error[0]);
                 setLoaingModalShow(false);

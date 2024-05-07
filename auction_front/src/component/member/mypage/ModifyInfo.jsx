@@ -139,6 +139,7 @@ function ModifyInfo() {
         try {
             const response = await axios.post(`${SERVER_URL.SERVER_URL()}/member/modify_phone`, {
                 m_phone,
+                id: loginedId,
             });
 
             if (response.data == 'error') {
@@ -159,6 +160,7 @@ function ModifyInfo() {
         try {
             const response = await axios.post(`${SERVER_URL.SERVER_URL()}/member/modify_addr`, {
                 m_addr,
+                m_id: loginedId,
             });
 
             if (response.data == 'error') {

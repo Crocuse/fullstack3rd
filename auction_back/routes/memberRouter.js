@@ -90,4 +90,8 @@ router.post('/find_pw', (req, res) => {
     memberService.findPw(req, res);
 });
 
+router.get('/delete', (req, res) => {
+    memberService.memberDelete(req, res);
+});
+
 module.exports = router;

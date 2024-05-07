@@ -11,6 +11,7 @@ const MyPageMenubar = () => {
                 <Link to="/member/my_page/mysells"> 판매 내역 </Link>
                 <Link to="/member/my_page/mywinnigbids"> 낙찰 내역 </Link>
                 <Link to="/member/my_page/mypoint"> 포인트 내역 </Link>
+                <Link to="/member/my_page/member_delete"> 회원탈퇴 </Link>
             </div>
 
             <Outlet />
