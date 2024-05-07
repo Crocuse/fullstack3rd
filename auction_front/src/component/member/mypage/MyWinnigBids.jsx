@@ -5,6 +5,8 @@ import { sessionCheck } from '../../../util/sessionCheck';
 import axios from 'axios';
 import { SERVER_URL } from '../../../config/server_url';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import '../../../css/member/mypage/MyWinnigBids.css';
+import LoadingModal from '../../include/LoadingModal';
 
 function MyWinnigBids() {
     // Hook -----------------------------------------------------------------------------------------------------------
@@ -15,8 +17,10 @@ function MyWinnigBids() {
     const [winnigs, setWinnigs] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    const [loadingModalShow, setLoaingModalShow] = useState(false);
 
     useEffect(() => {
+        setLoaingModalShow(true);
         sessionCheck(sessionId, navigate);
         ajax_getMyWinnigs(currentPage);
     }, [sessionId, navigate, currentPage]);
@@ -26,8 +30,6 @@ function MyWinnigBids() {
         setCurrentPage(page);
         ajax_getMyWinnigs(page);
     }
-
-    // Fucntion -----------------------------------------------------------------------------------------------------------
 
     // Axios -----------------------------------------------------------------------------------------------------------
     async function ajax_getMyWinnigs(page) {
@@ -39,23 +41,25 @@ function MyWinnigBids() {
 
         if (response.data === 'error') {
             alert('정보를 불러오는데 실패했습니다.');
+            setLoaingModalShow(false);
             return;
         }
 
         setWinnigs(response.data.winnigs || []);
         setTotalPages(response.data.totalPages);
+        setLoaingModalShow(false);
     }
 
     // View -----------------------------------------------------------------------------------------------------------
     return (
-        <article>
+        <article className="my-winnig-bids">
             <div className="title">
                 <h2>내 낙찰 내역</h2>
             </div>
 
             {winnigs.length > 0 ? (
                 <>
-                    <div className="winnig_lsit_table">
+                    <div className="winnig-list-table">
                         <table>
                             <thead>
                                 <tr>
@@ -107,8 +111,13 @@ function MyWinnigBids() {
                     </div>
                 </>
             ) : (
-                <div className="not_winnig">낙찰 내역이 없습니다.</div>
+                <div className="not_wrap">
+                    <div className="not-winnig">낙찰 내역이 없습니다.</div>
+                    <img src="/img/bid_bird_x.png" id="bidBirdX" />
+                </div>
             )}
+
+            {loadingModalShow === true ? <LoadingModal /> : null}
         </article>
     );
 }

@@ -6,6 +6,7 @@ import axios from 'axios';
 import { SERVER_URL } from '../../../config/server_url';
 import $ from 'jquery';
 import '../../../css/member/mypage/ModifyInfo.css';
+import LoadingModal from '../../include/LoadingModal';
 
 axios.defaults.withCredentials = true;
 
@@ -16,6 +17,7 @@ function ModifyInfo() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        setLoaingModalShow(true);
         sessionCheck(sessionId, navigate);
         axios_get_my_info();
     }, [sessionId, navigate]);
@@ -24,6 +26,7 @@ function ModifyInfo() {
     const [memberPoint, setMemberPoint] = useState(0);
     const [phoneModify, setPhoneModify] = useState(false);
     const [addrModify, setAddrModify] = useState(false);
+    const [loadingModalShow, setLoaingModalShow] = useState(false);
 
     // Handler -----------------------------------------------------------------------------------------------------------
     const modifyPhoneBtnClick = () => {
@@ -123,10 +126,12 @@ function ModifyInfo() {
             }
 
             setMemberInfo(response.data.selectedMember);
-            setMemberPoint(response.data.currentPoint.P_CURRENT || 0);
+            setMemberPoint(response.data.currentPoint);
+            setLoaingModalShow(false);
         } catch (error) {
             console.log(error);
             alert('통신 오류가 발생했습니다.');
+            setLoaingModalShow(false);
         }
     }
 
@@ -278,6 +283,8 @@ function ModifyInfo() {
                     </div>
                 </div>
             </div>
+
+            {loadingModalShow === true ? <LoadingModal /> : null}
         </article>
     );
 }

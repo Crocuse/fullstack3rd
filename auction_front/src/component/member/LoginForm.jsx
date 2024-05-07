@@ -73,8 +73,6 @@ function LoginForm() {
     async function axios_login_confirm(m_id, m_pw) {
         try {
             const response = await axios.post(`${SERVER_URL.SERVER_URL()}/member/login_confirm`, { m_id, m_pw });
-
-            console.log('🚀 ~ axios_login_confirm ~ response.data.error:', response.data.error);
             if (response.data.error) {
                 $('#fail_massage').text(response.data.error[0]);
                 setLoaingModalShow(false);
