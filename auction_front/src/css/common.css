@@ -91,11 +91,36 @@ nav ul li a:hover {
     background-color: #e0e0e0;
 }
 
+.drop_down_wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.drop_down_content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.drop_down_wrap .drop_down_content {
+    display: block;
+    margin-top: 180px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+
+}
+
 nav #bell_wrap {
     padding: 0;
     padding-right: 10px;
     display: flex;
     align-items: center;
+    position: relative;
+
 }
 
 nav img {
