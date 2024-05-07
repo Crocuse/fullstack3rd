@@ -86,7 +86,11 @@ function MySells() {
                             <tbody>
                                 {sellsList.map((list, idx) => (
                                     <tr key={idx}>
-                                        <td>{list.GR_NAME}</td>
+                                        <td>
+                                            {list.GR_NAME.length > 20
+                                                ? `${list.GR_NAME.slice(0, 20)}...`
+                                                : list.GR_NAME}
+                                        </td>
                                         <td>이미지들어갈거임</td>
                                         <td>{`${list.GR_PRICE.toLocaleString()}원`}</td>
                                         <td>{list.AR_REG_DATE.slice(0, 10)}</td>

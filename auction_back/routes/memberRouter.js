@@ -66,6 +66,10 @@ router.post('/get_my_regist_list', (req, res) => {
     memberService.getMyRegistList(req, res);
 });
 
+router.get('/cancel_goods', (req, res) => {
+    memberService.cancelGoods(req, res);
+});
+
 router.post('/get_my_sells', (req, res) => {
     memberService.getMySells(req, res);
 });

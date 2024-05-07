@@ -319,6 +319,20 @@ const memberService = {
         );
     },
 
+    cancelGoods: (req, res) => {
+        let gr_no = req.query.gr_no;
+
+        DB.query('DELETE FROM TBL_GOODS_REGIST WHERE GR_NO = ?', [gr_no], (err, rst) => {
+            if (err) {
+                console.log(err);
+                res.json('error');
+                return;
+            }
+
+            res.json('deleted');
+        });
+    },
+
     getMySells: (req, res) => {
         let id = req.body.id;
         let page = req.body.page || 1;
