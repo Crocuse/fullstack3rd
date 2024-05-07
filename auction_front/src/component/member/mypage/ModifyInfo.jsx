@@ -228,7 +228,7 @@ function ModifyInfo() {
                     )}
                 </div>
 
-                <div className="social_id">소셜 아이디</div>
+                <div className="social_id">소셜 아이디 {memberInfo.M_SOCIAL_ID || '소셜 로그인 회원이 아닙니다.'}</div>
 
                 <div className="point">내 포인트 {memberPoint.toLocaleString()}</div>
 
