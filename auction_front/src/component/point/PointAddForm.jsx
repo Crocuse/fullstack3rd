@@ -1,7 +1,7 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SERVER_URL } from "../../config/server_url";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import CertificationAPI from "./CertificationAPI";
 import PayAPI from "./PayAPI";
 import { useNavigate } from "react-router-dom";
@@ -13,15 +13,13 @@ function PointAddForm() {
     const navigate = useNavigate();
 
     const loginedId = useSelector(state => state.loginedInfos.loginedId.loginedId);
-    // const currentPoint = useSelector(state => state.currentPoint.currentPoint);
-    const dispatch = useDispatch();
     const [chargeAmount, setChargeAmount] = useState('');
     const [currentPoint, setCurrentPoint] = useState('');
+    const chargeInputRef = useRef(null);
 
     useEffect(() => {
         sessionCheck(sessionId, navigate);
         axios_get_my_point();
-
     }, []);
 
     const chargeAmountHandler = (e) => {
@@ -39,11 +37,11 @@ function PointAddForm() {
             const response = await axios.post(`${SERVER_URL.SERVER_URL()}/point/getMyPoint`, {
                 loginedId: loginedId,
             });
-            if (response.data == "err") {
+            if (response.data === "err") {
                 setCurrentPoint('ERROR');
             }
 
-            if (response.data.message == "0") {
+            if (response.data.message === "0") {
                 setCurrentPoint('0');
             }
 
@@ -71,12 +69,12 @@ function PointAddForm() {
                         </div>
                         <div>
                             <span className="span_txt">포인트 충전 : </span>
-                            <input type="text" className="poin_page_input" value={chargeAmount} onChange={(e) => chargeAmountHandler(e)} placeholder="포인트 충전 금액을 입력하세요." /><span className="span_txt">원</span> <br />
+                            <input ref={chargeInputRef} type="text" className="poin_page_input" value={chargeAmount} onChange={(e) => chargeAmountHandler(e)} placeholder="포인트 충전 금액을 입력하세요." /><span className="span_txt">원</span> <br />
                         </div>
                     </div>
                     {/* <CertificationAPI /> */}
                     <div className="point_btn_wrap">
-                        <PayAPI chargeAmount={chargeAmount} resetChargeAmount={resetChargeAmount} />
+                        <PayAPI chargeAmount={chargeAmount} resetChargeAmount={resetChargeAmount} chargeInputRef={chargeInputRef} axios_get_my_point={axios_get_my_point} />
                     </div>
                 </div>
 
