@@ -1,0 +1,93 @@
+.my-point {
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 50px auto;
+    max-width: 1200px;
+    padding: 30px;
+    width: 100%;
+}
+
+.my-point .title {
+    color: #333;
+    font-size: 18px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.my-point .title h2 {
+    margin: 0;
+}
+
+.my-point .current-point {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 30px;
+    color: #1e88e5;
+}
+
+.my-point .current-point span {
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.my-point .point-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.my-point .point-table table {
+    width: 100%;
+}
+
+.my-point .point-table th,
+.my-point .point-table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    word-wrap: break-word;
+    font-size: 14px;
+}
+
+.my-point .point-table th {
+    background-color: #f2f2f2;
+}
+
+.my-point .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.my-point .pagination button {
+    border: 1px solid #8b8b8b;
+    border-radius: 4px;
+    color: #424242;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 8px 12px;
+    transition: background-color 0.3s ease;
+    margin: 0 5px;
+}
+
+.my-point .pagination button:hover {
+    background-color: #f2f2f2;
+}
+
+.my-point .pagination .page_list button:disabled {
+    background-color: #1e88e5;
+    border: none;
+    color: #fff;
+    cursor: default;
+}
+
+.my-point .not-wrap {
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+}
+
+.my-point #bidBirdX {
+    width: 500px;
+}

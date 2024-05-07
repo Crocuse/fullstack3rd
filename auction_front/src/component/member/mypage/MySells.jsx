@@ -5,6 +5,8 @@ import { sessionCheck } from '../../../util/sessionCheck';
 import axios from 'axios';
 import { SERVER_URL } from '../../../config/server_url';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import '../../../css/member/mypage/MySells.css';
+import LoadingModal from '../../include/LoadingModal';
 
 function MySells() {
     // Hook -----------------------------------------------------------------------------------------------------------
@@ -15,19 +17,19 @@ function MySells() {
     const [sellsList, setSellsList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    const [loadingModalShow, setLoaingModalShow] = useState(false);
 
     useEffect(() => {
+        setLoaingModalShow(true);
         sessionCheck(sessionId, navigate);
         axios_getMySells(currentPage);
-    }, [sessionId, navigate, currentPage]);
+    }, [sessionId, currentPage]);
 
     // Handler -----------------------------------------------------------------------------------------------------------
     function pageChangeHandler(page) {
         setCurrentPage(page);
         axios_getMySells(page);
     }
-
-    // Fucntion -----------------------------------------------------------------------------------------------------------
 
     // Axios -----------------------------------------------------------------------------------------------------------
     async function axios_getMySells(page) {
@@ -40,29 +42,35 @@ function MySells() {
 
             if (response.data === 'error') {
                 alert('정보를 불러오는데 실패했습니다.');
+                setLoaingModalShow(false);
                 return;
             }
 
             setSellsList(response.data.list || []);
             setTotalPages(response.data.totalPages);
+            setLoaingModalShow(false);
         } catch (error) {
             console.log(error);
             alert('통신 오류가 발생했습니다.');
+            setLoaingModalShow(false);
         }
     }
 
     // View -----------------------------------------------------------------------------------------------------------
     return (
-        <article>
+        <article className="my-sells">
             <div className="title">
                 <h2>내 판매 내역</h2>
             </div>
 
             {sellsList.length === 0 ? (
-                <div className="not_sell">판매 내역이 없습니다.</div>
+                <div className="not_wrap">
+                    <div className="not-sell">판매 내역이 없습니다.</div>
+                    <img src="/img/bid_bird_x.png" id="bidBirdX" />
+                </div>
             ) : (
                 <>
-                    <div className="sells_table">
+                    <div className="sells-table">
                         <table>
                             <thead>
                                 <tr>
@@ -128,6 +136,8 @@ function MySells() {
                     </div>
                 </>
             )}
+
+            {loadingModalShow === true ? <LoadingModal /> : null}
         </article>
     );
 }

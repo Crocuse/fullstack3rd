@@ -58,6 +58,7 @@ router.get('/social_id_check', (req, res) => {
 });
 
 router.post('/modify_password', (req, res) => {
+    console.log('/modify_password');
     memberService.modifyPassword(req, res);
 });
 

@@ -5,6 +5,8 @@ import { sessionCheck } from '../../../util/sessionCheck';
 import axios from 'axios';
 import { SERVER_URL } from '../../../config/server_url';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import '../../../css/member/mypage/MyRegist.css';
+import LoadingModal from '../../include/LoadingModal';
 
 function MyRegist() {
     // Hook -----------------------------------------------------------------------------------------------------------
@@ -15,8 +17,10 @@ function MyRegist() {
     const [registList, setRegistList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    const [loadingModalShow, setLoaingModalShow] = useState(false);
 
     useEffect(() => {
+        setLoaingModalShow(true);
         sessionCheck(sessionId, navigate);
         axios_getMyRegistList(currentPage);
     }, [sessionId, navigate, currentPage]);
@@ -26,8 +30,6 @@ function MyRegist() {
         setCurrentPage(page);
         axios_getMyRegistList(page);
     }
-
-    // Fucntion -----------------------------------------------------------------------------------------------------------
 
     // Axios -----------------------------------------------------------------------------------------------------------
     async function axios_getMyRegistList(page) {
@@ -40,34 +42,36 @@ function MyRegist() {
 
             if (response.data === 'error') {
                 alert('정보를 불러오는데 실패했습니다.');
+                setLoaingModalShow(false);
                 return;
             } else if (response.data.list.length === 0) return;
 
             setRegistList(response.data.list);
             setTotalPages(response.data.totalPages);
+            setLoaingModalShow(false);
         } catch (error) {
             console.log(error);
             alert('통신 오류가 발생했습니다.');
+            setLoaingModalShow(false);
         }
     }
 
     // View -----------------------------------------------------------------------------------------------------------
     return (
-        <article>
+        <article className="my-regist">
             <div className="title">
                 <h2>내 상품 등록 내역</h2>
             </div>
 
             <div className="regist_list_wrap">
                 {registList.length === 0 ? (
-                    <>
-                        <div className="no_regist">
-                            <p>상품 등록 내역이 없습니다.</p>
-                        </div>
-                    </>
+                    <div className="not_wrap">
+                        <div>낙찰 내역이 없습니다.</div>
+                        <img src="/img/bid_bird_x.png" id="bidBirdX" />
+                    </div>
                 ) : (
                     <>
-                        <div className="list_table">
+                        <div className="list-table">
                             <table>
                                 <thead>
                                     <tr>
@@ -149,6 +153,8 @@ function MyRegist() {
                     </>
                 )}
             </div>
+
+            {loadingModalShow === true ? <LoadingModal /> : null}
         </article>
     );
 }

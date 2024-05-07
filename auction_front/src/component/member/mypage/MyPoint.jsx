@@ -5,6 +5,8 @@ import { sessionCheck } from '../../../util/sessionCheck';
 import axios from 'axios';
 import { SERVER_URL } from '../../../config/server_url';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import '../../../css/member/mypage/MyPoint.css';
+import LoadingModal from '../../include/LoadingModal';
 
 function MyPoint() {
     // Hook -----------------------------------------------------------------------------------------------------------
@@ -16,8 +18,10 @@ function MyPoint() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [totlaPoint, setTotalPoint] = useState(0);
+    const [loadingModalShow, setLoaingModalShow] = useState(false);
 
     useEffect(() => {
+        setLoaingModalShow(true);
         sessionCheck(sessionId, navigate);
         axois_getMyPointHistory(currentPage);
     }, [sessionId, navigate, currentPage]);
@@ -37,37 +41,41 @@ function MyPoint() {
             page: page,
             limit: 10,
         });
-
         try {
             if (response.data === 'error') {
                 alert('데이터를 불러오는데 실패했습니다.');
+                setLoaingModalShow(false);
             } else {
                 setPointHistory(response.data.history || []);
-                setTotalPages(response.data.totalPages);
                 setTotalPoint(response.data.history[0].P_CURRENT || 0);
+                setTotalPages(response.data.totalPages);
+                setLoaingModalShow(false);
             }
         } catch (error) {
             console.log(error);
             alert('통신 오류가 발생했습니다.');
+            setLoaingModalShow(false);
         }
     }
 
     // View -----------------------------------------------------------------------------------------------------------
     return (
-        <article>
+        <article className="my-point">
             <div className="title">
                 <h2>내 포인트 내역</h2>
             </div>
 
-            <div className="current_table">
-                현재 내 포인트
-                <span>{totlaPoint.toLocaleString()}</span>
+            <div className="current-point">
+                현재 내 포인트 :<span>{totlaPoint.toLocaleString()}</span>
             </div>
 
             {pointHistory.length === 0 ? (
-                <div className="not_history">포인트 변동 내역이 존재하지 않습니다.</div>
+                <div className="not-wrap">
+                    <div className="not-history">포인트 변동 내역이 존재하지 않습니다.</div>
+                    <img src="/img/bid_bird_x.png" alt="No history" id="bidBirdX" />
+                </div>
             ) : (
-                <div className="point_table">
+                <div className="point-table">
                     <table>
                         <thead>
                             <tr>
@@ -119,6 +127,8 @@ function MyPoint() {
                     </div>
                 </div>
             )}
+
+            {loadingModalShow === true ? <LoadingModal /> : null}
         </article>
     );
 }
