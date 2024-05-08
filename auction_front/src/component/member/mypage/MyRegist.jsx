@@ -7,7 +7,7 @@ import { SERVER_URL } from '../../../config/server_url';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../../css/member/mypage/MyRegist.css';
 import LoadingModal from '../../include/LoadingModal';
-import { data } from 'jquery';
+import $ from 'jquery';
 
 function MyRegist() {
     // Hook -----------------------------------------------------------------------------------------------------------
@@ -20,12 +20,20 @@ function MyRegist() {
     const [totalPages, setTotalPages] = useState(0);
     const [loadingModalShow, setLoaingModalShow] = useState(false);
     const [temp, setTemp] = useState(false);
+    const [showRjReason, setShowRjReason] = useState(false);
+    const [selectedIdx, setSelectedIdx] = useState(0);
 
     useEffect(() => {
         setLoaingModalShow(true);
         sessionCheck(sessionId, navigate);
         axios_getMyRegistList(currentPage);
     }, [sessionId, navigate, currentPage, temp]);
+
+    useEffect(() => {
+        if (showRjReason) {
+            reasonModalPutInfo(selectedIdx);
+        }
+    }, [showRjReason, selectedIdx]);
 
     // Handler -----------------------------------------------------------------------------------------------------------
     function pageChangeHandler(page) {
@@ -39,6 +47,25 @@ function MyRegist() {
 
         setLoaingModalShow(true);
         axios_cancelGoods(GR_NO);
+    }
+
+    function showRjReasonClick(idx) {
+        setSelectedIdx(idx);
+        setShowRjReason(true);
+    }
+
+    function reasonModalCloseBtn() {
+        setShowRjReason(false);
+    }
+
+    // Funtion -----------------------------------------------------------------------------------------------------------
+    function reasonModalPutInfo(idx) {
+        console.log('🚀 ~ reasonModalPutInfo ~ registList[idx]:', registList[idx]);
+
+        $('.info_table td.GR_NAME').html(registList[idx].GR_NAME);
+        $('.info_table td.GR_PRICE').html(registList[idx].GR_PRICE.toLocaleString());
+        $('.info_table td.GR_INFO').html(registList[idx].GR_INFO);
+        $('.info_table td.GR_REGGR_REJECTED_REASON').html(registList[idx].GR_REJECTED_REASON);
     }
 
     // Axios -----------------------------------------------------------------------------------------------------------
@@ -157,7 +184,10 @@ function MyRegist() {
                                                     '관리자 승인 대기중입니다.'
                                                 ) : list.GR_APPROVAL === 2 ? (
                                                     <>
-                                                        물품 등록이 반려 되었습니다. <a href="#none">반려 사유 보기</a>
+                                                        물품 등록이 반려 되었습니다. <br />{' '}
+                                                        <a href="#none" onClick={() => showRjReasonClick(idx)}>
+                                                            반려 사유 보기
+                                                        </a>
                                                     </>
                                                 ) : list.GR_RECEIPT === 0 ? (
                                                     <>
@@ -201,6 +231,43 @@ function MyRegist() {
                     </>
                 )}
             </div>
+
+            {showRjReason === true ? (
+                <div className="reason_modal_wrap">
+                    <div className="reason_modal">
+                        <div className="close_bar">
+                            <div className="close" onClick={reasonModalCloseBtn}>
+                                CLOSE
+                            </div>
+                        </div>
+                        <div className="goods_info">
+                            <div className="img">
+                                <img src="/img/bid_bird_img.png" />
+                            </div>
+                            <div className="info_table">
+                                <table>
+                                    <tr>
+                                        <td>등록명</td>
+                                        <td className="GR_NAME"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>등록가격</td>
+                                        <td className="GR_PRICE"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>물품 설명</td>
+                                        <td className="GR_INFO"></td>
+                                    </tr>
+                                    <tr className="last_tr">
+                                        <td>반려사유</td>
+                                        <td className="GR_REGGR_REJECTED_REASON"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : null}
 
             {loadingModalShow === true ? <LoadingModal /> : null}
         </article>

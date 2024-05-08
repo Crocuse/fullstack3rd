@@ -80,3 +80,78 @@
 .my-regist #bidBirdX {
     width: 500px;
 }
+
+.my-regist a {
+    color: #1e88e5;
+}
+
+.my-regist .reason_modal_wrap {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    background-color: rgba(0, 0, 0, 0.2);
+    width: 100%;
+    height: 100%;
+}
+
+.my-regist .reason_modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    background-color: #fff;
+    text-align: center;
+}
+
+.my-regist .reason_modal .close_bar {
+    text-align: end;
+    height: 30px;
+    background-color: #1e88e5;
+}
+
+.my-regist .reason_modal .close {
+    display: inline-block;
+    padding: 4px;
+    box-sizing: border-box;
+    height: 30px;
+    width: 100px;
+    text-align: center;
+    color: #fff;
+    line-height: 25px;
+    cursor: pointer;
+}
+
+.my-regist .reason_modal img {
+    max-height: 200px;
+    margin: 25px auto 25px;
+}
+
+.my-regist .reason_modal .info_table {
+    padding: 0 20px;
+    margin: 0 auto;
+    margin-bottom: 25px;
+    color: #424242;
+}
+
+.my-regist .reason_modal table {
+    border-collapse: collapse;
+}
+
+.my-regist .reason_modal td {
+    border-bottom: 1px solid #c4c4c4;
+    padding: 10px 0;
+}
+
+.my-regist .reason_modal .last_tr td {
+    border: none;
+}
+
+.my-regist .reason_modal td:nth-child(1) {
+    width: 80px;
+    text-align: left;
+}
+
+.my-regist .reason_modal td:nth-child(2) {
+    text-align: left;
+}

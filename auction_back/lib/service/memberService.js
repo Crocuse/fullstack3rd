@@ -282,7 +282,7 @@ const memberService = {
         let offset = (page - 1) * limit;
 
         DB.query(
-            `SELECT GR.GR_NO, GR_NAME, GR_PRICE, GR_INFO, GR_APPROVAL, GR_RECEIPT, AS_START_DATE  
+            `SELECT GR.GR_NO, GR_NAME, GR_PRICE, GR_INFO, GR_APPROVAL, GR_RECEIPT, AS_START_DATE, GR_REJECTED_REASON  
                 FROM TBL_GOODS_REGIST AS GR 
                 LEFT JOIN TBL_AUCTION_SCHEDULE AS A ON GR.GR_NO = A.GR_NO 
                 WHERE GR.M_ID = ? 
@@ -594,7 +594,7 @@ const memberService = {
         let shortId = generateTemp(6);
 
         DB.query(
-            `UPDATE TBL_MEMBER SET M_PW = 'Withdrawal member_${shortId}', M_MAIL = 'Withdrawal member_${shortId}', M_PHONE ='Withdrawal member_${shortId}', M_ADDR = 'Withdrawal member_${shortId}', M_STATUS = 0, M_MOD_DATE = NOW() WHERE M_ID = ?`,
+            `UPDATE TBL_MEMBER SET M_PW = 'Withdrawal member_${shortId}', M_MAIL = 'Withdrawal member_${shortId}', M_PHONE ='Withdrawal member_${shortId}', M_ADDR = 'Withdrawal member_${shortId}', M_STATUS = 1, M_MOD_DATE = NOW() WHERE M_ID = ?`,
             [id],
             (err, rst) => {
                 if (err) {
