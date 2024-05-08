@@ -1,0 +1,49 @@
+.customer_center_wrap {
+    width: 100%;
+}
+
+.customer_center_wrap .header {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+    background-color: #ececec;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.customer_center_wrap h1 {
+    margin: 0;
+    padding-top: 20px;
+}
+
+.customer_center_wrap .bidbird_img img {
+    max-width: 100px;
+}
+
+.customer_center_wrap .hero {
+    text-align: center;
+    padding: 50px 0;
+}
+
+.customer_center_wrap .actions {
+    margin-top: 20px;
+}
+
+.customer_center_wrap .button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.customer_center_wrap .guide {
+    text-align: center;
+    padding: 20px;
+    background-color: #f0f0f0;
+}
