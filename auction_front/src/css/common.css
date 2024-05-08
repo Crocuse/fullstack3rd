@@ -155,10 +155,13 @@ nav ul li a:hover {
 
 .drop_down_wrap .drop_down_content {
     display: block;
-    margin-top: 180px;
     text-align: center;
     padding: 10px;
+    width: 500px;
     border-radius: 8px;
+    position: absolute;
+    top: 50px;
+    left: -250px;
 }
 
 nav img {

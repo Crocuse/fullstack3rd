@@ -60,8 +60,6 @@ function MyRegist() {
 
     // Funtion -----------------------------------------------------------------------------------------------------------
     function reasonModalPutInfo(idx) {
-        console.log('🚀 ~ reasonModalPutInfo ~ registList[idx]:', registList[idx]);
-
         $('.info_table td.GR_NAME').html(registList[idx].GR_NAME);
         $('.info_table td.GR_PRICE').html(registList[idx].GR_PRICE.toLocaleString());
         $('.info_table td.GR_INFO').html(registList[idx].GR_INFO);
@@ -76,13 +74,14 @@ function MyRegist() {
                 page: page,
                 limit: 10,
             });
-
             if (response.data === 'error') {
                 alert('정보를 불러오는데 실패했습니다.');
                 setLoaingModalShow(false);
                 return;
-            } else if (response.data.list.length === 0) return;
-
+            } else if (response.data.list.length === 0) {
+                setLoaingModalShow(false);
+                return;
+            }
             setRegistList(response.data.list);
             setTotalPages(response.data.totalPages);
             setLoaingModalShow(false);
