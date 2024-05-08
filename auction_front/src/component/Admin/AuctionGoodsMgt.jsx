@@ -1,272 +1,202 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { SERVER_URL } from "../../config/server_url";
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { sessionCheck } from "../../util/sessionCheck";
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
+import LoadingModal from '../include/LoadingModal';
+import '../../css/Admin/AuctionGoodsMgt.css';
 
 function AuctionGoodsMgt() {
-
   const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
-
   const navigate = useNavigate();
-
-  const [goodsList, setGoodsList] = useState([]);
-  const [goodsState, setGoodsState] = useState(false);
-  const [selectedGoods, setSelectedGoods] = useState(null);
-  const [searchName, setSearchName] = useState("");
-  const [searchId, setSearchId] = useState("");
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [selectedApproval, setSelectedApproval] = useState("");
-  const [selectedReceipt, setSelectedReceipt] = useState("");
-  const [sortColumn, setSortColumn] = useState("GR_NO");
-  const [sortDirection, setSortDirection] = useState("desc");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const gridRef = useRef(null);
+  const [rowData, setRowData] = useState([]);
+  const [columnDefs, setColumnDefs] = useState([]);
+  const [loadingModalShow, setLoadingModalShow] = useState(false);
+  const [editModeRows, setEditModeRows] = useState({});
 
   useEffect(() => {
+    setLoadingModalShow(true);
     sessionCheck(sessionId, navigate);
     axios_goods_list();
-  },[sessionId, navigate]);
+  }, [sessionId, navigate]);
 
+  useEffect(() => {
+    setColumnDefs([
+      { headerName: '상품번호', field: 'GR_NO' },
+      { headerName: '상품이름', field: 'GR_NAME' },
+      { headerName: '등록ID', field: 'M_ID' },
+      { headerName: '상품가격', field: 'GR_PRICE' },
+      {
+        headerName: '등록상태',
+        field: 'GR_APPROVAL',
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: {
+          values: ['대기', '승인', '반려']
+        },
+      },
+      {
+        headerName: '수령상태',
+        field: 'GR_RECEIPT',
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: {
+          values: ['미수령', '수령'],
+        },
+      },
+      {
+        headerName: '등록일',
+        field: 'GR_REG_DATE',
+        filter: 'agDateColumnFilter',
+        filterParams: {
+          comparator: (filterLocalDateAtMidnight, cellValue) => {
+            const cellDate = new Date(cellValue);
+            const cellDateOnly = new Date(cellDate.getFullYear(), cellDate.getMonth(), cellDate.getDate());
+            if (filterLocalDateAtMidnight.getTime() === cellDateOnly.getTime()) {
+              return 0;
+            }
+            if (cellDateOnly < filterLocalDateAtMidnight) {
+              return -1;
+            }
+            if (cellDateOnly > filterLocalDateAtMidnight) {
+              return 1;
+            }
+          },
+        },
+      },
+      {
+        headerName: '수정일',
+        field: 'GR_MOD_DATE',
+        filter: 'agDateColumnFilter',
+        filterParams: {
+          comparator: (filterLocalDateAtMidnight, cellValue) => {
+            const cellDate = new Date(cellValue);
+            const cellDateOnly = new Date(cellDate.getFullYear(), cellDate.getMonth(), cellDate.getDate());
+            if (filterLocalDateAtMidnight.getTime() === cellDateOnly.getTime()) {
+              return 0;
+            }
+            if (cellDateOnly < filterLocalDateAtMidnight) {
+              return -1;
+            }
+            if (cellDateOnly > filterLocalDateAtMidnight) {
+              return 1;
+            }
+          },
+        },
+      },
+      {
+        headerName: '수정',
+        field: 'GR_NO',
+        filter: false,
+        floatingFilter: false,
+        cellRenderer: (params) => (
+          editModeRows[params.data.GR_NO] ? (
+            <button onClick={() => {
+              const approvalMap = {
+                '대기': 0,
+                '승인': 1,
+                '반려': 2,
+              };
+              const receiptMap = {
+                '미수령': 0,
+                '수령': 1,
+              };
+              const approval = approvalMap[params.data.GR_APPROVAL];
+              const receipt = receiptMap[params.data.GR_RECEIPT];
+              axios_goods_state_change(params.value, approval, receipt);
+              setEditModeRows(prevState => ({
+                ...prevState,
+                [params.data.GR_NO]: false,
+              }));
+            }}>
+              저장
+            </button>
+          ) : (
+            <input
+              type="checkbox"
+              checked={editModeRows[params.data.GR_NO] || false}
+              onChange={() =>
+                setEditModeRows(prevState => ({
+                  ...prevState,
+                  [params.data.GR_NO]: !prevState[params.data.GR_NO],
+                }))
+              }
+            />
+          )
+        ),
+      },
+    ]);
+  }, [editModeRows]);
 
-  const goodsStateclickBtn = (goods) => {
-    setGoodsState(!goodsState);
-    if (!goodsState) {
-      setSelectedGoods(goods);
-    } else {
-      axios_goods_state_change(goods.GR_NO);
-    }
-  };
+  const defaultColDef = useMemo(() => ({
+    editable: (params) => editModeRows[params.data.GR_NO] || false,
+    resizable: true,
+    filter: 'agTextColumnFilter',
+    floatingFilter: true,
+  }), [editModeRows]);
 
-  async function axios_goods_list() {
+  const rowClassRules = useMemo(() => ({
+  'row-red': params => params.data.GR_APPROVAL === '반려',
+  'row-green': params => params.data.GR_APPROVAL === '승인',
+  'row-yellow': params => params.data.GR_APPROVAL === '대기',
+  }), []);
+
+  const axios_goods_list = async () => {
     try {
       const response = await axios.get(`${SERVER_URL.SERVER_URL()}/admin/goods_list`);
-      setGoodsList(response.data);
+      const data = response.data.map(item => ({
+        ...item,
+        GR_APPROVAL: item.GR_APPROVAL === 0 ? '대기' :
+                     item.GR_APPROVAL === 1 ? '승인' : '반려',
+        GR_RECEIPT: item.GR_RECEIPT === 0 ? '미수령' : 
+                    item.GR_RECEIPT === 1 ? '수령' : '오류'
+      }));
+      setRowData(data);
+      setLoadingModalShow(false);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  async function axios_goods_state_change(gr_no) {
+  const axios_goods_state_change = async (gr_no, approval, receipt) => {
     try {
-      const approvalValue = document.querySelector(`select[name="goods_approval_sel_${gr_no}"]`).value;
-      const receiptValue = document.querySelector(`select[name="goods_receipt_sel_${gr_no}"]`).value;
-
       const response = await axios.post(`${SERVER_URL.SERVER_URL()}/admin/goods_state_change`, {
         gr_no,
-        approval: approvalValue,
-        receipt: receiptValue,
+        approval,
+        receipt : approval == 0 ? 0 : 
+                  approval == 1 ? receipt :
+                  approval == 2 ? 0 : null,
       });
 
       if (response.data === 'success') {
-      // 데이터 다시 불러오기
-      axios_goods_list();
+        axios_goods_list();
       } else {
         console.log('상태 변경 실패');
       }
-
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-  const handleSearchNameChange = (e) => setSearchName(e.target.value);
-  const handleSearchIdChange = (e) => setSearchId(e.target.value);
-  const handleMinPriceChange = (e) => setMinPrice(e.target.value);
-  const handleMaxPriceChange = (e) => setMaxPrice(e.target.value);
-  const handleApprovalChange = (e) => setSelectedApproval(e.target.value);
-  const handleReceiptChange = (e) => setSelectedReceipt(e.target.value);
-  const handleStartDateChange = (e) => setStartDate(e.target.value);
-  const handleEndDateChange = (e) => setEndDate(e.target.value);
-  const handleSort = (column) => {
-    if (sortColumn === column) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-    } else {
-      setSortColumn(column);
-      setSortDirection("asc");
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  const filteredList = goodsList.filter((goods) => {
-    if (searchName && !goods.GR_NAME.includes(searchName)) return false;
-    if (searchId && goods.M_ID !== searchId) return false;
-    if (minPrice && goods.GR_PRICE < minPrice) return false;
-    if (maxPrice && goods.GR_PRICE > maxPrice) return false;
-    if (selectedApproval && goods.GR_APPROVAL !== Number(selectedApproval)) return false;
-    if (selectedReceipt && goods.GR_RECEIPT !== Number(selectedReceipt)) return false;
-    
-    // 시작 날짜와 종료 날짜가 모두 선택된 경우
-    if (startDate && endDate) {
-      const regDate = new Date(goods.GR_REG_DATE);
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      
-      // 년, 월, 일을 추출하여 비교
-      const regDateStr = `${regDate.getFullYear()}-${regDate.getMonth()}-${regDate.getDate()}`;
-      const startStr = `${start.getFullYear()}-${start.getMonth()}-${start.getDate()}`;
-      const endStr = `${end.getFullYear()}-${end.getMonth()}-${end.getDate()}`;
-      
-      // 상품의 등록일이 시작 날짜보다 작거나 종료 날짜보다 큰 경우에는 필터링에서 제외
-      if (regDateStr < startStr || regDateStr > endStr) return false;
-    } 
-    // 시작 날짜만 선택된 경우
-    else if (startDate) {
-      const regDate = new Date(goods.GR_REG_DATE);
-      const start = new Date(startDate);
-      
-      // 년, 월, 일을 추출하여 비교
-      const regDateStr = `${regDate.getFullYear()}-${regDate.getMonth()}-${regDate.getDate()}`;
-      const startStr = `${start.getFullYear()}-${start.getMonth()}-${start.getDate()}`;
-      
-      // 상품의 등록일이 시작 날짜보다 작은 경우에는 필터링에서 제외
-      if (regDateStr < startStr) return false;
-    }
-    // 종료 날짜만 선택된 경우
-    else if (endDate) {
-      const regDate = new Date(goods.GR_REG_DATE);
-      const end = new Date(endDate);
-      
-      // 년, 월, 일을 추출하여 비교
-      const regDateStr = `${regDate.getFullYear()}-${regDate.getMonth()}-${regDate.getDate()}`;
-      const endStr = `${end.getFullYear()}-${end.getMonth()}-${end.getDate()}`;
-      
-      // 상품의 등록일이 종료 날짜보다 큰 경우에는 필터링에서 제외
-      if (regDateStr > endStr) return false;
-    }
-    
-    return true;
-  });
-
-  const sortedList = filteredList.sort((a, b) => {
-    if (sortColumn === "GR_NO") {
-      return sortDirection === "asc" ? a.GR_NO - b.GR_NO : b.GR_NO - a.GR_NO;
-    } else if (sortColumn === "GR_PRICE") {
-      return sortDirection === "asc" ? a.GR_PRICE - b.GR_PRICE : b.GR_PRICE - a.GR_PRICE;
-    } else if (sortColumn === "GR_REG_DATE") {
-      return sortDirection === "asc"
-        ? new Date(a.GR_REG_DATE) - new Date(b.GR_REG_DATE)
-        : new Date(b.GR_REG_DATE) - new Date(a.GR_REG_DATE);
-    } else if (sortColumn === "GR_MOD_DATE") {
-      return sortDirection === "asc"
-        ? new Date(a.GR_MOD_DATE) - new Date(b.GR_MOD_DATE)
-        : new Date(b.GR_MOD_DATE) - new Date(a.GR_MOD_DATE);
-    }
-    return 0;
-  });
-
+  
   return (
     <article>
       <div>AuctionGoodsMgt</div>
-      <div>
-        <span>상품이름검색</span>
-        <br />
-        <input type="text" placeholder="검색어를 입력하세요" value={searchName} onChange={handleSearchNameChange} />
-        <br />
-        <span>등록ID검색</span>
-        <br />
-        <input type="text" placeholder="ID를 입력하세요" value={searchId} onChange={handleSearchIdChange} />
-        <br />
-        <span>가격범위검색</span>
-        <br />
-        <input type="number" value={minPrice} onChange={handleMinPriceChange} /> ~{" "}
-        <input type="number" value={maxPrice} onChange={handleMaxPriceChange} />
-        <br />
-        <span>등록일 범위 검색</span>
-        <br />
-        <input type="date" value={startDate} onChange={handleStartDateChange} /> ~{" "}
-        <input type="date" value={endDate} onChange={handleEndDateChange} />
-        <span>등록상태</span>
-        <select value={selectedApproval} onChange={handleApprovalChange}>
-          <option value="">All</option>
-          <option value="0">대기</option>
-          <option value="1">승인</option>
-          <option value="2">반려</option>
-        </select>
-        <span>수령상태</span>
-        <select value={selectedReceipt} onChange={handleReceiptChange}>
-          <option value="">All</option>
-          <option value="0">미수령</option>
-          <option value="1">수령</option>
-        </select>
+      <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }}>
+      <AgGridReact
+        rowClassRules={rowClassRules}
+        ref={gridRef}
+        rowData={rowData}
+        columnDefs={columnDefs}
+        defaultColDef={defaultColDef}
+        pagination={true}
+        paginationPageSize={10}
+      />
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th onClick={() => handleSort("GR_NO")}>
-              상품번호 {sortColumn === "GR_NO" && (sortDirection === "asc" ? "▲" : "▼")}
-            </th>
-            <th>상품이름</th>
-            <th>등록ID</th>
-            <th onClick={() => handleSort("GR_PRICE")}>
-              상품가격 {sortColumn === "GR_PRICE" && (sortDirection === "asc" ? "▲" : "▼")}
-            </th>
-            <th>등록상태</th>
-            <th>수령상태</th>
-            <th onClick={() => handleSort("GR_REG_DATE")}>
-              등록일 {sortColumn === "GR_REG_DATE" && (sortDirection === "asc" ? "▲" : "▼")}
-            </th>
-            <th onClick={() => handleSort("GR_MOD_DATE")}>
-              수정일 {sortColumn === "GR_MOD_DATE" && (sortDirection === "asc" ? "▲" : "▼")}
-            </th>
-            <th>수정</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedList.map((goods) => (
-            <tr key={goods.GR_NO} style={{ textDecoration: goods.GR_APPROVAL === 2 ? "line-through" : "none" }}>
-              <td>{goods.GR_NO}</td>
-              <td>{goods.GR_NAME}</td>
-              <td>{goods.M_ID}</td>
-              <td>{goods.GR_PRICE}</td>
-              <td>
-  {goodsState && selectedGoods.GR_NO === goods.GR_NO ? (
-    <>
-      <select name={`goods_approval_sel_${goods.GR_NO}`} defaultValue={goods.GR_APPROVAL}
-        onChange={(e) => {
-          if (e.target.value === "2") {
-            setSelectedGoods({ ...selectedGoods, showRejectInput: true });
-          } else {
-            setSelectedGoods({ ...selectedGoods, showRejectInput: false });
-          }
-        }}
-      >
-        <option value="0">대기</option>
-        <option value="1">승인</option>
-        <option value="2">반려</option>
-      </select>
-      {selectedGoods.showRejectInput && (
-        <input
-          type="text"
-          placeholder="반려 사유를 입력하세요"
-          onChange={(e) => setSelectedGoods({ ...selectedGoods, rejectReason: e.target.value })}
-        />
-      )}
-    </>
-  ) : goods.GR_APPROVAL === 0 ? "대기" : goods.GR_APPROVAL === 1 ? "승인" : "반려"}
-</td>
-              <td>
-                {goodsState && selectedGoods.GR_NO === goods.GR_NO ? (
-                  <select name={`goods_receipt_sel_${goods.GR_NO}`} defaultValue={goods.GR_RECEIPT}>
-                    <option value="0">미수령</option>
-                    <option value="1">수령</option>
-                  </select>
-                ) : goods.GR_RECEIPT === 0 ? "미수령" : "수령"}
-              </td>
-              <td>{goods.GR_REG_DATE.slice(0, 16)}</td>
-              <td>{goods.GR_MOD_DATE.slice(0, 16)}</td>
-              <td>
-                {goodsState && selectedGoods.GR_NO === goods.GR_NO ? (
-                  <button onClick={() => goodsStateclickBtn(goods)}>확인</button>
-                ) : (
-                  <button onClick={() => goodsStateclickBtn(goods)}>수정</button>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {loadingModalShow === true ? <LoadingModal /> : null}
     </article>
   );
 }
