@@ -10,6 +10,7 @@
 }
 .home_wrap .definition_title {
     grid-area: 'title';
+    margin-bottom: 30px;
 }
 
 .home_wrap {
@@ -24,11 +25,17 @@
     margin-top: 20px;
     margin-bottom: 50px;
     grid-area: 'description';
+    padding: 0 100px;
 }
 
 .home_wrap .definition_txt div:nth-child(1) {
     font-size: 1.5em;
     margin-bottom: 30px;
+    text-align: justify;
+}
+
+.home_wrap .definition_txt .main_txt {
+    text-align: justify;
 }
 
 .home_wrap .intro_company_sec {
@@ -51,13 +58,14 @@
 }
 
 .home_wrap .bid_btn a {
-    border: 1px solid #242424;
-    padding: 15px;
-    margin-left: 20px;
+    padding: 10px 50px;
     border-radius: 5px;
     font-size: 1.2em;
-    font-weight: bold;
     color: black;
+}
+
+.home_wrap .bid_btn a:nth-child(1) {
+    margin-right: 30px;
 }
 
 .home_wrap .bid_btn a:hover {

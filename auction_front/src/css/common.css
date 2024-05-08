@@ -1,8 +1,18 @@
+@font-face {
+    font-family: 'GowunDodum-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/GowunDodum-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 html,
 body {
-    font-family: 'LINESeedKR-Rg';
+    font-family: 'GowunDodum-Regular';
+    -webkit-text-stroke: 1px;
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.1);
     height: 100%;
     margin: 0;
+    color: #242424;
 }
 
 body {
@@ -10,7 +20,6 @@ body {
     flex-direction: column;
     min-height: 100vh;
     background-color: #f5f5f5;
-    color: #333;
 }
 
 a {
@@ -21,14 +30,21 @@ li {
     list-style-type: none;
 }
 
+button,
+input[type='button'],
+input[type='reset'],
+input::placeholder {
+    font-family: 'GowunDodum-Regular';
+    -webkit-text-stroke: 1px;
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.1);
+}
+
 header {
     background-color: #1e88e5;
     color: #ffffff;
     padding: 20px;
-    text-align: left;
+    text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
     flex-shrink: 0;
 }
 
@@ -36,15 +52,26 @@ header img {
     width: 50px;
 }
 
-header h1 {
-    margin: 0;
-    font-size: 2rem;
-    text-transform: uppercase;
-    margin-left: 10px;
-}
-
 header a {
     color: #ece6e6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@font-face {
+    font-family: 'TTHakgyoansimMonggeulmonggeulR';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_keris@1.0/TTHakgyoansimMonggeulmonggeulR.woff2')
+        format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+header a span {
+    font-family: 'TTHakgyoansimMonggeulmonggeulR';
+    font-size: 2.5em;
+    padding-left: 20px;
+    padding-top: 5px;
 }
 
 nav {
@@ -111,7 +138,6 @@ nav ul li a:hover {
     text-align: center;
     padding: 10px;
     border-radius: 8px;
-
 }
 
 nav #bell_wrap {
@@ -120,7 +146,6 @@ nav #bell_wrap {
     display: flex;
     align-items: center;
     position: relative;
-
 }
 
 nav img {
@@ -143,25 +168,4 @@ footer {
     padding: 20px;
     text-align: center;
     flex-shrink: 0;
-}
-
-@font-face {
-    font-family: 'LINESeedKR-Th';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Th.woff2') format('woff2');
-    font-weight: 100;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'LINESeedKR-Rg';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'LINESeedKR-Bd';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2');
-    font-weight: 700;
-    font-style: normal;
 }
