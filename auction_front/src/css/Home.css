@@ -1,47 +1,39 @@
 .home_wrap .first_sec {
-    height: 500px;
-    align-items: center;
-    display: grid;
-    grid-template-areas:
-        'title img'
-        'description img'
-        'button img';
-    margin-bottom: 100px;
-}
-.home_wrap .definition_title {
-    grid-area: 'title';
-    margin-bottom: 30px;
+    width: 100%;
+    padding-top: 100px;
+    padding-bottom: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .home_wrap {
+    width: 100%;
     text-align: center;
+}
+
+.home_wrap .intro_company_sec {
     padding: 0 100px;
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.home_wrap .logo_img_sec {
+    padding-right: 100px;
 }
 
 .home_wrap .definition_txt {
-    margin-top: 20px;
-    margin-bottom: 50px;
-    grid-area: 'description';
-    padding: 0 100px;
+    width: 100%;
 }
 
 .home_wrap .definition_txt div:nth-child(1) {
     font-size: 1.5em;
+    margin-top: 30px;
     margin-bottom: 30px;
     text-align: justify;
 }
 
 .home_wrap .definition_txt .main_txt {
     text-align: justify;
-}
-
-.home_wrap .intro_company_sec {
-    display: grid;
-    grid-template-rows: 150px 200px 100px;
-    align-items: center;
 }
 
 .home_wrap #definition {
@@ -54,18 +46,22 @@
 }
 
 .home_wrap .bid_btn_wrap {
-    margin-top: 50px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .home_wrap .bid_btn a {
-    padding: 10px 50px;
+    box-sizing: border-box;
+    padding: 8px 50px;
     border-radius: 5px;
     font-size: 1.2em;
     color: black;
 }
 
 .home_wrap .bid_btn a:nth-child(1) {
-    margin-right: 30px;
+    margin-right: 50px;
 }
 
 .home_wrap .bid_btn a:hover {
@@ -83,12 +79,12 @@
 }
 
 .home_wrap .bid_btn a {
-    background-color: #1e88e5;
+    background-color: #49a5f5;
     color: #fff;
 }
 
 .home_wrap .bid_btn a:hover {
-    background-color: #1565c0;
+    background-color: #3791e0;
 }
 
 .home_wrap .bid_btn > div button:hover {
@@ -99,18 +95,23 @@
     word-break: keep-all;
 }
 
-.home_wrap .logo_img_sec {
-    margin: 80px;
+.home_wrap .second_sec {
+    padding-top: 50px;
+    width: 100%;
+    margin-bottom: 50px;
     display: flex;
+    flex-direction: column;
     align-items: center;
 }
 
-.home_wrap .second_sec {
-    height: 400px;
-    margin-bottom: 50px;
+.home_wrap .current_bid_sec {
+    width: 100%;
+    padding: 0 100px;
+    box-sizing: border-box;
 }
 
 .home_wrap .current_bid_sec > div {
+    width: 100%;
     font-size: 1.8em;
     font-weight: bold;
     margin-bottom: 30px;
@@ -128,15 +129,13 @@
 .home_wrap .current_bid_img {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-}
-
-.home_wrap .current_bid_img > div {
-    flex: 1;
-    text-align: center;
 }
 
 .home_wrap .current_bid_img img {
     max-width: 100%;
     height: auto;
+}
+
+#bird_img {
+    max-width: 400px;
 }
