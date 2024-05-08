@@ -35,7 +35,15 @@ li {
     list-style-type: none;
 }
 
-button,
+button {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    font-family: 'GowunDodum-Regular' !important;
+    -webkit-text-stroke: 1px;
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.1);
+}
+
 input[type='button'],
 input[type='reset'],
 input::placeholder {

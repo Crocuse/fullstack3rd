@@ -150,14 +150,14 @@ function MyRegist() {
                                     {registList.map((list, idx) => (
                                         <tr key={idx}>
                                             <td>
-                                                {list.GR_NAME.length > 20
-                                                    ? `${list.GR_NAME.slice(0, 20)}...`
+                                                {list.GR_NAME.length > 15
+                                                    ? `${list.GR_NAME.slice(0, 15)}...`
                                                     : list.GR_NAME}
                                             </td>
                                             <td>{list.GR_PRICE.toLocaleString()}원</td>
                                             <td>
-                                                {list.GR_INFO.length > 20
-                                                    ? `${list.GR_INFO.slice(0, 20)}...`
+                                                {list.GR_INFO.length > 15
+                                                    ? `${list.GR_INFO.slice(0, 15)}...`
                                                     : list.GR_INFO}
                                             </td>
                                             <td>
