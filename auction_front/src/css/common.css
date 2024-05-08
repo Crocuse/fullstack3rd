@@ -127,6 +127,13 @@ nav ul li a:hover {
     position: relative;
     display: flex;
     align-items: center;
+    justify-content: center;
+}
+
+.drop_down_wrap a {
+    padding: 0;
+    width: 50px;
+    text-align: center;
 }
 
 .drop_down_content {
@@ -146,16 +153,8 @@ nav ul li a:hover {
     border-radius: 8px;
 }
 
-nav #bell_wrap {
-    padding: 0;
-    padding-right: 10px;
-    display: flex;
-    align-items: center;
-    position: relative;
-}
-
 nav img {
-    max-height: 30px;
+    max-height: 25px;
 }
 
 main {
