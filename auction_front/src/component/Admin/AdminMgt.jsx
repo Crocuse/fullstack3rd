@@ -6,6 +6,8 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { sessionCheck } from "../../util/sessionCheck";
 import '../../css/Admin/AdminMgt.css';
+import LoadingModal from '../include/LoadingModal';
+
 import { AgGridReact } from 'ag-grid-react';
 import { ModuleRegistry } from 'ag-grid-community';
 import { ClientSideRowModelModule } from 'ag-grid-community';
@@ -28,13 +30,14 @@ ModuleRegistry.registerModules([
 function AdminMgt() {
     const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
     const navigate = useNavigate();
-
+    const [loadingModalShow,setLoadingModalShow] = useState(false);
     const [rowData, setRowData] = useState([]);
     const [colDefs, setColDefs] = useState([]);
     const [editModeRows, setEditModeRows] = useState({});
 
     useEffect(() => {
         sessionCheck(sessionId, navigate);
+        setLoadingModalShow(true)
         axios_admin_list();
 
         setColDefs([
@@ -61,8 +64,44 @@ function AdminMgt() {
                 editable: (params) => editModeRows[params.data.A_ID] || false,
                 onCellDoubleClicked: axios_admin_modify_confirm,
             },
-            { field: 'A_REG_DATE', headerName: '관리자 등록일' },
-            { field: 'A_MOD_DATE', headerName: '관리자 수정일' },
+            {   field: 'A_REG_DATE', 
+                headerName: '관리자 등록일',
+                filter: 'agDateColumnFilter',
+                filterParams: {
+                  comparator: (filterLocalDateAtMidnight, cellValue) => {
+                    const cellDate = new Date(cellValue);
+                    const cellDateOnly = new Date(cellDate.getFullYear(), cellDate.getMonth(), cellDate.getDate());
+                    if (filterLocalDateAtMidnight.getTime() === cellDateOnly.getTime()) {
+                      return 0;
+                    }
+                    if (cellDateOnly < filterLocalDateAtMidnight) {
+                      return -1;
+                    }
+                    if (cellDateOnly > filterLocalDateAtMidnight) {
+                      return 1;
+                    }
+                  },
+                },
+            },
+            {   field: 'A_MOD_DATE', 
+                headerName: '관리자 수정일',
+                filter: 'agDateColumnFilter',
+                filterParams: {
+                  comparator: (filterLocalDateAtMidnight, cellValue) => {
+                    const cellDate = new Date(cellValue);
+                    const cellDateOnly = new Date(cellDate.getFullYear(), cellDate.getMonth(), cellDate.getDate());
+                    if (filterLocalDateAtMidnight.getTime() === cellDateOnly.getTime()) {
+                      return 0;
+                    }
+                    if (cellDateOnly < filterLocalDateAtMidnight) {
+                      return -1;
+                    }
+                    if (cellDateOnly > filterLocalDateAtMidnight) {
+                      return 1;
+                    }
+                  },
+                }, 
+            },
             {
                 field: 'edit',
                 headerName: '수정',
@@ -112,6 +151,7 @@ function AdminMgt() {
         try {
             const response = await axios.get(`${SERVER_URL.SERVER_URL()}/admin/admin_list`);
             setRowData(response.data);
+            setLoadingModalShow(false)
         } catch (error) {
             console.log(error);
         }
@@ -169,7 +209,9 @@ function AdminMgt() {
     }
 
     return (
+        
         <article className="admin-mgt">
+            
             <div className="admin-mgt-title">ADMIN MANAGEMENT</div>
             <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }}>
                 <AgGridReact
@@ -180,7 +222,9 @@ function AdminMgt() {
                     paginationPageSize={10}
                 />
             </div>
+            {loadingModalShow === true ? <LoadingModal /> : null}
         </article>
+        
     );
 }
 

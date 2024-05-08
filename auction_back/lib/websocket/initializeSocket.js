@@ -1,5 +1,5 @@
 const socketIO = require('socket.io');
-const auctionAlarmHandler = require('./auctionAlarmHandler');
+const webSocketHandler = require('./webSocketHandler');
 
 function initializeSocket(server) {
     const io = socketIO(server, {
@@ -12,7 +12,7 @@ function initializeSocket(server) {
     io.on('connection', socket => {
         console.log("WEBSOCKET CONNECTED !!!! ");
 
-        auctionAlarmHandler(socket, io);
+        webSocketHandler(socket, io);
 
     });
 }

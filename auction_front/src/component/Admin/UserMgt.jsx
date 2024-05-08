@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { sessionCheck } from "../../util/sessionCheck";
 import '../../css/Admin/UserMgt.css';
+import LoadingModal from '../include/LoadingModal';
 
 import { AgGridReact } from 'ag-grid-react';
 import { ModuleRegistry } from 'ag-grid-community';
@@ -33,14 +34,17 @@ function UserMgt() {
     const [selectedMember, setSelectedMember] = useState(null);
     const [selectedAddress, setSelectedAddress] = useState(null);
     const [detailAddress, setDetailAddress] = useState("");
+    const [loadingModalShow,setLoadingModalShow] = useState(false);
+
 
     const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
     const navigate = useNavigate();
 
     useEffect(() => {
+        setLoadingModalShow(true)
         axios_member_list();
         sessionCheck(sessionId, navigate);
-    }, [sessionId, navigate]);
+    }, [sessionId]);
 
     useEffect(() => {
         setColDefs([
@@ -95,8 +99,45 @@ function UserMgt() {
                 ),
                 hide: true,
             },
-            { field: 'M_REG_DATE', headerName: '멤버 등록일' },
-            { field: 'M_MOD_DATE', headerName: '멤버 수정일' },
+            {   field: 'M_REG_DATE', 
+                headerName: '멤버 등록일',
+                filter: "agDateColumnFilter",
+                filterParams: {
+                    comparator: (filterLocalDateAtMidnight, cellValue) => {
+                      const cellDate = new Date(cellValue);
+                      const cellDateOnly = new Date(cellDate.getFullYear(), cellDate.getMonth(), cellDate.getDate());
+                      if (filterLocalDateAtMidnight.getTime() === cellDateOnly.getTime()) {
+                        return 0;
+                      }
+                      if (cellDateOnly < filterLocalDateAtMidnight) {
+                        return -1;
+                      }
+                      if (cellDateOnly > filterLocalDateAtMidnight) {
+                        return 1;
+                      }
+                    },
+                  }, 
+            },
+            {
+                    field: 'M_MOD_DATE',
+                    headerName: '멤버 수정일',
+                    filter: 'agDateColumnFilter',
+                    filterParams: {
+                      comparator: (filterLocalDateAtMidnight, cellValue) => {
+                        const cellDate = new Date(cellValue);
+                        const cellDateOnly = new Date(cellDate.getFullYear(), cellDate.getMonth(), cellDate.getDate());
+                        if (filterLocalDateAtMidnight.getTime() === cellDateOnly.getTime()) {
+                          return 0;
+                        }
+                        if (cellDateOnly < filterLocalDateAtMidnight) {
+                          return -1;
+                        }
+                        if (cellDateOnly > filterLocalDateAtMidnight) {
+                          return 1;
+                        }
+                      },
+                    },
+            },
             {
                 field: 'edit',
                 headerName: '수정',
@@ -212,6 +253,7 @@ function UserMgt() {
                 alert('유저 수정에 성공하였습니다.');
                 setEditModeRows({});
                 axios_member_list();
+                setLoadingModalShow(false)
             }
         } catch (error) {
             console.log(error);
@@ -229,6 +271,7 @@ function UserMgt() {
                 if (response.data > 0) {
                     alert('삭제가 완료되었습니다.');
                     axios_member_list();
+                    setLoadingModalShow(false)
                 } else {
                     alert('삭제에 실패했습니다.');
                 }
@@ -243,6 +286,7 @@ function UserMgt() {
         try {
             const response = await axios.get(`${SERVER_URL.SERVER_URL()}/admin/member_list`);
             setRowData(response.data);
+            setLoadingModalShow(false)
         } catch (error) {
             console.log(error);
         }
@@ -261,6 +305,7 @@ function UserMgt() {
                     paginationPageSize={10}
                 />
             </div>
+            {loadingModalShow === true ? <LoadingModal /> : null}
             {isModalOpen && (
                 <div className="modal">
                     <div className="modal-content">
@@ -287,6 +332,7 @@ function UserMgt() {
                     </div>
                 </div>
             )}
+            
         </article>
     );
 }

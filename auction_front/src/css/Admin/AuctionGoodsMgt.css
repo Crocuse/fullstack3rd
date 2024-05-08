@@ -81,9 +81,7 @@
   .auction-goods-reg-button:hover {
     background-color: #1565c0;
   }
-  .row-blue {
-    background-color: #cce5ff;
-  }
+
   .row-red {
     background-color: #ffcccb;
   }
@@ -92,11 +90,6 @@
     background-color: #c3e6cb;
   }
   
-  .row-gray {
-    background-color: #e2e3e5;
-  }
-  
   .row-yellow {
     background-color: #fff3cd;
   }
-  

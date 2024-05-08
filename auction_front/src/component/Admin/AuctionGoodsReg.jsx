@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { sessionCheck } from "../../util/sessionCheck";
 import "../../css/Admin/AuctionGoodsReg.css";
+import LoadingModal from '../include/LoadingModal';
 
 import { AgGridReact } from 'ag-grid-react';
 import { ModuleRegistry } from 'ag-grid-community';
@@ -28,14 +29,16 @@ function AuctionGoodsReg() {
     const gridRef = useRef();
     const sessionId = useSelector((state) => state["loginedInfos"]["loginedId"]["sessionId"]);
     const navigate = useNavigate();
-
+    const [rowClassName, setRowClassName] = useState('');
     const [goodsRegList, setGoodsRegList] = useState([]);
     const [rowData, setRowData] = useState([]);
     const [editModeRows, setEditModeRows] = useState({});
     const [colDefs, setColDefs] = useState([]);
+    const [loadingModalShow,setLoadingModalShow] = useState(false);
 
     useEffect(() => {
         sessionCheck(sessionId, navigate);
+        setLoadingModalShow(true)
         axios_goods_reg_list();
     }, [sessionId]);
 
@@ -106,21 +109,27 @@ function AuctionGoodsReg() {
                 },
                 filter: "agDateColumnFilter",
                 filterParams: {
-                    comparator: (filterLocaleDate, cellValue) => {
-                        if (!cellValue) return -1;
-                        const cellDate = new Date(cellValue);
-                        if (cellDate < filterLocaleDate) return -1;
-                        else if (cellDate > filterLocaleDate) return 1;
-                        else return 0;
+                    comparator: (filterLocalDateAtMidnight, cellValue) => {
+                      const cellDate = new Date(cellValue);
+                      const cellDateOnly = new Date(cellDate.getFullYear(), cellDate.getMonth(), cellDate.getDate());
+                      if (filterLocalDateAtMidnight.getTime() === cellDateOnly.getTime()) {
+                        return 0;
+                      }
+                      if (cellDateOnly < filterLocalDateAtMidnight) {
+                        return -1;
+                      }
+                      if (cellDateOnly > filterLocalDateAtMidnight) {
+                        return 1;
+                      }
                     },
-                },
+                  },
             },
             {
                 field: "edit",
                 headerName: "경매등록",
                 width: 120,
                 cellRenderer: (params) => {
-                    if (params.data.AS_STATUS === 1) return null;
+                    if (params.data.AS_START_DATE < getTodayDate()) return null;
                     return editModeRows[params.data.GR_NO] ? (
                         <button onClick={() => axios_goods_reg_state_change(params.data)}>저장</button>
                     ) : (
@@ -147,6 +156,19 @@ function AuctionGoodsReg() {
         resizable: true,
     }), []);
 
+    const rowClassRules = useMemo(() => ({
+        
+        'row-green': (params) => {
+          const { AS_START_DATE, AS_STATUS } = params.data;
+          return AS_START_DATE === getTodayDate() && AS_STATUS !== 1 && AS_STATUS !== 0 && AS_STATUS !== 2;
+        },
+        'row-red': (params) => params.data.AS_STATUS === 1,
+        'row-yellow': (params) => params.data.AS_STATUS === 0,
+        'row-blue': (params) => params.data.AS_STATUS === 2,
+        'row-gray': (params) => params.data.AS_START_DATE < getTodayDate(),
+      }), []);
+
+
     function getTodayDate() {
         const today = new Date();
         const year = today.getFullYear();
@@ -158,8 +180,11 @@ function AuctionGoodsReg() {
 
     async function axios_goods_reg_list() {
         try {
+            setLoadingModalShow(true)
             const response = await axios.get(`${SERVER_URL.SERVER_URL()}/admin/goods_reg_list`);
+            
             setRowData(response.data);
+            setLoadingModalShow(false)
         } catch (error) {
             console.log(error);
         }
@@ -167,11 +192,13 @@ function AuctionGoodsReg() {
 
     async function axios_goods_reg_state_change(data) {
         try {
+            setLoadingModalShow(true)
             const { GR_NO, AS_LOCATION_NUM, AS_STATUS, AS_START_DATE } = data;
             const startDate = new Date(AS_START_DATE).toISOString().split("T")[0];
 
             if (startDate <= getTodayDate()) {
                 alert("당일이나 오늘 이전으로는 등록할 수 없습니다.");
+                setLoadingModalShow(false)
                 return;
             }
 
@@ -188,9 +215,11 @@ function AuctionGoodsReg() {
             } else if (response.data === "already") {
                 alert("한 날짜에 자리는 중복될 수 없습니다.");
             } else if (response.data === "success") {
+                
                 axios_goods_reg_list();
                 setEditModeRows({});
             }
+            setLoadingModalShow(false)
         } catch (error) {
             console.log(error);
         }
@@ -198,6 +227,7 @@ function AuctionGoodsReg() {
 
     return (
         <article className="auction-goods-reg">
+        
             <div className="auction-goods-reg-title">AuctionGoodsReg</div>
             <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }}>
                 <AgGridReact
@@ -207,26 +237,28 @@ function AuctionGoodsReg() {
                     defaultColDef={defaultColDef}
                     pagination={true}
                     paginationPageSize={10}
+                    rowClassRules={rowClassRules}
                     sideBar={{
                         toolPanels: [
-                            {
-                                id: 'columns',
-                                labelDefault: 'Columns',
-                                labelKey: 'columns',
-                                iconKey: 'columns',
-                                toolPanel: 'agColumnsToolPanel',
-                            },
-                            {
-                                id: 'filters',
-                                labelDefault: 'Filters',
-                                labelKey: 'filters',
-                                iconKey: 'filter',
-                                toolPanel: 'agFiltersToolPanel',
-                            },
+                        {
+                            id: 'columns',
+                            labelDefault: 'Columns',
+                            labelKey: 'columns',
+                            iconKey: 'columns',
+                            toolPanel: 'agColumnsToolPanel',
+                        },
+                        {
+                            id: 'filters',
+                            labelDefault: 'Filters',
+                            labelKey: 'filters',
+                            iconKey: 'filter',
+                            toolPanel: 'agFiltersToolPanel',
+                        },
                         ],
                     }}
                 />
             </div>
+            {loadingModalShow === true ? <LoadingModal /> : null}
         </article>
     );
 }
