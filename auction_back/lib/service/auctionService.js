@@ -1,3 +1,4 @@
+const { json } = require("body-parser");
 const DB = require("../db/db");
 
 const auctionService = {
@@ -7,7 +8,7 @@ const auctionService = {
         let mId = req.user;
 
         DB.query('INSERT INTO TBL_GOODS_REGIST(GR_NAME, GR_PRICE, GR_INFO, M_ID) VALUES(?, ?, ?, ?)', 
-        [post.grName, post.grPrice, post.grInfo, 'gildong'],
+        [post.grName, post.grPrice, post.grInfo, mId],
         (error, result) => {
             if(error){
                 console.log(error)
@@ -70,6 +71,53 @@ const auctionService = {
                     };
                     res.json(data);
                 });
+            }
+        })
+    },
+    bidingInfo : (req, res) => {
+        let grNo = req.query.grNo;
+
+        DB.query(`SELECT * FROM TBL_AUCTION_CURRENT WHERE GR_NO = ? ORDER BY AC_REG_DATE ASC`, 
+        [grNo],
+        (error, result) => {
+            if(error) {
+                console.log(error);
+            } else {
+                res.json(result);
+            }
+        })
+    },
+    biding : (req, res) => {
+        let grNo = req.query.grNo;
+        let asPrice = req.query.asPrice;
+        let mId = req.user;
+
+        asPrice = Number(asPrice) + (asPrice*0.1);
+        asPrice = Math.round(asPrice/100)  * 100
+        console.log(asPrice);
+        console.log(mId);
+
+        DB.query(`SELECT MAX(AC_POINT) AS max_price FROM TBL_AUCTION_CURRENT WHERE GR_NO = ?`, 
+        [grNo],
+        (error, result) => {
+            if(error) {
+                console.log(error);
+            } else {
+                let maxPrice = result[0].max_price;
+                if(asPrice > maxPrice) {
+                    DB.query(`insert into TBL_AUCTION_CURRENT(m_id, ac_point, gr_no) values(?, ?, ?)`, 
+                    [mId, asPrice, grNo],
+                    (error, result) => {
+                        if(error) {
+                            console.log(error);
+                        } else {
+                            console.log(result);
+                            res.json(result);
+                        }
+                    })
+                } else {
+                    res.json('fail');
+                }
             }
         })
     }

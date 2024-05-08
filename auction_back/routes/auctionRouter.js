@@ -20,6 +20,16 @@ router.get('/list_product', (req, res) => {
     auctionService.listProduct(req, res);
 });
 
+router.get('/bidingInfo', (req, res) => {
+    console.log('/auction/bidingInfo');
+    auctionService.bidingInfo(req, res);
+});
+
+router.get('/biding', (req, res) => {
+    console.log('/auction/biding');
+    auctionService.biding(req, res);
+});
+
 
 module.exports = router;
 
