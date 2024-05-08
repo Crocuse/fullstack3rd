@@ -3,13 +3,17 @@ import React, { useEffect, useState } from "react";
 import { SERVER_URL } from "../../config/server_url";
 import { useNavigate } from 'react-router-dom';
 import '../../css/Auction/CurrentList.css';
+import LoadingModal from "../include/LoadingModal";
 
 function CurrentList() {
     const [auctionProduct, setAuctionProduct] = useState([]);
+    const [loadingModalShow, setLoaingModalShow] = useState(false);
     const navigate = useNavigate();
     
     useEffect(()=> {
+        setLoaingModalShow(true);
         getTodayAuctionList();
+
     }, [])
     
     async function getTodayAuctionProduct(grNo, location) {
@@ -25,6 +29,8 @@ function CurrentList() {
                     location
                 }
                 setAuctionProduct(prevProduct => [...prevProduct, data].sort((a, b) => a.location - b.location));
+                
+                setLoaingModalShow(false);
             }
         } catch(error) {
             console.log(error);
@@ -84,6 +90,7 @@ function CurrentList() {
                     ))}
                 </tbody>
             </table>
+            {loadingModalShow === true ? <LoadingModal /> : null}
         </div>
     );
 }
