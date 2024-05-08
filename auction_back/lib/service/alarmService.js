@@ -59,7 +59,7 @@ module.exports = {
 
                                 Promise.all(promises)
                                     .then(() => {
-                                        io.emit('alarm', { maxAcPoint, products });
+                                        socket.emit('alarm', { maxAcPoint, products });
                                     })
                                     .catch(err => {
                                         socket.emit('maxAcPointError', { message: "ERROR 관리자에 문의하세요. <br />고객센터 : 031-1234-5678" });
