@@ -12,6 +12,14 @@ function webSocketHandler(socket, io) {
 
     });
 
+    socket.on('auctionRefresh', (socketData) => {
+        console.log('socketData>>>>>>>>>>>>>>>>>>>>>',socketData);
+        socket.broadcast.emit('bidmsg', {
+            id : socketData.loginedId,
+            bid : socketData.nextBid
+        });
+    })
+
 
 }
 

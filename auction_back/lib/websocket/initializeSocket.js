@@ -11,8 +11,13 @@ function initializeSocket(server) {
 
     io.on('connection', socket => {
         console.log("WEBSOCKET CONNECTED !!!! ");
-
+        // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        // console.log('socket>>>>', socket);
+        // console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+        // console.log('io>>>>', io);
+        // console.log('-------------------------------------------------------------------------')
         webSocketHandler(socket, io);
+        
 
     });
 }
