@@ -55,7 +55,7 @@ exports.passport = (app) => {
     app.get(
         '/auth/google',
         cors({
-            origin: ['http://localhost:3000', 'http://14.42.124.87:3000'],
+            origin: 'http://localhost:3000',
             methods: ['GET'],
         }),
         passport.authenticate('google', {
@@ -80,7 +80,7 @@ exports.passport = (app) => {
     app.post(
         '/auth/google/callback',
         cors({
-            origin: ['http://localhost:3000', 'http://14.42.124.87:3000'],
+            origin: 'http://localhost:3000',
             methods: ['POST'],
         }),
         async (req, res) => {
@@ -158,7 +158,7 @@ exports.passport = (app) => {
     app.get(
         '/auth/naver',
         cors({
-            origin: ['http://localhost:3000', 'http://14.42.124.87:3000'],
+            origin: 'http://localhost:3000',
             methods: ['GET'],
         }),
         passport.authenticate('naver', {
@@ -193,7 +193,7 @@ exports.passport = (app) => {
     app.post(
         '/auth/naver/callback',
         cors({
-            origin: ['http://localhost:3000', 'http://14.42.124.87:3000'],
+            origin: 'http://localhost:3000',
             methods: ['POST'],
         }),
         async (req, res) => {
