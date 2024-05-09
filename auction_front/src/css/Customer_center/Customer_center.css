@@ -2,6 +2,10 @@
     width: 100%;
 }
 
+.customer_center_wrap * {
+    margin: 0;
+}
+
 .customer_center_wrap .header {
     width: 100%;
     box-sizing: border-box;
@@ -15,7 +19,6 @@
 }
 
 .customer_center_wrap h1 {
-    margin: 0;
     padding-top: 20px;
 }
 
@@ -23,13 +26,17 @@
     max-width: 100px;
 }
 
-.customer_center_wrap .hero {
-    text-align: center;
-    padding: 50px 0;
+.customer_center_wrap .bidbird_info {
+    padding-top: 15px;
 }
 
-.customer_center_wrap .actions {
-    margin-top: 20px;
+.customer_center_wrap .hero {
+    text-align: center;
+    padding: 60px 0;
+}
+
+.customer_center_wrap .hero h2 {
+    padding-bottom: 20px;
 }
 
 .customer_center_wrap .button {

@@ -1,0 +1,18 @@
+.customer_center_wrap .customer_center_nav {
+    margin-top: 35px;
+    display: flex;
+    justify-content: center;
+}
+
+.customer_center_wrap .customer_center_nav a {
+    width: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.customer_center_wrap .customer_center_nav img {
+    max-width: 25px;
+    margin-right: 10px;
+}

@@ -1,5 +1,6 @@
 import React from 'react';
-import '../css/Customer_center.css';
+import '../../css/Customer_center/Customer_center.css';
+import CenterNav from './CenterNav';
 
 function customer_center() {
     return (
@@ -10,20 +11,18 @@ function customer_center() {
                         <img src="/img/customer_center/bid_bird_center.png" alt="" />
                     </div>
                     <h1>비드버드 고객센터</h1>
+                    <div className="bidbird_info">
+                        <p>전화 : 031-123-4567</p>
+                        <p>이메일 : bidbird_bidbird@gmail.com</p>
+                        <p>카카오톡 채널 : '@비드버드' 검색</p>
+                    </div>
                 </div>
 
                 <div class="main">
                     <div class="hero">
                         <h2>무엇을 도와드릴까요?</h2>
                         <p>고객님의 불편사항이나 궁금증을 해결해 드리겠습니다.</p>
-                        <div class="actions">
-                            <a href="#" class="button">
-                                온라인 상담신청
-                            </a>
-                            <a href="#" class="button">
-                                블루멤버쉽 안내
-                            </a>
-                        </div>
+                        <CenterNav />
                     </div>
 
                     <div class="guide">
