@@ -49,14 +49,19 @@ const CenterNav = () => {
                     <img src="/img/customer_center/kakaotalk_white.png" />
                     1:1 채팅 상담
                 </a>
-                <a href="#" class="button">
-                    <img src="/img/customer_center/board_icon.png" />
-                    <Link to="qna">문의글 작성</Link>
-                </a>
-                <a href="#" class="button">
-                    <img src="/img/customer_center/qna_icon.png" />
-                    <Link to="faq">자주묻는 질문</Link>
-                </a>
+                <Link to="qna">
+                    <a href="#" class="button">
+                        <img src="/img/customer_center/board_icon.png" />
+                        문의글 작성
+                    </a>
+                </Link>
+
+                <Link to="faq">
+                    <a href="#" class="button">
+                        <img src="/img/customer_center/qna_icon.png" />
+                        자주묻는 질문
+                    </a>
+                </Link>
             </div>
 
             <Outlet />
