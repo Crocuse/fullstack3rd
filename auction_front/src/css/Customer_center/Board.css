@@ -1,0 +1,25 @@
+.board_wrap .form-wrapper {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.board_wrap .title-input {
+    width: 500px;
+    height: 40px;
+    margin: 10px;
+}
+
+.board_wrap .text-area {
+    width: 80%;
+    min-height: 500px;
+}
+
+.board_wrap .submit-button {
+    width: 200px;
+    height: 50px;
+    font-size: 20px;
+    padding: 20px;
+    border: none;
+    background: indianred;
+    border-radius: 5px;
+}
