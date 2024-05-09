@@ -1,5 +1,6 @@
 const socketIO = require('socket.io');
 const overCountBidHandler = require('./overCountBidHandler');
+const webSocketHandler = require('./webSocketHandler');
 
 function initializeSocket(server) {
     const io = socketIO(server, {
