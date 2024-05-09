@@ -58,6 +58,10 @@ function AuctionPage() {
         socket.on('bidmsg', (data) => {
             console.log(data);
         })
+
+        return() => {
+            socket.off('bidmsg');
+        }
     });
 
     async function nowBidPrice() {

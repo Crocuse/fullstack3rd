@@ -4,7 +4,7 @@ const overCountBidHandler = require('./overCountBidHandler');
 function initializeSocket(server) {
     const io = socketIO(server, {
         cors: {
-            origin: "http://localhost:3000",
+            origin: "http://14.42.124.873000",
             credentials: true
         }
     });
@@ -13,6 +13,7 @@ function initializeSocket(server) {
     const overCountBidNameSpace = io.of("/overCountBid");
     overCountBidNameSpace.on('connection', socket => {
         console.log("OVER COUNT BID WEBSOCKET CONNECTED !");
+        overCountBidHandler(socket, io);
     });
 
     io.on('connection', socket => {
@@ -26,7 +27,7 @@ function initializeSocket(server) {
 
 
 
-        overCountBidHandler(socket, io);
+
     });
 
 }
