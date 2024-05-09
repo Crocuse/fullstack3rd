@@ -1,5 +1,5 @@
 const socketIO = require('socket.io');
-const webSocketHandler = require('./webSocketHandler');
+const overCountBidHandler = require('./overCountBidHandler');
 
 function initializeSocket(server) {
     const io = socketIO(server, {
@@ -7,6 +7,12 @@ function initializeSocket(server) {
             origin: "http://localhost:3000",
             credentials: true
         }
+    });
+
+
+    const overCountBidNameSpace = io.of("/overCountBid");
+    overCountBidNameSpace.on('connection', socket => {
+        console.log("OVER COUNT BID WEBSOCKET CONNECTED !");
     });
 
     io.on('connection', socket => {
@@ -17,9 +23,12 @@ function initializeSocket(server) {
         // console.log('io>>>>', io);
         // console.log('-------------------------------------------------------------------------')
         webSocketHandler(socket, io);
-        
 
+
+
+        overCountBidHandler(socket, io);
     });
+
 }
 
 module.exports = initializeSocket;

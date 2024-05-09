@@ -6,45 +6,41 @@ import "../../css/Alarm/alarm.css";
 
 function AuctionAlarm() {
     const loginedId = useSelector(state => state.loginedInfos.loginedId.loginedId);
-    const [auctionBid, setAuctionBid] = useState();
-    const [maxAuctionPoint, setMaxAuctionPoint] = useState();
-
+    const [auctionBids, setAuctionBids] = useState([]);
 
     useEffect(() => {
-        const socket = io(`${SERVER_URL.SERVER_URL()}`);
+        const socket = io(`${SERVER_URL.SERVER_URL()}/overCountBid`, {
+            query: { loginedId }
+        });
 
         socket.on('connect', () => {
             console.log('connected to server');
         });
-        socket.emit('overbidding', { loginedId });
 
         socket.on('acPointInfoErrorInDB', ({ message }) => {
-            setAuctionBid(message);
+            setAuctionBids(prevBids => [message, ...prevBids]);
         });
 
         socket.on('acPointInfoError', ({ message }) => {
-            setAuctionBid(message);
+            setAuctionBids(prevBids => [message, ...prevBids]);
         });
 
         socket.on('maxAcPointError', ({ message }) => {
-            setAuctionBid(message);
+            setAuctionBids(prevBids => [message, ...prevBids]);
         });
 
         socket.on('alarm', ({ maxAcPoint, products }) => {
-            const alarmMessages = products.map((product, index) => {
+            const newBids = products.map((product, index) => {
                 const productName = product.productName;
                 const maxBid = maxAcPoint[index].MAX_BID;
                 return `[${productName}] 상회 입찰 발생 상회입찰가: ${maxBid}원`;
             });
-            const combinedMessage = alarmMessages.join(' ');
-
-            setMaxAuctionPoint(combinedMessage);
+            setAuctionBids(prevBids => [...newBids, ...prevBids]);
         });
 
         socket.on('notFoundMaxAcPoint', ({ message }) => {
-            setAuctionBid(message);
+            setAuctionBids(prevBids => [message, ...prevBids]);
         });
-
 
         return () => {
             socket.off("connect");
@@ -55,11 +51,7 @@ function AuctionAlarm() {
             socket.off("notFoundMaxAcPoint");
             socket.disconnect();
         };
-    }, [maxAuctionPoint]);
-
-
-
-
+    }, []);
 
     return (
         <>
@@ -67,8 +59,9 @@ function AuctionAlarm() {
                 <article>
                     <div><p className="alarm-box">알람</p></div>
                     <div>
-                        {auctionBid}
-                        {maxAuctionPoint}
+                        {auctionBids.map((bid, index) => (
+                            <div key={index}>{bid}</div>
+                        ))}
                     </div>
                 </article>
             </div>
