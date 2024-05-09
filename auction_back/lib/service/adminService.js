@@ -204,7 +204,23 @@ const adminService = {
                 })
     },
     goodsList:(req,res)=>{
-        DB.query(`SELECT * FROM TBL_GOODS_REGIST`,(err,goods)=>{
+        DB.query(`SELECT 
+                      GR.*
+                  FROM 
+                      TBL_GOODS_REGIST AS GR
+                  WHERE 
+                      GR.GR_NO 
+                  NOT IN (
+                  SELECT 
+                      GR_NO
+                  FROM 
+                      TBL_AUCTION_SCHEDULE
+                  WHERE 
+                      AS_STATUS = 2
+                  )
+                  ORDER BY 
+                      GR.GR_APPROVAL ASC;`,
+                  (err,goods)=>{
             if(err){
                 res.json(null);
             } else {
@@ -256,7 +272,20 @@ const adminService = {
         );
       },
     goodsRegList:(req,res)=>{
-        DB.query(`SELECT * FROM TBL_AUCTION_SCHEDULE AS A JOIN TBL_GOODS_REGIST AS GR ON A.GR_NO = GR.GR_NO`,(err,goods)=>{
+        DB.query(`SELECT 
+                      * 
+                  FROM 
+                      TBL_AUCTION_SCHEDULE AS A 
+                  JOIN 
+                      TBL_GOODS_REGIST AS GR 
+                  ON 
+                      A.GR_NO = GR.GR_NO 
+                  WHERE 
+                      AS_START_DATE > NOW() 
+                  OR 
+                      AS_START_DATE IS NULL
+                  ORDER BY 
+                      AS_STATUS`,(err,goods)=>{
             if(err){
                 res.json(null);
             } else {
@@ -321,6 +350,8 @@ const adminService = {
           TBL_AUCTION_RESULT AS AR
           JOIN TBL_GOODS_REGIST AS GR ON AR.GR_NO = GR.GR_NO
           LEFT JOIN TBL_DELIVERY_GOODS AS DG ON AR.GR_NO = DG.GR_NO
+        ORDER BY
+          AR.AR_REG_DATE DESC
       `;
     
       DB.query(sql, (err, results) => {
@@ -374,6 +405,19 @@ const adminService = {
         }
       });
 
+    },
+    goodsRejectReason:(req,res)=>{
+      let post = req.body
+      DB.query(`UPDATE TBL_GOODS_REGIST SET GR_REJECTED_REASON =?, GR_APPROVAL = 2 WHERE GR_NO =?`,[post.reject_reason,post.gr_no],
+        (err,result)=>{
+
+          if(err){
+            console.log(err);
+            res.json('fail')
+          } else {
+            res.json('success')
+          }
+        })
     }
     
 

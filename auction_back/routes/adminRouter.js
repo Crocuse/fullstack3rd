@@ -76,5 +76,9 @@ router.get('/get_sales_data',(req,res)=>{
     adminService.getSalesData(req,res);
 });
 
+router.put('/goods_reject_reason',(req,res)=>{
+    adminService.goodsRejectReason(req,res);
+})
+
 module.exports = router;
 
