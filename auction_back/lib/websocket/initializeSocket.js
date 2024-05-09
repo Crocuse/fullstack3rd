@@ -4,7 +4,7 @@ const overCountBidHandler = require('./overCountBidHandler');
 function initializeSocket(server) {
     const io = socketIO(server, {
         cors: {
-            origin: "http://localhost:3000",
+            origin: "http://14.42.124.873000",
             credentials: true
         }
     });
