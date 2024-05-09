@@ -62,7 +62,7 @@ function AuctionPage() {
         return() => {
             socket.off('bidmsg');
         }
-    });
+    }, [loginedId, nextBid]);
 
     async function nowBidPrice() {
         console.log('nowBidPrice()');
