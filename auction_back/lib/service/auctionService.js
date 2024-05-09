@@ -120,6 +120,12 @@ const auctionService = {
                 }
             }
         })
+    },
+    bidmsg: (socket, socketData) => {
+        socket.broadcast.emit('bidmsg', {
+            id : socketData.loginedId,
+            bid : socketData.nextBid
+        });
     }
 }
 
