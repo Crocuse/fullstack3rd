@@ -1,16 +1,17 @@
 @font-face {
-    font-family: 'GowunDodum-Regular';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/GowunDodum-Regular.woff') format('woff');
+    font-family: 'NanumSquareRound';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquareRound.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
+
 html {
     background-color: #edf0ff;
 }
 
 html,
 body {
-    font-family: 'GowunDodum-Regular';
+    font-family: 'NanumSquareRound';
     -webkit-text-stroke: 1px;
     -webkit-text-stroke: 1px rgba(0, 0, 0, 0.1);
     margin: 0;

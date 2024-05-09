@@ -1,5 +1,3 @@
 export const SERVER_URL = {
-
-   SERVER_URL: () => `${process.env.REACT_APP_API_URL+':'+process.env.REACT_APP_PORT}`,
-
-}
+    SERVER_URL: () => `http://14.42.124.87:3001`,
+};
