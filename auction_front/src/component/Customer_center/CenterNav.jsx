@@ -51,11 +51,11 @@ const CenterNav = () => {
                 </a>
                 <a href="#" class="button">
                     <img src="/img/customer_center/board_icon.png" />
-                    <Link to="/Customer_center/qna">문의글 작성</Link>
+                    <Link to="qna">문의글 작성</Link>
                 </a>
                 <a href="#" class="button">
                     <img src="/img/customer_center/qna_icon.png" />
-                    <Link to="/Customer_center/faq">자주묻는 질문</Link>
+                    <Link to="faq">자주묻는 질문</Link>
                 </a>
             </div>
 

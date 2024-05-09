@@ -1,6 +1,6 @@
 import React from 'react';
 import '../../css/Customer_center/Customer_center.css';
-import CenterNav from './CenterNav';
+import { Outlet } from 'react-router-dom';
 
 function customer_center() {
     return (
@@ -22,7 +22,7 @@ function customer_center() {
                     <div class="hero">
                         <h2>무엇을 도와드릴까요?</h2>
                         <p>고객님의 불편사항이나 궁금증을 해결해 드리겠습니다.</p>
-                        <CenterNav />
+                        <Outlet />
                     </div>
 
                     <div class="guide">

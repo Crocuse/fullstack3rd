@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { sessionCheck } from '../../../util/sessionCheck';
 import MyPageMenubar from './MyPageMenubar';
 
@@ -22,7 +22,7 @@ function MyPage() {
     // View -----------------------------------------------------------------------------------------------------------
     return (
         <article>
-            <MyPageMenubar />
+            <Outlet />
         </article>
     );
 }
