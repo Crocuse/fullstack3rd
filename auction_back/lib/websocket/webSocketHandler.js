@@ -10,7 +10,7 @@ function webSocketHandler(socket, io) {
 
     socket.on('overbidding', ({ loginedId }) => {
         alarmService.getAcPointInfo(loginedId, socket, io);
-
+ 
     });
 
     socket.on('auctionRefresh', (socket, socketData) => {
