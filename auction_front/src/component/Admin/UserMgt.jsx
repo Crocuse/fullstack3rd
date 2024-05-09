@@ -97,7 +97,7 @@ function UserMgt() {
                         <button onClick={() => openModal(params.data)}>우편번호 찾기</button>
                     ) : null
                 ),
-                hide: true,
+
             },
             {   field: 'M_REG_DATE', 
                 headerName: '멤버 등록일',
@@ -152,12 +152,13 @@ function UserMgt() {
                             <input
                                 type="checkbox"
                                 checked={editModeRows[params.data.M_ID] || false}
-                                onChange={() =>
-                                    setEditModeRows({
+                                onChange={() => {
+                                    const newEditModeRows = {
                                         ...editModeRows,
                                         [params.data.M_ID]: !editModeRows[params.data.M_ID],
-                                    })
-                                }
+                                    };
+                                    setEditModeRows(newEditModeRows);
+                                }}
                             />
                         )
                     )
@@ -189,7 +190,7 @@ function UserMgt() {
     const openModal = (member) => {
         setSelectedMember(member);
         setIsModalOpen(true);
-        gridRef.current.columnApi.setColumnVisible('postcode', true);
+        
     };
 
     const closeModal = () => {
@@ -236,9 +237,8 @@ function UserMgt() {
         setRowData(updatedRowData);
         setEditModeRows({
             ...editModeRows,
-            [selectedMember.M_ID]: false,
+
         });
-        gridRef.current.columnApi.setColumnVisible('postcode', false);
         closeModal();
     };
 
@@ -254,6 +254,7 @@ function UserMgt() {
                 setEditModeRows({});
                 axios_member_list();
                 setLoadingModalShow(false)
+                gridRef.current.columnApi.setColumnVisible('postcode', false);
             }
         } catch (error) {
             console.log(error);
