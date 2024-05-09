@@ -13,6 +13,7 @@ function initializeSocket(server) {
     const overCountBidNameSpace = io.of("/overCountBid");
     overCountBidNameSpace.on('connection', socket => {
         console.log("OVER COUNT BID WEBSOCKET CONNECTED !");
+        overCountBidHandler(socket, io);
     });
 
     io.on('connection', socket => {
@@ -26,7 +27,7 @@ function initializeSocket(server) {
 
 
 
-        overCountBidHandler(socket, io);
+
     });
 
 }
