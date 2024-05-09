@@ -40,7 +40,7 @@ button {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    font-family: 'GowunDodum-Regular' !important;
+    font-family: 'NanumSquareRound' !important;
     -webkit-text-stroke: 1px;
     -webkit-text-stroke: 1px rgba(0, 0, 0, 0.1);
 }
@@ -48,7 +48,7 @@ button {
 input[type='button'],
 input[type='reset'],
 input::placeholder {
-    font-family: 'GowunDodum-Regular';
+    font-family: 'NanumSquareRound';
     -webkit-text-stroke: 1px;
     -webkit-text-stroke: 1px rgba(0, 0, 0, 0.1);
 }
