@@ -121,10 +121,32 @@ const auctionService = {
             }
         })
     },
-    bidmsg: (socket, socketData) => {
+    bidmsg: async (socketData, socket) => {
+        let loglist = [];
+        if (socketData.grNo !== '') {
+            try {
+                const result = await new Promise((resolve, reject) => {
+                    DB.query(`SELECT * FROM TBL_AUCTION_CURRENT WHERE GR_NO = ? ORDER BY AC_REG_DATE ASC`,
+                    [socketData.grNo],
+                    (error, rows) => {
+                        if (error) {
+                            reject(error);
+                        } else {
+                            resolve(rows);
+                        }
+                    });
+                });
+                loglist = result;
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
         socket.broadcast.emit('bidmsg', {
             id : socketData.loginedId,
-            bid : socketData.nextBid
+            bid : socketData.nextBid,
+            price : socketData.nowPrice,
+            log : loglist,
         });
     }
 }

@@ -16,7 +16,7 @@ function AuctionPage() {
     const [nextBid, setNextBid] = useState('');
     const [idx, setIdx] = useState(0);
     const [loadingModalShow, setLoaingModalShow] = useState(false);
-    const [isSocketIo, setIsSocketio] = useState(false);
+    const [isIoSocket, setIsIoSocket] = useState(false);
     const [bidingLog, setBidingLog] = useState([]);
     const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
     const loginedId = useSelector(state => state['loginedInfos']['loginedId']['loginedId']);
@@ -33,6 +33,23 @@ function AuctionPage() {
         nowBidPrice();
         if(product.GR_PRICE >= nowPrice)
             setNowPirce(product.GR_PRICE);
+
+        socket.on('bidmsg', (data) => {
+            console.log(data);
+            setBidingLog(data.log);
+            if(data.bid !== '')
+                setNextBid(nextBidfunc(data.bid));
+            if(data.price !== ''){
+                console.log('aaaaaaaaaaaa');
+                setNowPirce(data.bid);
+            }
+                
+        })
+
+        return() => {
+
+            socket.off('bidmsg');
+        }
     }, [])
 
     useEffect(() => {
@@ -45,24 +62,17 @@ function AuctionPage() {
 
     useEffect(() => {
         console.log("useEffect3");
-
         const socketData = {
             loginedId,
             nextBid,
+            nowPrice,
+            grNo : product.GR_NO
         }
 
         console.log(socketData);
 
         socket.emit('auctionRefresh', socketData);
-
-        socket.on('bidmsg', (data) => {
-            console.log(data);
-        })
-
-        return() => {
-            socket.off('bidmsg');
-        }
-    }, [loginedId, nextBid]);
+    },[isIoSocket]);
 
     async function nowBidPrice() {
         console.log('nowBidPrice()');
@@ -71,15 +81,16 @@ function AuctionPage() {
             const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/bidingInfo?grNo=${product.GR_NO}`);
             if(response.data.length > 0){
                 let maxIdx = response.data.length - 1;
-                setNowPirce(response.data[maxIdx].AC_POINT);
-                let nextbid = response.data[maxIdx].AC_POINT + (response.data[maxIdx].AC_POINT * 0.1);
-                nextbid = Math.round(nextbid/100) * 100;
-                setNextBid(nextbid.toLocaleString('ko-KR'));
+                let nPrice = response.data[maxIdx].AC_POINT;
+                setNowPirce(nPrice);
+                setNextBid(nextBidfunc(nPrice));
                 setBidingLog(response.data);
                 
             } else {
-                setNowPirce(product.GR_PRICE);
-                setNextBid(0);
+                console.log('length0');
+                let nPrice = product.GR_PRICE;
+                setNowPirce(nPrice);
+                setNextBid(nextBidfunc(nPrice));
                 setBidingLog([]);
             }
             setLoaingModalShow(false);
@@ -103,7 +114,7 @@ function AuctionPage() {
                 alert('입찰에 성공 했습니다.');
                 nowBidPrice();
                 setLoaingModalShow(false);
-                setIsSocketio(true);
+                setIsIoSocket(prev=> !prev)
             }
         } catch(error) {
             console.log(error);
@@ -120,6 +131,14 @@ function AuctionPage() {
         } else {
             setAsPrice(value.toLocaleString('ko-KR'));
         }
+    }
+
+    const nextBidfunc = (nPrice) => {
+        console.log('nextBidfunc');
+        let nextbid = nPrice + (nPrice * 0.1);
+        nextbid = Math.round(nextbid/100) * 100;
+        
+        return nextbid;
     }
 
     const leftBtnClickHandler = () => {
@@ -146,7 +165,6 @@ function AuctionPage() {
 
     const normalBidBtnHandler = () => {
         console.log("normalBidBtnHandler()");
-        setIsSocketio(false);
         sessionCheck(sessionId, navigate);
         setLoaingModalShow(true);
         normalBid();
@@ -186,14 +204,14 @@ function AuctionPage() {
                             {
                                 bidingLog.map((biding, idx) => (
                                     <>
-                                        <div>[{biding.AC_REG_DATE}] {biding.M_ID}님 께서 {biding.AC_POINT}원 에 상회 입찰 하였습니다.</div>
+                                        <div key={idx}>[{biding.AC_REG_DATE}] {biding.M_ID}님 께서 {biding.AC_POINT.toLocaleString('ko-KR')}원 에 상회 입찰 하였습니다.</div>
                                     </>
                                 ))
                             }
                             </div>
                         </div>
                         <div className="auction_btn">
-                            <button onClick={normalBidBtnHandler}>입찰({nextBid}₩)</button><br/>
+                            <button onClick={normalBidBtnHandler}>입찰({nextBid.toLocaleString('ko-KR')}₩)</button><br/>
                             <div className="call_bid">
                                 <div>
                                     <input type="text" name="as_price" value={asPrice} onChange={(e) => asPriceChangeHandler(e)}/>      

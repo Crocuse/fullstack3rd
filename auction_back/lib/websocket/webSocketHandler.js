@@ -13,8 +13,9 @@ function webSocketHandler(socket, io) {
  
     });
 
-    socket.on('auctionRefresh', (socket, socketData) => {
-        auctionService.bidmsg(socket, socketData);
+    socket.on('auctionRefresh', (socketData) => {
+        console.log('auctionRefresh');
+        auctionService.bidmsg(socketData, socket);
     })
 }
 
