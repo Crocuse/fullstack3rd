@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { SERVER_URL } from "../../config/server_url";
 import '../../css/Auction/AuctionPage.css';
 import LoadingModal from "../include/LoadingModal";
+import { io } from "socket.io-client";
 
 
 
@@ -15,12 +16,15 @@ function AuctionPage() {
     const [nextBid, setNextBid] = useState('');
     const [idx, setIdx] = useState(0);
     const [loadingModalShow, setLoaingModalShow] = useState(false);
+    const [isSocketIo, setIsSocketio] = useState(false);
     const [bidingLog, setBidingLog] = useState([]);
     const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
+    const loginedId = useSelector(state => state['loginedInfos']['loginedId']['loginedId']);
     const navigate = useNavigate();
     const location = useLocation();
     const product = location.state.product;
     const auctionLogRef = useRef(null);
+    const socket = io(`${SERVER_URL.SERVER_URL()}`)
 
     useEffect(() => {
         console.log("useEffect");
@@ -38,6 +42,23 @@ function AuctionPage() {
         auctionLogElement.scrollTop = auctionLogElement.scrollHeight;
         }
     }, [bidingLog]);
+
+    useEffect(() => {
+        console.log("useEffect3");
+
+        const socketData = {
+            loginedId,
+            nextBid,
+        }
+
+        console.log(socketData);
+
+        socket.emit('auctionRefresh', socketData);
+
+        socket.on('bidmsg', (data) => {
+            console.log(data);
+        })
+    });
 
     async function nowBidPrice() {
         console.log('nowBidPrice()');
@@ -78,6 +99,7 @@ function AuctionPage() {
                 alert('입찰에 성공 했습니다.');
                 nowBidPrice();
                 setLoaingModalShow(false);
+                setIsSocketio(true);
             }
         } catch(error) {
             console.log(error);
@@ -120,6 +142,7 @@ function AuctionPage() {
 
     const normalBidBtnHandler = () => {
         console.log("normalBidBtnHandler()");
+        setIsSocketio(false);
         sessionCheck(sessionId, navigate);
         setLoaingModalShow(true);
         normalBid();

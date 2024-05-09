@@ -9,9 +9,22 @@ function initializeSocket(server) {
         }
     });
 
+
     const overCountBidNameSpace = io.of("/overCountBid");
     overCountBidNameSpace.on('connection', socket => {
         console.log("OVER COUNT BID WEBSOCKET CONNECTED !");
+    });
+
+    io.on('connection', socket => {
+        console.log("WEBSOCKET CONNECTED !!!! ");
+        // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        // console.log('socket>>>>', socket);
+        // console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+        // console.log('io>>>>', io);
+        // console.log('-------------------------------------------------------------------------')
+        webSocketHandler(socket, io);
+
+
 
         overCountBidHandler(socket, io);
     });
