@@ -32,17 +32,21 @@ initializeSocket(server);
 
 // CORS START -----------------------------------------------------------------------------------------------------------
 if (os.version().includes('Windows')) {
-    app.use(cors({
-        origin: 'http://localhost:3000',
-        credentials: true,
-        optionsSuccessStatus: 200
-    }));
+    app.use(
+        cors({
+            origin: ['http://localhost:3000', 'http://14.42.124.87:3000'],
+            credentials: true,
+            optionsSuccessStatus: 200,
+        })
+    );
 } else {
-    app.use(cors({
-        origin: 'http://3.24.176.186:3000',
-        credentials: true,
-        optionsSuccessStatus: 200
-    }));
+    app.use(
+        cors({
+            origin: ['http://localhost:3000', 'http://14.42.124.87:3000'],
+            credentials: true,
+            optionsSuccessStatus: 200,
+        })
+    );
 }
 // CORS END -----------------------------------------------------------------------------------------------------------
 
@@ -52,7 +56,7 @@ const options = {
     port: 3306,
     user: 'root',
     password: '12345678',
-    database: 'DB_BIDBIRD'
+    database: 'DB_BIDBIRD',
 };
 const sessionStore = new MySQLStore(options);
 
@@ -65,7 +69,7 @@ const sessionObj = {
     cookie: {
         maxAge: maxAge,
     },
-}
+};
 
 app.use(session(sessionObj));
 // session setting END -----------------------------------------------------------------------------------------------------------
@@ -74,12 +78,15 @@ app.use(session(sessionObj));
 let pp = require('./lib/passport/passport');
 let passport = pp.passport(app);
 
-app.post('/member/login_confirm', passport.authenticate('local', {
-    successRedirect: '/member/login_success',
-    failureRedirect: '/member/login_fail',
-    successFlash: true,
-    failureFlash: true
-}));
+app.post(
+    '/member/login_confirm',
+    passport.authenticate('local', {
+        successRedirect: '/member/login_success',
+        failureRedirect: '/member/login_fail',
+        successFlash: true,
+        failureFlash: true,
+    })
+);
 
 // passport setting END -----------------------------------------------------------------------------------------------------------
 

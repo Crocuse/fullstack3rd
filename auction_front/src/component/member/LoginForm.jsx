@@ -27,10 +27,12 @@ function LoginForm() {
 
         if (m_id == '') {
             alert('아이디를 입력해주세요.');
+            setLoaingModalShow(false);
             return;
         }
         if (m_pw == '') {
             alert('비밀번호를 입력해주세요.');
+            setLoaingModalShow(false);
             return;
         }
 
