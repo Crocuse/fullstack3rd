@@ -1,125 +1,205 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { SERVER_URL } from "../../config/server_url";
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { sessionCheck } from "../../util/sessionCheck";
+import "../../css/Admin/AuctionResult.css";
+import LoadingModal from '../include/LoadingModal';
+
+import { AgGridReact } from 'ag-grid-react';
+import { ModuleRegistry, RowType } from 'ag-grid-community';
+import { ClientSideRowModelModule } from 'ag-grid-community';
+import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
+import { FiltersToolPanelModule } from 'ag-grid-enterprise';
+import { SetFilterModule } from 'ag-grid-enterprise';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-quartz.css';
+
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    MenuModule,
+    ColumnsToolPanelModule,
+    FiltersToolPanelModule,
+    SetFilterModule,
+]);
 
 function AuctionResult() {
-  const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);   
-  const navigate = useNavigate();
-  
-  const [resultList, setResultList] = useState([]);
+    const gridRef = useRef();
+    const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
+    const navigate = useNavigate();
+    const [resultList, setResultList] = useState([]);
+    const [colDefs, setColDefs] = useState([]);
+    const [loadingModalShow, setLoadingModalShow] = useState(false);
 
-  useEffect(() => { 
-    sessionCheck(sessionId, navigate);
-    axios_auction_result_list();
-  }, [sessionId, navigate]);
+    useEffect(() => {
+        sessionCheck(sessionId, navigate);
+        setLoadingModalShow(true);
+        axios_auction_result_list();
+    }, [sessionId, navigate]);
 
-  const reBidAlert = (no,id) =>{
-    let confirm = window.confirm(`판매자 ${id} 에게 재경매 여부 알림을 보내시겠습니까?`);
-  }
-  const deliveryGoods = (no,id) =>{
-    let confirm = window.confirm(`구매자 ${id} 에게 물품을 배송하시겠습니까?`);
+    useEffect(() => {
+        setColDefs([
+            {
+                field: 'GR_NO',
+                headerName: '상품번호',
+                width: 105,
+                filter: 'agNumberColumnFilter',
+            },
+            {
+                field: 'GR_NAME',
+                headerName: '상품명',
+                filter: 'agTextColumnFilter',
+            },
+            {
+                field: 'AR_IS_BID',
+                headerName: '경매결과',
+                width: 105,
+                valueFormatter: (params) => params.value === 0 ? "유찰" : "낙찰",
+                filter: 'agSetColumnFilter',
+                filterParams: {
+                    values: [0, 1],
+                    valueFormatter: (params) => params.value === 0 ? "유찰" : "낙찰",
+                },
+            },
+            {
+                field: 'AR_SELL_ID',
+                headerName: '판매자ID',
+                filter: 'agTextColumnFilter',
+                width: 120,
+            },
+            {
+                field: 'AR_BUY_ID',
+                headerName: '구매자ID',
+                width: 120,
+                filter: 'agTextColumnFilter',
+            },
+            {
+                field: 'AR_POINT',
+                headerName: '낙찰 포인트',
+                width: 130,
+                filter: 'agNumberColumnFilter',
+            },
+            {
+                field: 'AR_REG_DATE',
+                headerName: '경매일',
+                filter: 'agDateColumnFilter',
+                filterParams: {
+                    comparator: (filterLocalDateAtMidnight, cellValue) => {
+                        const cellDate = new Date(cellValue);
+                        const cellDateOnly = new Date(cellDate.getFullYear(), cellDate.getMonth(), cellDate.getDate());
+                        if (filterLocalDateAtMidnight.getTime() === cellDateOnly.getTime()) {
+                            return 0;
+                        }
+                        if (cellDateOnly < filterLocalDateAtMidnight) {
+                            return -1;
+                        }
+                        if (cellDateOnly > filterLocalDateAtMidnight) {
+                            return 1;
+                        }
+                    },
+                },
+            },
+            {
+                field: 'DG_STATUS',
+                headerName: '물품배송',
+                width: 110,
+                cellRenderer: (params) => {
+                    const { DG_STATUS, DG_ADDR, AR_IS_BID, GR_NO, AR_BUY_ID } = params.data;
+                    if (DG_STATUS === 0 && DG_ADDR !== null && AR_IS_BID === 1) {
+                        return <button onClick={() => deliveryGoods(GR_NO, AR_BUY_ID)}>물품배송</button>;
+                    } else if (DG_STATUS === 0 && DG_ADDR === null && AR_IS_BID === 1) {
+                        return "배송지 정보가 없습니다.";
+                    } else if (DG_STATUS === 1 && DG_ADDR !== null) {
+                        return "배송중";
+                    } else {
+                        return "";
+                    }
+                },
+                filter: false,
+            },
+            {
+                field: 'rebid',
+                headerName: '재경매여부',
+                width: 110,
+                cellRenderer: (params) => {
+                    const { AR_IS_BID, AR_SELL_ID } = params.data;
+                    if (AR_IS_BID === 0) {
+                        return <button onClick={() => reBidAlert(AR_SELL_ID)}>재경매알림</button>;
+                    } else {
+                        return null;
+                    }
+                },
+                filter: false,
+            },
+        ]);
+    }, []);
 
-    if(confirm){
-        axios_delivery_goods(no);
+    const rowClassRules = useMemo(() => ({
+      'row-green': (params) => params.data.AR_IS_BID === 1,
+      'row-red': (params) => params.data.AR_IS_BID === 0,
+      'row-yellow': (params) => params.data.AR_IS_BID === 1 && params.data.DG_STATUS === 0,
+    }), []);
+
+
+    const defaultColDef = useMemo(() => ({
+        filter: true,
+        floatingFilter: true,
+        resizable: true,
+    }), []);
+
+    const reBidAlert = (id) => {
+        let confirm = window.confirm(`판매자 ${id} 에게 재경매 여부 알림을 보내시겠습니까?`);
+    };
+
+    const deliveryGoods = (no, id) => {
+        let confirm = window.confirm(`구매자 ${id} 에게 물품을 배송하시겠습니까?`);
+        if (confirm) {
+            axios_delivery_goods(no);
+        }
+    };
+
+    async function axios_auction_result_list() {
+        try {
+            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/admin/auction_result_list`);
+            setResultList(response.data);
+            setLoadingModalShow(false);
+        } catch (error) {
+            console.log(error);
+        }
     }
-  }
 
-
-  async function axios_auction_result_list() {
-    try {
-      const response = await axios.get(
-        `${SERVER_URL.SERVER_URL()}/admin/auction_result_list`
-      );
-      setResultList(response.data);
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
+    async function axios_delivery_goods(no) {
+        try {
+            const response = await axios.post(`${SERVER_URL.SERVER_URL()}/admin/delivery_goods`, { gr_no: no });
+            if (response.data > 1) {
+                axios_auction_result_list();
+            } else {
+                alert('물품배송 업데이트에 실패하였습니다.');
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
-  }
 
-  async function axios_delivery_goods(no) {
-    try {
-      const response = await axios.post(
-        `${SERVER_URL.SERVER_URL()}/admin/delivery_goods`,{gr_no : no}
-      );
-      if(response.data > 1){
-          axios_auction_result_list();
-      }else {
-        alert('물품배송 업데이트에 실패하였습니다.');
-      }
-      
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  return (
-    <article>
-      <div>AuctionResult</div>
-      <table>
-        <thead>
-          <tr>
-            <th>상품번호</th>
-            <th>상품명</th>
-            <th>경매결과</th>
-            <th>판매자ID</th>
-            <th>구매자ID</th>
-            <th>낙찰 포인트</th>
-            <th>경매일</th>
-            <th>물품배송</th>
-            <th>재경매여부</th>
-          </tr>
-        </thead>
-        <tbody>
-          {resultList.length > 0 ? (
-            resultList.map((List) => (
-              <tr key={List.GR_NO}>
-                <td>{List.GR_NO}</td>
-                <td>{List.GR_NAME}</td>
-                <td>{List.AR_IS_BID === 0 ? "유찰": "낙찰"}</td>
-                <td>{List.AR_SELL_ID}</td>
-                <td>{List.AR_BUY_ID}</td>
-                <td>{List.AR_POINT}</td>
-                <td>{List.AR_REG_DATE}</td>
-                <td>
-                  {
-
-                  List.DG_STATUS === 0 && List.DG_ADDR !== null && List.AR_IS_BID === 1  
-                  ? 
-                  
-                  <button onClick={()=>deliveryGoods(List.GR_NO,List.AR_BUY_ID)}>물품배송</button> 
-                  
-                  : 
-                  
-                  List.DG_STATUS === 0 && List.DG_ADDR === null && List.AR_IS_BID === 1 
-                  ?
-                  "배송지 정보가 없습니다."
-                  :
-                  List.DG_STATUS === 1 && List.DG_ADDR !== null 
-                  ?
-                  "배송중"
-                  :
-                  ""
-
-                  }
-                </td>
-                <td>
-                  {List.AR_IS_BID === 0 ? <button onClick={()=>reBidAlert(List.AR_SELL_ID)}>재경매알림</button> : null}
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="9">경매 종료된 상품이 없습니다.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </article>
-  );
+    return (
+        <article className="auction-result">
+            <div className="auction-result-title">AuctionResult</div>
+            <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }}>
+                <AgGridReact
+                    ref={gridRef}
+                    rowData={resultList}
+                    columnDefs={colDefs}
+                    defaultColDef={defaultColDef}
+                    pagination={true}
+                    paginationPageSize={10}
+                    rowClassRules={rowClassRules}
+                />
+            </div>
+            {loadingModalShow === true ? <LoadingModal /> : null}
+        </article>
+    );
 }
 
 export default AuctionResult;

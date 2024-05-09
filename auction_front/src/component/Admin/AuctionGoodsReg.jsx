@@ -108,7 +108,7 @@ function AuctionGoodsReg() {
                 },
                 filter: 'agSetColumnFilter',
                 filterParams: {
-                    values: [0, 1, 2, 3, 4],
+                    values: [0, 1, 2],
                     valueFormatter: (params) => {
                         const value = params.value;
                         if (value === 0) {
@@ -117,13 +117,7 @@ function AuctionGoodsReg() {
                             return '재경매 미승인';
                         } else if (value === 2) {
                             return '경매 대기중';
-                        } else if (value === 3) {
-                            return '경매 진행중';
-                        } else if (value === 4) {
-                            return '경매 종료';
-                        } else {
-                            return '오류';
-                        }
+                        } 
                     },
                 },
             },
@@ -235,7 +229,7 @@ function AuctionGoodsReg() {
             const startDate = new Date(AS_START_DATE).toISOString().split("T")[0];
 
 
-            
+
             if (AS_LOCATION_NUM == null){
                 alert("자리 번호를 등록해주세요");
                 setLoadingModalShow(false)
