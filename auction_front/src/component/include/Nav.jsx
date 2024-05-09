@@ -3,7 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { SERVER_URL } from '../../config/server_url';
-import AuctionAlarm from "../alarm/AuctionAlarm";
+import AuctionAlarm from '../alarm/AuctionAlarm';
+
+axios.defaults.withCredentials = true;
 
 function Nav() {
     // Hook -----------------------------------------------------------------------------------------------------------------
@@ -87,10 +89,16 @@ function Nav() {
 
         m_menu = (
             <>
-                <div className='drop_down_wrap'>
-                    <Link to="#" id="bell_wrap" onClick={() => { setAlarm(!alarm) }}>
+                <div className="drop_down_wrap">
+                    <Link
+                        to="#"
+                        id="bell_wrap"
+                        onClick={() => {
+                            setAlarm(!alarm);
+                        }}
+                    >
                         {alarm && (
-                            <div className='drop_down_content'>
+                            <div className="drop_down_content">
                                 <AuctionAlarm />
                             </div>
                         )}
