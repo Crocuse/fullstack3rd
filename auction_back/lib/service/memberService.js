@@ -55,7 +55,6 @@ const memberService = {
             <div
                 style="
                 max-width: 600px;
-                margin: 0 auto;
                 padding: 20px;
                 background-color: #f5f5f5;
                 border-radius: 5px;
@@ -481,7 +480,6 @@ const memberService = {
                 <div
                 style="
                     max-width: 600px;
-                    margin: 0 auto;
                     padding: 20px;
                     background-color: #f5f5f5;
                     border-radius: 5px;
@@ -552,7 +550,6 @@ const memberService = {
                     <div
                     style="
                         max-width: 600px;
-                        margin: 0 auto;
                         padding: 20px;
                         background-color: #f5f5f5;
                         border-radius: 5px;

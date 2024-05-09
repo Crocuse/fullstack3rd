@@ -7,7 +7,9 @@
 }
 
 .customer_center_wrap .header {
-    width: 100%;
+    width: 100vw;
+    position: absolute;
+    left: 0;
     box-sizing: border-box;
     padding: 20px;
     background-color: #ececec;
@@ -16,6 +18,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.customer_center_wrap .header_height {
+    height: 280px;
 }
 
 .customer_center_wrap h1 {

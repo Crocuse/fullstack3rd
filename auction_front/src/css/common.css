@@ -5,10 +5,6 @@
     font-style: normal;
 }
 
-html {
-    background-color: #edf0ff;
-}
-
 html,
 body {
     font-family: 'NanumSquareRound';
@@ -23,8 +19,12 @@ body {
     flex-direction: column;
     min-height: 100vh;
     background-color: #f5f5f5;
-    width: 1200px;
     margin: auto;
+}
+
+article {
+    width: 1200px;
+    margin: 0 auto;
 }
 
 a {
@@ -93,6 +93,11 @@ nav {
     padding: 10px 50px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     flex-shrink: 0;
+}
+
+.nav_wrap {
+    width: 1200px;
+    margin: 0 auto;
 }
 
 nav ul {

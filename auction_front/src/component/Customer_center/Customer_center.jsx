@@ -17,6 +17,7 @@ function customer_center() {
                         <p>카카오톡 채널 : '@비드버드' 검색</p>
                     </div>
                 </div>
+                <div className="header_height"></div>
 
                 <div class="main">
                     <div class="hero">

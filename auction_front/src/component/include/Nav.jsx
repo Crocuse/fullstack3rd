@@ -129,12 +129,14 @@ function Nav() {
 
     return (
         <nav>
-            <ul>
-                <li>
-                    <div className="main_menu">{mainMenu}</div>
-                    <div className="m_menu">{m_menu}</div>
-                </li>
-            </ul>
+            <div className="nav_wrap">
+                <ul>
+                    <li>
+                        <div className="main_menu">{mainMenu}</div>
+                        <div className="m_menu">{m_menu}</div>
+                    </li>
+                </ul>
+            </div>
         </nav>
     );
 }
