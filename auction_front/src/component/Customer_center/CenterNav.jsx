@@ -69,13 +69,6 @@ const CenterNav = () => {
                         </a>
                     </Link>
                 )}
-
-                <Link to="faq">
-                    <a href="#" class="button">
-                        <img src="/img/customer_center/qna_icon.png" />
-                        자주묻는 질문
-                    </a>
-                </Link>
             </div>
 
             <Outlet />
