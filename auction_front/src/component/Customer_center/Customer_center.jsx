@@ -27,8 +27,9 @@ function customer_center() {
                     </div>
 
                     <div class="guide">
-                        <p>상담을 통해 시 진문 상담사가 배정되어 빠르고 친절하게 안내해 드립니다.</p>
+                        <p>오전 9시 ~ 오후 6시 이내에 1:1 채팅 상담시 빠르게 실시간 답변을 받을 수 있습니다.</p>
                     </div>
+                    <div class="guide_height"></div>
                 </div>
             </div>
         </article>

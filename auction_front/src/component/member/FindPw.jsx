@@ -78,7 +78,7 @@ const FindPw = () => {
                     <h4>비밀번호 찾기</h4>
                 </div>
                 <div className="find">
-                    <div className="find_txt">회원가입시 등록한 메일 주소로 임시 비밀번호가 발송됩니다.</div>
+                    <div className="find_txt">회원가입시 등록한 메일로 임시 비밀번호가 발송됩니다.</div>
                     <div className="input_mail">
                         <input type="text" name="m_mail" placeholder="가입시 등록한 이메일 주소를 입력해주세요." />
                     </div>
