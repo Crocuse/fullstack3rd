@@ -1,6 +1,31 @@
 const DB = require('../db/db');
 
 module.exports = {
+    notificataionOverBid: (socketData, socket, io) => {
+        console.log("[ALARMSERVICE] notificataionOverBid()");
+        let grNo = socketData.grNo;
+        console.log(socketData.grNo);
+        DB.query(`SELECT M_ID
+        FROM TBL_AUCTION_CURRENT
+        WHERE GR_NO = ?
+        ORDER BY AC_POINT DESC
+        LIMIT 1 OFFSET 1;
+        `,
+            [grNo],
+            (err, id) => {
+                if (err) {
+                    socket.emit("notificationOverBidErr", { message: "ERROR 관리자에 문의하세요. <br />고객센터 : 031-1234-5678" });
+                }
+                console.log(id);
+                if (id.length > 0) {
+                    console.log("-------------------->>>>>>>", id[0].M_ID);
+                    socket.emit('notificationOverBid', { message: '상회 입찰이 발생하였습니다.', id: id[0].M_ID });
+
+                }
+            });
+
+    },
+
     getAcPointInfo: (loginedId, socket, io) => {
         console.log("[ALARMSERVICE] getAcPointInfo()");
 

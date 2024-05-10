@@ -31,20 +31,20 @@ function AuctionPage() {
         setLoaingModalShow(true);
         sessionCheck(sessionId, navigate);
         nowBidPrice();
-        if(product.GR_PRICE >= nowPrice)
+        if (product.GR_PRICE >= nowPrice)
             setNowPirce(product.GR_PRICE);
 
         socket.on('bidmsg', (data) => {
             console.log(data);
             setBidingLog(data.log);
-            if(data.bid !== '')
+            if (data.bid !== '')
                 setNextBid(nextBidfunc(data.bid));
-            if(data.price !== ''){
+            if (data.price !== '') {
                 setNowPirce(data.bid);
             }
         })
 
-        return() => {
+        return () => {
             socket.off('bidmsg');
         }
     }, [])
@@ -53,7 +53,7 @@ function AuctionPage() {
         console.log("useEffect2");
         const auctionLogElement = auctionLogRef.current;
         if (auctionLogElement) {
-        auctionLogElement.scrollTop = auctionLogElement.scrollHeight;
+            auctionLogElement.scrollTop = auctionLogElement.scrollHeight;
         }
     }, [bidingLog]);
 
@@ -63,26 +63,30 @@ function AuctionPage() {
             loginedId,
             nextBid,
             nowPrice,
-            grNo : product.GR_NO
+            grNo: product.GR_NO
         }
 
         console.log(socketData);
-
+        socket.emit('overBid', socketData);
         socket.emit('auctionRefresh', socketData);
-    },[isIoSocket]);
+        socket.on('notificationOverBid', (data) => {
+            console.log(data);
+        });
+
+    }, [isIoSocket]);
 
     async function nowBidPrice() {
         console.log('nowBidPrice()');
 
-        try{
+        try {
             const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/bidingInfo?grNo=${product.GR_NO}`);
-            if(response.data.length > 0){
+            if (response.data.length > 0) {
                 let maxIdx = response.data.length - 1;
                 let nPrice = response.data[maxIdx].AC_POINT;
                 setNowPirce(nPrice);
                 setNextBid(nextBidfunc(nPrice));
                 setBidingLog(response.data);
-                
+
             } else {
                 console.log('length0');
                 let nPrice = product.GR_PRICE;
@@ -91,8 +95,8 @@ function AuctionPage() {
                 setBidingLog([]);
             }
             setLoaingModalShow(false);
-            
-        } catch(error) {
+
+        } catch (error) {
             console.log(error);
         }
     }
@@ -100,10 +104,10 @@ function AuctionPage() {
     async function normalBid() {
         console.log('normalBid()');
 
-        try{
+        try {
             const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/biding?grNo=${product.GR_NO}&asPrice=${nowPrice}`);
 
-            if(response.data == 'fail') {
+            if (response.data == 'fail') {
                 alert('입찰에 실패 했습니다.');
                 window.location.reload();
                 setLoaingModalShow(false);
@@ -111,9 +115,9 @@ function AuctionPage() {
                 alert('입찰에 성공 했습니다.');
                 nowBidPrice();
                 setLoaingModalShow(false);
-                setIsIoSocket(prev=> !prev)
+                setIsIoSocket(prev => !prev)
             }
-        } catch(error) {
+        } catch (error) {
             console.log(error);
             setLoaingModalShow(false);
         }
@@ -123,7 +127,7 @@ function AuctionPage() {
         console.log('asPriceChangeHandler()');
         let value = e.target.value;
         value = Number(value.replaceAll(',', ''));
-        if(isNaN(value)){
+        if (isNaN(value)) {
             setAsPrice(0);
         } else {
             setAsPrice(value.toLocaleString('ko-KR'));
@@ -133,8 +137,8 @@ function AuctionPage() {
     const nextBidfunc = (nPrice) => {
         console.log('nextBidfunc');
         let nextbid = nPrice + (nPrice * 0.05);
-        nextbid = Math.round(nextbid/100) * 100;
-        
+        nextbid = Math.round(nextbid / 100) * 100;
+
         return nextbid;
     }
 
@@ -142,8 +146,8 @@ function AuctionPage() {
         console.log('leftBtnClickHandler()');
         let tmp = imgIdx;
         tmp--;
-        if(tmp < 0) {
-            tmp = product.imgs.length -1;
+        if (tmp < 0) {
+            tmp = product.imgs.length - 1;
         }
         setImgIdx(tmp);
         console.log(tmp);
@@ -153,7 +157,7 @@ function AuctionPage() {
         console.log('rightBtnClickHandler()');
         let tmp = imgIdx;
         tmp++;
-        if(tmp > product.imgs.length -1) {
+        if (tmp > product.imgs.length - 1) {
             tmp = 0;
         }
         setImgIdx(tmp);
@@ -169,24 +173,24 @@ function AuctionPage() {
 
     const asBidBtnHandler = () => {
         console.log("asBidBtnHandler()");
-        if(checkAsBid(asPrice)) {
+        if (checkAsBid(asPrice)) {
 
         }
     }
 
-    const checkAsBid = (price) =>{
-        price = price.replaceAll(',','');
+    const checkAsBid = (price) => {
+        price = price.replaceAll(',', '');
         let tmpPrice = price;
         tmpPrice = Math.round(tmpPrice / 100) * 100;
         tmpPrice -= price;
 
         let tmpNowPrice = nowPrice;
         tmpNowPrice = tmpNowPrice + (tmpNowPrice * 0.1)
-        if(tmpPrice !== 0){
+        if (tmpPrice !== 0) {
             alert('10원 단위 금액은 사용할 수 없습니다.');
             return false;
         }
-        else if(tmpNowPrice) {
+        else if (tmpNowPrice) {
 
         }
     }
@@ -196,11 +200,11 @@ function AuctionPage() {
             <div className="auction_page_wrap">
                 <div className="auction_semi_info">
                     <div className="auction_back_img">
-                        <button onClick={leftBtnClickHandler}><img src="/img/arrow_left.png"/></button>
+                        <button onClick={leftBtnClickHandler}><img src="/img/arrow_left.png" /></button>
                         <div className="auction_img">
                             <img src={`${SERVER_URL.SERVER_URL()}/goodsImg/${product.imgs[imgIdx]}`} alt="" />
                         </div>
-                        <button><img src="/img/arrow_right.png" onClick={rightBtnClickHandler}/></button>
+                        <button><img src="/img/arrow_right.png" onClick={rightBtnClickHandler} /></button>
                     </div>
                     <div className="auction_info">
                         <h1>{product.GR_NAME}</h1>
@@ -217,25 +221,25 @@ function AuctionPage() {
                         <img id="bubble" src="/img/bubble.png" alt="" />
                     </div>
                     <div className="bubble_text">
-                        
+
                     </div>
                     <div className="auction_progress">
                         <div className="auction_log" ref={auctionLogRef}>
                             <div className="text_log">
-                            {
-                                bidingLog.map((biding) => (
-                                    <div key={biding.AC_NO}>
-                                        [{biding.AC_REG_DATE}] {biding.M_ID}님 께서 {biding.AC_POINT.toLocaleString('ko-KR')}원 에 상회 입찰 하였습니다.
-                                    </div>
-                                ))
-                            }
+                                {
+                                    bidingLog.map((biding) => (
+                                        <div key={biding.AC_NO}>
+                                            [{biding.AC_REG_DATE}] {biding.M_ID}님 께서 {biding.AC_POINT.toLocaleString('ko-KR')}원 에 상회 입찰 하였습니다.
+                                        </div>
+                                    ))
+                                }
                             </div>
                         </div>
                         <div className="auction_btn">
-                            <button onClick={normalBidBtnHandler}>입찰({nextBid.toLocaleString('ko-KR')}₩)</button><br/>
+                            <button onClick={normalBidBtnHandler}>입찰({nextBid.toLocaleString('ko-KR')}₩)</button><br />
                             <div className="call_bid">
                                 <div>
-                                    <input type="text" name="as_price" value={asPrice} onChange={(e) => asPriceChangeHandler(e)}/>      
+                                    <input type="text" name="as_price" value={asPrice} onChange={(e) => asPriceChangeHandler(e)} />
                                 </div>
                                 <div>
                                     <button onClick={asBidBtnHandler}>호가 입찰</button>
@@ -247,7 +251,7 @@ function AuctionPage() {
             </div>
             {loadingModalShow === true ? <LoadingModal /> : null}
         </article>
-        
+
     );
 }
 export default AuctionPage;

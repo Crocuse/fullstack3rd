@@ -12,7 +12,7 @@ function initializeSocket(server) {
     } else {
         corsOrigin = 'http://13.238.114.78:3000'
     }
-    
+
     const io = socketIO(server, {
         cors: {
             origin: corsOrigin,
@@ -28,7 +28,7 @@ function initializeSocket(server) {
     });
 
     io.on('connection', socket => {
-        console.log("WEBSOCKET CONNECTED !!!! ");
+        console.log("WEBSOCKET CONNECTED!! ");
         webSocketHandler(socket, io);
     });
 

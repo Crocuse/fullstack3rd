@@ -2,7 +2,7 @@ const alarmService = require('../service/alarmService');
 const auctionService = require('../service/auctionService')
 
 function webSocketHandler(socket, io) {
-    console.log('[WEBSOCKETHANDLER]');
+    console.log('[WEBSOCKET HANDLER]');
 
     socket.on('message', ({ name, message }) => {
         io.emit('message', ({ name, message }));
@@ -10,7 +10,12 @@ function webSocketHandler(socket, io) {
 
     socket.on('overbidding', ({ loginedId }) => {
         alarmService.getAcPointInfo(loginedId, socket, io);
- 
+
+    });
+
+    socket.on('overBid', (socketData) => {
+        console.log('여ㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕ기 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        alarmService.notificataionOverBid(socketData, socket, io);
     });
 
     socket.on('auctionRefresh', (socketData) => {
