@@ -78,7 +78,11 @@ router.get('/get_sales_data',(req,res)=>{
 
 router.put('/goods_reject_reason',(req,res)=>{
     adminService.goodsRejectReason(req,res);
-})
+});
+
+router.get('/test',(req,res)=>{
+    adminService.testSql(req,res);
+});
 
 module.exports = router;
 

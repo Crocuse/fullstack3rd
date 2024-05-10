@@ -1,6 +1,7 @@
 const DB = require("../db/db");
 const bcrypt = require('bcrypt');
 const generateTemp = require("../util/uuidGenerator");
+const dbSql = require("../db/ModuelSql");
 
 
 const adminService = {
@@ -76,7 +77,7 @@ const adminService = {
     },
     memberList:(req,res)=>{
         
-        DB.query(`SELECT * FROM TBL_MEMBER`,(err,members)=>{
+        DB.query(`SELECT * FROM TBL_MEMBER ORDER BY M_REG_DATE DESC`,(err,members)=>{
             if(err){
                 res.json(null);
             } else {
@@ -418,8 +419,18 @@ const adminService = {
             res.json('success')
           }
         })
+    },
+    testSql: async (req, res) => {
+      try {
+        const results = await dbSql.select('TBL_MEMBER', ['*']);
+        console.log(results);
+        res.json(results);
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
     }
-    
+  
 
 
 }

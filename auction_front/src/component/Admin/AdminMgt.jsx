@@ -44,17 +44,20 @@ function AdminMgt() {
             
             {
                 field: 'A_ID',
-                headerName: '관리자 아이디',
+                headerName: '관리자ID',
+                width: 130,
             },
             {
                 field: 'A_NAME',
                 headerName: '관리자 이름',
+                width: 140,
                 editable: (params) => editModeRows[params.data.A_ID] || false,
 
             },
             {
                 field: 'A_PHONE',
                 headerName: '관리자 전화번호',
+                width: 150,
                 editable: (params) => editModeRows[params.data.A_ID] || false,
                 onCellDoubleClicked: axios_admin_modify_confirm,
             },
