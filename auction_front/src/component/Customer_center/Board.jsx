@@ -1,7 +1,12 @@
+// Board.jsx
 import React, { useEffect, useRef } from 'react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import '@ckeditor/ckeditor5-build-classic/build/translations/ko.js';
 import '../../css/Customer_center/Board.css';
+import MyUploadAdapter from '../../util/MyUploadAdapter';
+import $ from 'jquery';
+import axios from 'axios';
+import { SERVER_URL } from '../../config/server_url';
 
 const Board = (props) => {
     // Hook ------------------------------------------------------------------------------------------------------------------------
@@ -12,6 +17,7 @@ const Board = (props) => {
         if (editorRef.current) {
             ClassicEditor.create(editorRef.current, {
                 language: 'ko',
+                extraPlugins: [MyCustomUploadAdapterPlugin],
             })
                 .then((newEditor) => {
                     editor = newEditor;
@@ -35,19 +41,33 @@ const Board = (props) => {
     };
 
     const writeQnaClick = () => {
-        if (editor) {
-            const editorData = editor.getData();
-            console.log('Editor data:', editorData);
-            // 여기에서 에디터 데이터를 활용하여 필요한 작업을 수행할 수 있습니다.
-            // 예를 들어, 서버로 데이터를 전송하거나 상태를 업데이트할 수 있습니다.
+        let title = $('#title').val();
+        let editorData = editor.getData();
+        console.log('Editor data:', editorData);
+
+        if (title === '') {
+            alert('문의명을 입력해주세요.');
+            return;
+        } else if (editorData === '') {
+            alert('문의 내용을 작성해주세요.');
+            return;
+        } else {
+            axios_insertQNA(title, editorData);
         }
     };
+
+    // Axios ------------------------------------------------------------------------------------------------------------------------
+    async function axios_insertQNA(title, editorData) {
+        try {
+            // const response = await axios.post(`${SERVER_URL.SERVER_URL()}/customer_center/insertQna`);
+        } catch (error) {}
+    }
 
     // View ------------------------------------------------------------------------------------------------------------------------
     return (
         <div className="board_wrap">
             <div className="title">
-                <input type="text" placeholder="문의명을 입력해주세요." />
+                <input type="text" id="title" placeholder="문의명을 입력해주세요." />
             </div>
             <div className="editor" ref={editorRef}></div>
             <div className="btn_wrap">
@@ -57,5 +77,11 @@ const Board = (props) => {
         </div>
     );
 };
+
+function MyCustomUploadAdapterPlugin(editor) {
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+        return new MyUploadAdapter(loader);
+    };
+}
 
 export default Board;

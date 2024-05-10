@@ -35,15 +35,15 @@ const uploads = {
         return upload.array('gr_imgs');
     },
 
-    UPLOAD_QNA_MIDDLEWARE: (m_id) => {
+    UPLOAD_QNA_MIDDLEWARE: () => {
         const upload = multer({
             storage: multer.diskStorage({
                 destination(req, files, done) {
                     let fileDir = '';
                     if (os.version().includes('Windows')) {
-                        fileDir = `C:/acution/qna/${m_id}`;
+                        fileDir = 'C:/acution/qna';
                     } else {
-                        fileDir = `/home/ubuntu/acution/qna/${m_id}`;
+                        fileDir = '/home/ubuntu/acution/qna';
                     }
 
                     if (!fs.existsSync(fileDir)) {
@@ -62,7 +62,7 @@ const uploads = {
             },
         });
 
-        return upload.array('gr_imgs');
+        return upload.array('imgs');
     },
 };
 
