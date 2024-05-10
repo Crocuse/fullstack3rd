@@ -7,24 +7,33 @@ import '../../css/Alarm/alarm.css';
 function AuctionAlarm() {
     const loginedId = useSelector((state) => state.loginedInfos.loginedId.loginedId);
     const [auctionBids, setAuctionBids] = useState([]);
+    const [message, setMessage] = useState();
+
+    const socket = io(`${SERVER_URL.SERVER_URL()}`);
 
     useEffect(() => {
-        const socket = io(`${SERVER_URL.SERVER_URL()}/overCountBid`, {
-            query: { loginedId },
-        });
 
         socket.on('connect', () => {
-            console.log('connected to server');
+            console.log('CONNECTED TO SERVER');
+        });
+
+        socket.on('notificationOverBidErr', (data) => {
+            console.log(data);
+        });
+
+        socket.on('notificationOverBid', (data) => {
+            console.log(data);
+            setMessage(data.message);
         });
 
         // socket.on('acPointInfoErrorInDB', ({ message }) => {
         //     setAuctionBids((prevBids) => [message, ...prevBids]);
         // });
 
-        socket.on('acPointInfoError', (item) => {
-            console.log(item);
-            setAuctionBids((prevBids) => [item, ...prevBids]);
-        });
+        // socket.on('acPointInfoError', (item) => {
+        //     console.log(item);
+        //     setAuctionBids((prevBids) => [item, ...prevBids]);
+        // });
 
 
         // socket.on('maxAcPointError', ({ message }) => {
@@ -67,39 +76,35 @@ function AuctionAlarm() {
         //     }
         // });
 
-        socket.on('highPrice', (item) => {
-            console.log("최고가라고 들어오나")
-            setAuctionBids((prevBids) => [...prevBids, item]);
-        });
+        // socket.on('highPrice', (item) => {
+        //     console.log("최고가라고 들어오나")
+        //     setAuctionBids((prevBids) => [...prevBids, item]);
+        // });
 
-        socket.on('nonHighPrice', (item) => {
-            console.log("높은가격없다고 들어오나")
-            setAuctionBids((prevBids) => [...prevBids, item]);
-        });
+        // socket.on('nonHighPrice', (item) => {
+        //     console.log("높은가격없다고 들어오나")
+        //     setAuctionBids((prevBids) => [...prevBids, item]);
+        // });
 
-        socket.on("overBidInfo", (item) => {
-            console.log("오버비드인포로 들어오나")
-            console.log(item);
-            setAuctionBids((prevBids) => [...prevBids, item]);
-        });
+        // socket.on("overBidInfo", (item) => {
+        //     console.log("오버비드인포로 들어오나")
+        //     console.log(item);
+        //     setAuctionBids((prevBids) => [...prevBids, item]);
+        // });
 
-        socket.on("nonOverBidInfo", (item) => {
-            setAuctionBids((prevBids) => [...prevBids, item]);
-        });
+        // socket.on("nonOverBidInfo", (item) => {
+        //     setAuctionBids((prevBids) => [...prevBids, item]);
+        // });
 
 
 
 
         return () => {
             socket.off('connect');
-            socket.off('acPointInfoErrorInDB');
-            socket.off('acPointInfoError');
-            socket.off('maxAcPointError');
-            socket.off('maxAcPoint');
-            socket.off('notFoundMaxAcPoint');
+            socket.off('notificationOverBid');
             socket.disconnect();
         };
-    }, []);
+    }, [loginedId]);
 
     return (
         <>
@@ -108,13 +113,13 @@ function AuctionAlarm() {
                     <p className="alarm-box">알람</p>
                 </div>
                 <div>
-                    {auctionBids.map((bid, index) => (
-                        <div key={index}>
-                            <p>상품명: {bid.GR_NAME}</p>
-                            <p> {bid.BidStatus}</p>
-                            <p>--------------------</p>
-                        </div>
-                    ))}
+
+                    <div>
+                        <p>상품명: </p>
+                        <p> {message}</p>
+                        <p>--------------------</p>
+                    </div>
+
                 </div>
             </div>
         </>
