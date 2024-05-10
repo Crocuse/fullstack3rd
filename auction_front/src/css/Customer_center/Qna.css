@@ -1,0 +1,52 @@
+.qna_wrap h2 {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid #8f8f8f;
+}
+
+.qna_wrap table {
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+    border-collapse: collapse;
+}
+
+.qna_wrap .write_btn {
+    margin-top: 10px;
+    display: flex;
+    justify-content: end;
+}
+
+.qna_wrap .write_btn button {
+    border: none;
+    padding: 8px 17px;
+    border-radius: 5px;
+    font-size: 1em;
+    background-color: #49a5f5;
+    color: #fff;
+    -webkit-text-stroke: 0;
+    cursor: pointer;
+}
+
+.qna_wrap td {
+    border: 1px solid #dadada;
+    background-color: #fff;
+    padding: 3px 0;
+}
+
+.qna_wrap th {
+    background-color: #49a5f5;
+    border: 1px solid #fff !important;
+    color: #ffffff;
+    -webkit-text-stroke: #fff;
+    padding: 5px 0;
+    font-weight: 400;
+}
+
+.qna_wrap th:nth-child(3) {
+    width: 50%;
+}
+
+.qna_wrap .no_qna {
+    padding: 20px 0;
+}

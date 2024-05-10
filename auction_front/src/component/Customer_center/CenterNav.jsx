@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
 import '../../css/Customer_center/CenterNav.css';
 import { Link, Outlet } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const CenterNav = () => {
     // Hook ----------------------------------------------------------------------------------------------------------------------------------
+    const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
+
     useEffect(() => {
         // Kakao SDK 스크립트 로드
         const script = document.createElement('script');
@@ -37,6 +40,10 @@ const CenterNav = () => {
         });
     };
 
+    const qnaClickNotLogin = () => {
+        alert('문의글 작성은 로그인 후 이용 가능합니다.');
+    };
+
     // View ----------------------------------------------------------------------------------------------------------------------------------
     return (
         <>
@@ -49,12 +56,19 @@ const CenterNav = () => {
                     <img src="/img/customer_center/kakaotalk_white.png" />
                     1:1 채팅 상담
                 </a>
-                <Link to="qna">
-                    <a href="#" class="button">
+                {sessionId === '' ? (
+                    <a href="#" class="button" onClick={qnaClickNotLogin}>
                         <img src="/img/customer_center/board_icon.png" />
                         문의글 작성
                     </a>
-                </Link>
+                ) : (
+                    <Link to="qna">
+                        <a href="#" class="button">
+                            <img src="/img/customer_center/board_icon.png" />
+                            문의글 작성
+                        </a>
+                    </Link>
+                )}
 
                 <Link to="faq">
                     <a href="#" class="button">

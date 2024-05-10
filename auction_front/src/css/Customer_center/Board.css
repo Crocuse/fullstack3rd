@@ -1,25 +1,44 @@
-.board_wrap .form-wrapper {
-    width: 80%;
-    margin: 0 auto;
+.board_wrap {
+    width: 100%;
+    margin: 60px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.board_wrap .title-input {
-    width: 500px;
-    height: 40px;
-    margin: 10px;
+.board_wrap .title input {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 1.1em;
+    box-sizing: border-box;
+    border: 1px solid #dadada;
 }
 
-.board_wrap .text-area {
-    width: 80%;
-    min-height: 500px;
+.board_wrap .ck.ck-editor {
+    width: 100%;
+}
+.board_wrap .ck-editor__editable {
+    min-height: 400px;
 }
 
-.board_wrap .submit-button {
-    width: 200px;
-    height: 50px;
-    font-size: 20px;
-    padding: 20px;
+.board_wrap .btn_wrap {
+    display: flex;
+    justify-content: end;
+    margin-top: 10px;
+}
+
+.board_wrap .btn_wrap button {
     border: none;
-    background: indianred;
+    background-color: #fff;
+    padding: 10px 20px;
     border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.board_wrap .btn_wrap button:nth-child(2) {
+    margin-left: 10px;
+    background-color: #49a5f5;
+    color: #fff;
+    -webkit-text-stroke: 0;
 }
