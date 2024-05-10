@@ -47,6 +47,7 @@ import MemberDelete from './component/member/mypage/MemberDelete';
 import Qna from './component/Customer_center/Qna';
 import Faq from './component/Customer_center/Faq';
 import CenterNav from './component/Customer_center/CenterNav';
+import Test from './component/Test';
 
 function App() {
     // 폰트어썸 적용
@@ -64,6 +65,7 @@ function App() {
                                     <Header />
                                     <Nav />
                                     <Routes>
+                                        <Route path="/test" element={<Test />}></Route>
                                         <Route path="/" element={<Home />}></Route>
                                         <Route path="/auction/current_list" element={<CurList />}></Route>
                                         <Route path="/auction/regist_form" element={<RegForm />}></Route>
