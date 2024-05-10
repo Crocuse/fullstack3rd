@@ -41,7 +41,6 @@ const auctionService = {
             if(error){
                 console.log(error);
             } else {
-                console.log(list);
                 if(list.length > 0) {
                     res.json(list);
                 } else {
@@ -58,7 +57,6 @@ const auctionService = {
             if(error) {
                 console.log(error);
             } else {
-                console.log(product);
                 DB.query(`SELECT GI_NAME FROM TBL_GOODS_IMG WHERE GR_NO = ?`,
                 [grNo],
                 (error, imgs) => {
@@ -94,8 +92,6 @@ const auctionService = {
 
         asPrice = Number(asPrice) + (asPrice*0.1);
         asPrice = Math.round(asPrice/100)  * 100
-        console.log(asPrice);
-        console.log(mId);
 
         DB.query(`SELECT MAX(AC_POINT) AS max_price FROM TBL_AUCTION_CURRENT WHERE GR_NO = ?`, 
         [grNo],
@@ -111,7 +107,6 @@ const auctionService = {
                         if(error) {
                             console.log(error);
                         } else {
-                            console.log(result);
                             res.json(result);
                         }
                     })
