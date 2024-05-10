@@ -14,7 +14,7 @@ function AuctionPage() {
     const [asPrice, setAsPrice] = useState('');
     const [nowPrice, setNowPirce] = useState('');
     const [nextBid, setNextBid] = useState('');
-    const [idx, setIdx] = useState(0);
+    const [imgIdx, setImgIdx] = useState(0);
     const [loadingModalShow, setLoaingModalShow] = useState(false);
     const [isIoSocket, setIsIoSocket] = useState(false);
     const [bidingLog, setBidingLog] = useState([]);
@@ -40,14 +40,11 @@ function AuctionPage() {
             if(data.bid !== '')
                 setNextBid(nextBidfunc(data.bid));
             if(data.price !== ''){
-                console.log('aaaaaaaaaaaa');
                 setNowPirce(data.bid);
             }
-                
         })
 
         return() => {
-
             socket.off('bidmsg');
         }
     }, [])
@@ -135,7 +132,7 @@ function AuctionPage() {
 
     const nextBidfunc = (nPrice) => {
         console.log('nextBidfunc');
-        let nextbid = nPrice + (nPrice * 0.1);
+        let nextbid = nPrice + (nPrice * 0.05);
         nextbid = Math.round(nextbid/100) * 100;
         
         return nextbid;
@@ -143,23 +140,23 @@ function AuctionPage() {
 
     const leftBtnClickHandler = () => {
         console.log('leftBtnClickHandler()');
-        let tmp = idx;
+        let tmp = imgIdx;
         tmp--;
         if(tmp < 0) {
             tmp = product.imgs.length -1;
         }
-        setIdx(tmp);
+        setImgIdx(tmp);
         console.log(tmp);
     }
 
     const rightBtnClickHandler = () => {
         console.log('rightBtnClickHandler()');
-        let tmp = idx;
+        let tmp = imgIdx;
         tmp++;
         if(tmp > product.imgs.length -1) {
             tmp = 0;
         }
-        setIdx(tmp);
+        setImgIdx(tmp);
         console.log(tmp);
     }
 
@@ -170,6 +167,30 @@ function AuctionPage() {
         normalBid();
     }
 
+    const asBidBtnHandler = () => {
+        console.log("asBidBtnHandler()");
+        if(checkAsBid(asPrice)) {
+
+        }
+    }
+
+    const checkAsBid = (price) =>{
+        price = price.replaceAll(',','');
+        let tmpPrice = price;
+        tmpPrice = Math.round(tmpPrice / 100) * 100;
+        tmpPrice -= price;
+
+        let tmpNowPrice = nowPrice;
+        tmpNowPrice = tmpNowPrice + (tmpNowPrice * 0.1)
+        if(tmpPrice !== 0){
+            alert('10원 단위 금액은 사용할 수 없습니다.');
+            return false;
+        }
+        else if(tmpNowPrice) {
+
+        }
+    }
+
     return (
         <article>
             <div className="auction_page_wrap">
@@ -177,7 +198,7 @@ function AuctionPage() {
                     <div className="auction_back_img">
                         <button onClick={leftBtnClickHandler}><img src="/img/arrow_left.png"/></button>
                         <div className="auction_img">
-                            <img src={`${SERVER_URL.SERVER_URL()}/goodsImg/${product.imgs[idx]}`} alt="" />
+                            <img src={`${SERVER_URL.SERVER_URL()}/goodsImg/${product.imgs[imgIdx]}`} alt="" />
                         </div>
                         <button><img src="/img/arrow_right.png" onClick={rightBtnClickHandler}/></button>
                     </div>
@@ -202,10 +223,10 @@ function AuctionPage() {
                         <div className="auction_log" ref={auctionLogRef}>
                             <div className="text_log">
                             {
-                                bidingLog.map((biding, idx) => (
-                                    <>
-                                        <div key={idx}>[{biding.AC_REG_DATE}] {biding.M_ID}님 께서 {biding.AC_POINT.toLocaleString('ko-KR')}원 에 상회 입찰 하였습니다.</div>
-                                    </>
+                                bidingLog.map((biding) => (
+                                    <div key={biding.AC_NO}>
+                                        [{biding.AC_REG_DATE}] {biding.M_ID}님 께서 {biding.AC_POINT.toLocaleString('ko-KR')}원 에 상회 입찰 하였습니다.
+                                    </div>
                                 ))
                             }
                             </div>
@@ -217,7 +238,7 @@ function AuctionPage() {
                                     <input type="text" name="as_price" value={asPrice} onChange={(e) => asPriceChangeHandler(e)}/>      
                                 </div>
                                 <div>
-                                    <button>호가 입찰</button>
+                                    <button onClick={asBidBtnHandler}>호가 입찰</button>
                                 </div>
                             </div>
                         </div>
