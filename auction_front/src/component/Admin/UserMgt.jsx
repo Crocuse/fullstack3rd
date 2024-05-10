@@ -35,6 +35,7 @@ function UserMgt() {
     const [selectedAddress, setSelectedAddress] = useState(null);
     const [detailAddress, setDetailAddress] = useState("");
     const [loadingModalShow,setLoadingModalShow] = useState(false);
+    const [postCodeShow,setPostCodeShow] = useState(true);
 
 
     const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
@@ -50,12 +51,13 @@ function UserMgt() {
         setColDefs([
             {
                 field: 'M_ID',
-                headerName: '아이디',
-                pinned: 'left'
+                headerName: 'ID',
+                width: 120
             },
             {
                 field: 'M_STATUS',
                 headerName: '상태',
+                width: 110,
                 filter: false,
                 floatingFilter: false,
                 cellRenderer: (params) => (
@@ -80,18 +82,22 @@ function UserMgt() {
             {
                 field: 'M_PHONE',
                 headerName: '멤버 연락처',
+                width: 125,
                 editable: (params) => editModeRows[params.data.M_ID] || false,
             },
             {
                 field: 'M_ADDR',
                 headerName: '멤버 주소',
+                width:306,
                 editable: (params) => editModeRows[params.data.M_ID] || false,
             },
             {
                 field: 'postcode',
                 headerName: '우편번호',
+                width: 110,
                 filter: false,
                 floatingFilter: false,
+                hide: postCodeShow,
                 cellRenderer: (params) => (
                     editModeRows[params.data.M_ID] ? (
                         <button onClick={() => openModal(params.data)}>우편번호 찾기</button>
@@ -102,6 +108,7 @@ function UserMgt() {
             {   field: 'M_REG_DATE', 
                 headerName: '멤버 등록일',
                 filter: "agDateColumnFilter",
+                width:180,
                 filterParams: {
                     comparator: (filterLocalDateAtMidnight, cellValue) => {
                       const cellDate = new Date(cellValue);
@@ -122,6 +129,7 @@ function UserMgt() {
                     field: 'M_MOD_DATE',
                     headerName: '멤버 수정일',
                     filter: 'agDateColumnFilter',
+                    width:180,
                     filterParams: {
                       comparator: (filterLocalDateAtMidnight, cellValue) => {
                         const cellDate = new Date(cellValue);
@@ -144,6 +152,7 @@ function UserMgt() {
                 width: 80,
                 filter: false,
                 floatingFilter: false,
+                pinned:'right',
                 cellRenderer: (params) => (
                     params.data.M_STATUS === 1 ? null : (
                         editModeRows[params.data.M_ID] ? (
@@ -157,6 +166,7 @@ function UserMgt() {
                                         ...editModeRows,
                                         [params.data.M_ID]: !editModeRows[params.data.M_ID],
                                     };
+                                    setPostCodeShow(!postCodeShow);
                                     setEditModeRows(newEditModeRows);
                                 }}
                             />
@@ -168,6 +178,7 @@ function UserMgt() {
                 field: 'delete',
                 headerName: '탈퇴',
                 width: 80,
+                pinned:'right',
                 cellRenderer: (params) => (
                     params.data.M_STATUS === 1 ? null : (
                         <button onClick={() => memberDeleteBtn(params.data)}>탈퇴</button>
@@ -224,6 +235,14 @@ function UserMgt() {
         }).open();
     };
 
+    
+    const rowClassRules = useMemo(() => ({
+        
+
+        'row-red': (params) => params.data.M_STATUS === 1,
+
+      }), []);
+
     const handleSave = () => {
         const updatedRowData = rowData.map((member) => {
             if (member.M_ID === selectedMember.M_ID) {
@@ -254,7 +273,8 @@ function UserMgt() {
                 setEditModeRows({});
                 axios_member_list();
                 setLoadingModalShow(false)
-                gridRef.current.columnApi.setColumnVisible('postcode', false);
+                setPostCodeShow(!postCodeShow);
+                gridRef.current.columnApi.setColumnVisible('postcode', postCodeShow);
             }
         } catch (error) {
             console.log(error);
@@ -298,6 +318,7 @@ function UserMgt() {
             <div className="user-mgt-title">MEMBER MANAGEMENT</div>
             <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }}>
                 <AgGridReact
+                    rowClassRules={rowClassRules}
                     ref={gridRef}
                     rowData={rowData}
                     columnDefs={colDefs}

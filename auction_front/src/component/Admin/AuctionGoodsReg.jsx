@@ -89,12 +89,6 @@ function AuctionGoodsReg() {
                         return '재경매 미승인';
                     } else if (value === 2) {
                         return '경매 대기중';
-                    } else if (value === 3) {
-                        return '경매 진행중';
-                    } else if (value === 4) {
-                        return '경매 종료';
-                    } else {
-                        return '오류';
                     }
                 },
                 editable: (params) => editModeRows[params.data.GR_NO] || false,

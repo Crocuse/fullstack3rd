@@ -50,6 +50,7 @@ function AuctionResult() {
             {
                 field: 'GR_NAME',
                 headerName: '상품명',
+                width: 291,
                 filter: 'agTextColumnFilter',
             },
             {
@@ -119,20 +120,7 @@ function AuctionResult() {
                 },
                 filter: false,
             },
-            {
-                field: 'rebid',
-                headerName: '재경매여부',
-                width: 110,
-                cellRenderer: (params) => {
-                    const { AR_IS_BID, AR_SELL_ID } = params.data;
-                    if (AR_IS_BID === 0) {
-                        return <button onClick={() => reBidAlert(AR_SELL_ID)}>재경매알림</button>;
-                    } else {
-                        return null;
-                    }
-                },
-                filter: false,
-            },
+            
         ]);
     }, []);
 
@@ -149,9 +137,6 @@ function AuctionResult() {
         resizable: true,
     }), []);
 
-    const reBidAlert = (id) => {
-        let confirm = window.confirm(`판매자 ${id} 에게 재경매 여부 알림을 보내시겠습니까?`);
-    };
 
     const deliveryGoods = (no, id) => {
         let confirm = window.confirm(`구매자 ${id} 에게 물품을 배송하시겠습니까?`);
