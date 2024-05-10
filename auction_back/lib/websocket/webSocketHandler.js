@@ -1,4 +1,5 @@
 const alarmService = require('../service/alarmService');
+const auctionService = require('../service/auctionService')
 
 function webSocketHandler(socket, io) {
     console.log('[WEBSOCKETHANDLER]');
@@ -9,18 +10,13 @@ function webSocketHandler(socket, io) {
 
     socket.on('overbidding', ({ loginedId }) => {
         alarmService.getAcPointInfo(loginedId, socket, io);
-
+ 
     });
 
     socket.on('auctionRefresh', (socketData) => {
-        console.log('socketData>>>>>>>>>>>>>>>>>>>>>',socketData);
-        socket.broadcast.emit('bidmsg', {
-            id : socketData.loginedId,
-            bid : socketData.nextBid
-        });
+        console.log('auctionRefresh');
+        auctionService.bidmsg(socketData, socket);
     })
-
-
 }
 
 module.exports = webSocketHandler;

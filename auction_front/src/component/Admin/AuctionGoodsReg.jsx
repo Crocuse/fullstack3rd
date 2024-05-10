@@ -8,7 +8,7 @@ import "../../css/Admin/AuctionGoodsReg.css";
 import LoadingModal from '../include/LoadingModal';
 
 import { AgGridReact } from 'ag-grid-react';
-import { ModuleRegistry } from 'ag-grid-community';
+import { ModuleRegistry, RowType } from 'ag-grid-community';
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import { MenuModule } from 'ag-grid-enterprise';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
@@ -71,23 +71,55 @@ function AuctionGoodsReg() {
             {
                 field: 'AS_STATUS',
                 headerName: '대기상태',
-                cellRenderer: (params) => {
+                valueGetter: (params) => {
                     const { AS_START_DATE, AS_STATUS } = params.data;
                     if (AS_START_DATE === getTodayDate()) {
-                        return "경매 진행중";
+                        return 3; // 경매 진행중
                     } else if (AS_START_DATE < getTodayDate()) {
-                        return "경매 종료";
-                    } else if (AS_STATUS === 0) {
-                        return "등록 대기";
-                    } else if (AS_STATUS === 1) {
-                        return "재경매 미승인";
-                    } else if (AS_STATUS === 2) {
-                        return "경매 대기중";
+                        return 4; // 경매 종료
                     } else {
-                        return "오류";
+                        return AS_STATUS;
                     }
                 },
-                filter: 'agTextColumnFilter',
+                valueFormatter: (params) => {
+                    const value = params.value;
+                    if (value === 0) {
+                        return '등록 대기';
+                    } else if (value === 1) {
+                        return '재경매 미승인';
+                    } else if (value === 2) {
+                        return '경매 대기중';
+                    } else if (value === 3) {
+                        return '경매 진행중';
+                    } else if (value === 4) {
+                        return '경매 종료';
+                    } else {
+                        return '오류';
+                    }
+                },
+                editable: (params) => editModeRows[params.data.GR_NO] || false,
+                cellEditor: 'agSelectCellEditor',
+                cellEditorParams: {
+                    values: [0, 2],
+                },
+                refData: {
+                    0: '대기',
+                    2: '등록',
+                },
+                filter: 'agSetColumnFilter',
+                filterParams: {
+                    values: [0, 1, 2],
+                    valueFormatter: (params) => {
+                        const value = params.value;
+                        if (value === 0) {
+                            return '등록 대기';
+                        } else if (value === 1) {
+                            return '재경매 미승인';
+                        } else if (value === 2) {
+                            return '경매 대기중';
+                        } 
+                    },
+                },
             },
             {
                 field: "AS_LOCATION_NUM",
@@ -101,7 +133,7 @@ function AuctionGoodsReg() {
             },
             {
                 field: "AS_START_DATE",
-                headerName: "경매시작날",
+                headerName: "경매날",
                 cellEditor: "agDateStringCellEditor",
                 editable: (params) => editModeRows[params.data.GR_NO] || false,
                 cellEditorParams: {
@@ -196,11 +228,19 @@ function AuctionGoodsReg() {
             const { GR_NO, AS_LOCATION_NUM, AS_STATUS, AS_START_DATE } = data;
             const startDate = new Date(AS_START_DATE).toISOString().split("T")[0];
 
+
+
+            if (AS_LOCATION_NUM == null){
+                alert("자리 번호를 등록해주세요");
+                setLoadingModalShow(false)
+                return;
+            }
             if (startDate <= getTodayDate()) {
                 alert("당일이나 오늘 이전으로는 등록할 수 없습니다.");
                 setLoadingModalShow(false)
                 return;
             }
+
 
             const response = await axios.post(`${SERVER_URL.SERVER_URL()}/admin/goods_reg_state_change`, {
                 gr_no: GR_NO,
@@ -232,6 +272,7 @@ function AuctionGoodsReg() {
             <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }}>
                 <AgGridReact
                     ref={gridRef}
+                    context={{ refData: { 0: '대기', 2: '등록' } }}
                     rowData={rowData}
                     columnDefs={colDefs}
                     defaultColDef={defaultColDef}
