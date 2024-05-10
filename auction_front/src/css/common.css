@@ -12,6 +12,7 @@ body {
     -webkit-text-stroke: 1px rgba(0, 0, 0, 0.1);
     margin: 0;
     color: #242424;
+    overflow-x: hidden;
 }
 
 body {
