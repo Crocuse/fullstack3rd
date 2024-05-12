@@ -19,18 +19,18 @@ function initializeSocket(server) {
             credentials: true
         }
     });
+    
+        io.on('connection', socket => {
+            console.log("WEBSOCKET CONNECTED!! ");
+            webSocketHandler(socket, io);
+        });
 
 
-    const overCountBidNameSpace = io.of("/overCountBid");
-    overCountBidNameSpace.on('connection', socket => {
-        console.log("OVER COUNT BID WEBSOCKET CONNECTED !");
-        overCountBidHandler(socket, io);
-    });
-
-    io.on('connection', socket => {
-        console.log("WEBSOCKET CONNECTED!! ");
-        webSocketHandler(socket, io);
-    });
+    // const overCountBidNameSpace = io.of("/overCountBid");
+    // overCountBidNameSpace.on('connection', socket => {
+    //     console.log("OVER COUNT BID WEBSOCKET CONNECTED !");
+    //     overCountBidHandler(socket, io);
+    // });
 
 }
 
