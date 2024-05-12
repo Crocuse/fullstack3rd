@@ -7,6 +7,8 @@ import { SERVER_URL } from "../../config/server_url";
 import '../../css/Auction/AuctionPage.css';
 import LoadingModal from "../include/LoadingModal";
 import { io } from "socket.io-client";
+import { useDispatch } from 'react-redux';
+import {setOverBidMsg} from '../../redux/action/setOverBidMsg';
 
 
 
@@ -25,6 +27,7 @@ function AuctionPage() {
     const product = location.state.product;
     const auctionLogRef = useRef(null);
     const socket = io(`${SERVER_URL.SERVER_URL()}`)
+    const dispatch = useDispatch();
 
     useEffect(() => {
         console.log("useEffect");
@@ -71,6 +74,16 @@ function AuctionPage() {
         socket.emit('auctionRefresh', socketData);
         socket.on('notificationOverBid', (data) => {
             console.log(data);
+            if(data) {
+                console.log(data);
+                let message = data.message;
+                let id = data.id;
+                let name = data.name;
+                let date = data.date;
+                dispatch(setOverBidMsg({id, message, name, date}));
+            } else {
+                return null;
+            }
         });
 
     }, [isIoSocket]);
