@@ -77,7 +77,7 @@ const Qna = () => {
                                 return (
                                     <tr key={idx} onClick={() => qnalistClick(idx)}>
                                         <td>{qna.Q_NO}</td>
-                                        <td>{qna.Q_REG_DATE}</td>
+                                        <td>{qna.Q_REG_DATE.slice(0, 10)}</td>
                                         <td>
                                             {qna.Q_TITLE.length > 20 ? `${qna.Q_TITLE.slice(0, 20)}...` : qna.Q_TITLE}
                                         </td>
