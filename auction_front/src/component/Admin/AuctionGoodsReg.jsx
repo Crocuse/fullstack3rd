@@ -71,7 +71,7 @@ function AuctionGoodsReg() {
             {
                 field: 'AS_STATUS',
                 headerName: '대기상태',
-                width:150,
+                width: 150,
                 valueGetter: (params) => {
                     const { AS_START_DATE, AS_STATUS } = params.data;
                     if (AS_START_DATE === getTodayDate()) {
@@ -95,11 +95,14 @@ function AuctionGoodsReg() {
                 editable: (params) => editModeRows[params.data.GR_NO] || false,
                 cellEditor: 'agSelectCellEditor',
                 cellEditorParams: {
-                    values: [0, 2],
-                },
-                refData: {
-                    0: '대기',
-                    2: '등록',
+                    values: ['등록 대기', '등록'],
+                    valueFormatter: (params) => {
+                        if (params.value === '등록 대기') {
+                            return 0;
+                        } else if (params.value === '등록') {
+                            return 2;
+                        }
+                    },
                 },
                 filter: 'agSetColumnFilter',
                 filterParams: {
@@ -112,7 +115,7 @@ function AuctionGoodsReg() {
                             return '재경매 미승인';
                         } else if (value === 2) {
                             return '경매 대기중';
-                        } 
+                        }
                     },
                 },
             },
@@ -221,42 +224,40 @@ function AuctionGoodsReg() {
 
     async function axios_goods_reg_state_change(data) {
         try {
-            setLoadingModalShow(true)
+            setLoadingModalShow(true);
             const { GR_NO, AS_LOCATION_NUM, AS_STATUS, AS_START_DATE } = data;
             const startDate = new Date(AS_START_DATE).toISOString().split("T")[0];
-
-
-
-            if (AS_LOCATION_NUM == null){
+    
+            if (AS_LOCATION_NUM == null) {
                 alert("자리 번호를 등록해주세요");
-                setLoadingModalShow(false)
+                setLoadingModalShow(false);
                 return;
             }
             if (startDate <= getTodayDate()) {
                 alert("당일이나 오늘 이전으로는 등록할 수 없습니다.");
-                setLoadingModalShow(false)
+                setLoadingModalShow(false);
                 return;
             }
-
-
+    
+            const selectedStatus = AS_STATUS === '등록 대기' ? 0 : 2;
+    
             const response = await axios.post(`${SERVER_URL.SERVER_URL()}/admin/goods_reg_state_change`, {
                 gr_no: GR_NO,
-                as_location_num: AS_LOCATION_NUM,
-                as_state: AS_STATUS,
-                as_start_date: startDate,
+                as_location_num: selectedStatus === 0 ? null : AS_LOCATION_NUM,
+                as_state: selectedStatus,
+                as_start_date: selectedStatus === 0 ? null : startDate,
             });
-
+    
             console.log(response.data);
             if (response.data === "fail") {
                 alert("상태변경에 실패했습니다.");
             } else if (response.data === "already") {
                 alert("한 날짜에 자리는 중복될 수 없습니다.");
             } else if (response.data === "success") {
-                
                 axios_goods_reg_list();
                 setEditModeRows({});
             }
-            setLoadingModalShow(false)
+            setLoadingModalShow(false);
         } catch (error) {
             console.log(error);
         }
