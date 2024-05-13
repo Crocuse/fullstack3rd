@@ -2,6 +2,7 @@ const DB = require('../db/db');
 const bcrypt = require('bcrypt');
 const google = require('../config/google.json');
 const naver = require('../config/naver.json');
+const kakao = require('../config/kakao.json');
 const mailService = require('./gmailService');
 const generateTemp = require('../util/uuidGenerator');
 const MemberDao = require('../dao/MemberDao');
@@ -62,6 +63,13 @@ const memberService = {
         res.json({ url: naverAuthURL });
     },
 
+    kakaoLogin: (req, res) => {
+        const kakaoAuthURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${
+            kakao.web.client_id
+        }&redirect_uri=${encodeURIComponent(kakao.web.redirect_uri)}`;
+        res.json({ url: kakaoAuthURL });
+    },
+
     loginSuccess: async (req, res) => {
         if (req.user == 'super') {
             res.json({
@@ -83,7 +91,32 @@ const memberService = {
 
     getMyInfo: async (req, res) => {
         let result = await MemberDao.getMyInfo(req);
-        res.json(result);
+
+        const selectedMember = {
+            ...result.member[0],
+            M_ADDR: result.member[0].M_ADDR.replace(/\//g, ' '),
+            M_ID:
+                result.member[0].M_ID.slice(0, 2) === 'N_'
+                    ? '네이버 로그인 회원입니다.'
+                    : result.member[0].M_ID.slice(0, 2) === 'G_'
+                    ? '구글 로그인 회원입니다.'
+                    : result.member[0].M_ID.slice(0, 2) === 'K_'
+                    ? '카카오톡 로그인 회원입니다.'
+                    : result.member[0].M_ID,
+            M_SOCIAL_ID:
+                result.member[0].M_SOCIAL_ID === null
+                    ? '소셜 로그인 회원이 아닙니다.'
+                    : result.member[0].M_SOCIAL_ID.slice(0, 2) === 'N_'
+                    ? '네이버 로그인 회원입니다.'
+                    : result.member[0].M_SOCIAL_ID.slice(0, 2) === 'G_'
+                    ? '구글 로그인 회원입니다.'
+                    : result.member[0].M_SOCIAL_ID.slice(0, 2) === 'K_'
+                    ? '카카오톡 로그인 회원입니다.'
+                    : '소셜 로그인 회원이 아닙니다.',
+        };
+        let currentPoint = 0;
+        if (result.point.length != 0) result.currentPoint = point[0].P_CURRENT;
+        res.json({ selectedMember, currentPoint });
     },
 
     modifyPhone: async (req, res) => {
@@ -156,6 +189,8 @@ const memberService = {
             res.json('google_id');
         } else if (m_id[0].M_ID.slice(0, 2) === 'N_') {
             res.json('naver_id');
+        } else if (m_id[0].M_ID.slice(0, 2) === 'K_') {
+            res.json('kakao_id');
         } else {
             let mail = req.body.mail;
             let subject = `[비드버드] 회원님의 아이디 정보입니다.`;

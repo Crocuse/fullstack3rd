@@ -6,6 +6,7 @@ const cors = require('cors');
 const { OAuth2Client } = require('google-auth-library');
 const axios = require('axios');
 const naver = require('../config/naver.json');
+const kakao = require('../config/kakao.json');
 
 exports.passport = (app) => {
     const passport = require('passport');
@@ -55,7 +56,7 @@ exports.passport = (app) => {
     app.get(
         '/auth/google',
         cors({
-            origin: 'http://localhost:3000',
+            origin: '*',
             methods: ['GET'],
         }),
         passport.authenticate('google', {
@@ -80,7 +81,7 @@ exports.passport = (app) => {
     app.post(
         '/auth/google/callback',
         cors({
-            origin: 'http://localhost:3000',
+            origin: '*',
             methods: ['POST'],
         }),
         async (req, res) => {
@@ -158,7 +159,7 @@ exports.passport = (app) => {
     app.get(
         '/auth/naver',
         cors({
-            origin: 'http://localhost:3000',
+            origin: '*',
             methods: ['GET'],
         }),
         passport.authenticate('naver', {
@@ -193,7 +194,7 @@ exports.passport = (app) => {
     app.post(
         '/auth/naver/callback',
         cors({
-            origin: 'http://localhost:3000',
+            origin: '*',
             methods: ['POST'],
         }),
         async (req, res) => {
@@ -270,6 +271,128 @@ exports.passport = (app) => {
         }
     );
     // NAVER SETTING END
+
+    // KAKAO SETTING START
+    app.get(
+        '/auth/kakao',
+        cors({
+            origin: 'http://localhost:3000',
+            methods: ['GET'],
+        }),
+        passport.authenticate('kakao', {
+            scope: ['profile_nickname', 'account_email'],
+        })
+    );
+
+    async function getKakaoAccessToken(code) {
+        const { data } = await axios({
+            method: 'POST',
+            url: 'https://kauth.kakao.com/oauth/token',
+            params: {
+                grant_type: 'authorization_code',
+                client_id: kakao.web.client_id,
+                redirect_uri: kakao.web.redirect_uri,
+                code: code,
+            },
+        });
+        return data.access_token;
+    }
+
+    async function getKakaoProfile(accessToken) {
+        const { data } = await axios({
+            method: 'GET',
+            url: 'https://kapi.kakao.com/v2/user/me',
+            headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        return data.kakao_account;
+    }
+
+    app.post(
+        '/auth/kakao/callback',
+        cors({
+            origin: 'http://localhost:3000',
+            methods: ['POST'],
+        }),
+        async (req, res) => {
+            const { code } = req.body;
+            const accessToken = await getKakaoAccessToken(code);
+            const profile = await getKakaoProfile(accessToken);
+
+            DB.query(`SELECT * FROM TBL_MEMBER WHERE M_MAIL = ?`, [profile.email], (err, member) => {
+                if (err) {
+                    console.log(err);
+                    return res.json({ success: false, message: '카카오 로그인에 실패했습니다.' });
+                }
+
+                if (member.length == 0) {
+                    DB.query(
+                        `INSERT INTO TBL_MEMBER(M_ID, M_SOCIAL_ID, M_PW, M_MAIL, M_PHONE) VALUES(?, ?, ?, ?, ?)`,
+                        [
+                            `K_${profile.email.split('@')[0]}`,
+                            `K_${profile.email.split('@')[0]}`,
+                            bcrypt.hashSync(shortid(), 10),
+                            profile.email,
+                            '--',
+                        ],
+                        (err, rst) => {
+                            if (err) {
+                                console.log(err);
+                                return res.json({ success: false, message: '카카오 로그인에 실패했습니다.' });
+                            }
+
+                            const user = {
+                                id: `K_${profile.id}`,
+                                name: profile.profile.nickname,
+                            };
+
+                            req.login(user, (err) => {
+                                if (err) {
+                                    console.log(err);
+                                    return res.json({ success: false, message: '카카오 로그인에 실패했습니다.' });
+                                }
+
+                                return res.json({
+                                    success: true,
+                                    sessionID: req.sessionID,
+                                    loginedId: `K_${profile.email.split('@')[0]}`,
+                                });
+                            });
+                        }
+                    );
+                } else {
+                    DB.query(
+                        'UPDATE TBL_MEMBER SET M_SOCIAL_ID = ? WHERE M_MAIL = ?',
+                        [`K_${profile.email.split('@')[0]}`, profile.email],
+                        (err, rst) => {
+                            if (err) {
+                                console.log(err);
+                                return res.json({ success: false, message: '카카오 로그인에 실패했습니다.' });
+                            }
+
+                            const user = {
+                                id: member[0].M_ID,
+                                name: member[0].M_ID,
+                            };
+
+                            req.login(user, (err) => {
+                                if (err) {
+                                    console.log(err);
+                                    return res.json({ success: false, message: '카카오 로그인에 실패했습니다.' });
+                                }
+
+                                return res.json({
+                                    success: true,
+                                    sessionID: req.sessionID,
+                                    loginedId: member[0].M_ID,
+                                });
+                            });
+                        }
+                    );
+                }
+            });
+        }
+    );
+    // KAKAO SETTING END
 
     return passport;
 };

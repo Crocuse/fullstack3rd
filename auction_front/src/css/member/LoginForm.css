@@ -69,33 +69,53 @@
 .login_wrap .social_login_wrap {
     margin-top: 30px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
 }
 
 .login_wrap .social_login_wrap > div {
-    flex: 0 0 180px;
-    padding: 6px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 5px;
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center;
     line-height: 16px;
+    margin-bottom: 7px;
+}
+
+.login_wrap .social_login_wrap .kakao_login {
+    background-color: #fddc3f;
+}
+
+.login_wrap .social_login_wrap .naver_login {
+    background-color: #00c73c;
 }
 
 .login_wrap .social_login_wrap .icon {
-    margin-right: 10px;
+    position: relative;
+    left: 10px;
 }
 
 .login_wrap .social_login_wrap .icon img {
     width: 20px;
     height: 20px;
+    line-height: 10px;
 }
 
 .login_wrap .social_login_wrap .login_txt {
+    width: 100%;
+    position: relative;
+    right: 10px;
     font-size: 16px;
     color: #333;
     margin: 0 15px;
+    text-align: center;
+}
+
+.login_wrap .social_login_wrap .naver_login .login_txt {
+    color: #fff;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
 }
