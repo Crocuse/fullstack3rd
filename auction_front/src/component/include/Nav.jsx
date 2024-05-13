@@ -12,6 +12,7 @@ function Nav() {
     const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
     const loginedAdmin = useSelector((state) => state['loginedInfos']['loginedId']['loginedAdmin']);
     const loginedUser = useSelector((state) => state['loginedInfos']['loginedId']['loginedId']);
+    const alarmId = useSelector(state => state.notificationOverBid.message.id);
     const [alarm, setAlarm] = useState(false);
     const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -140,9 +141,8 @@ function Nav() {
                                 <AuctionAlarm />
                             </div>
                         )}
-                        <img src="/img/bell.png"
-                            id="bell_img"
-                            className={alarm ? 'badge' : 'badge hide'} />
+                        <img src="/img/bell.png"  id="bell_img"  />
+                        {(loginedUser === alarmId) && <div className="badge"></div>}
                     </Link>
                 </div>
                 <Link to="/member/my_page/modify_info">마이페이지</Link>

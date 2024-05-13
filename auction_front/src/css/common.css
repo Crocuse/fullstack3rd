@@ -211,3 +211,16 @@ footer {
     text-align: center;
     flex-shrink: 0;
 }
+
+
+.drop_down_wrap .badge {
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.drop_down_wrap .badge.hide {
+    display: none;
+}
