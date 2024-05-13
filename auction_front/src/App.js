@@ -49,6 +49,7 @@ import Faq from './component/Customer_center/Faq';
 import CenterNav from './component/Customer_center/CenterNav';
 import Test from './component/Test';
 import TopArrow from './component/include/TopArrow';
+import QnaAwnser from './component/Admin/QnaAwnser';
 
 function App() {
     // 폰트어썸 적용
@@ -94,6 +95,7 @@ function App() {
                                             <Route path="/alarm/AuctionAlarm" element={<AuctionAlarm />} />
                                             <Route path="/admin/home" element={<AdminHome />}></Route>
                                             <Route path="/admin/AdminReg" element={<AdminReg />}></Route>
+                                            <Route path="/admin/Qna" element={<QnaAwnser />}></Route>
                                             <Route
                                                 path="/admin/auction_goods_mgt"
                                                 element={<AuctionGoodsMgt />}
