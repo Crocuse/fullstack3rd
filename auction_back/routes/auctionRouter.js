@@ -30,6 +30,10 @@ router.get('/biding', (req, res) => {
     auctionService.biding(req, res);
 });
 
+router.get('/asBiding', (req, res) => {
+    console.log('/auction/asBiding');
+    auctionService.asBiding(req, res);
+});
 
 module.exports = router;
 
