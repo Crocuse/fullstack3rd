@@ -13,6 +13,9 @@ function Nav() {
     const loginedAdmin = useSelector((state) => state['loginedInfos']['loginedId']['loginedAdmin']);
     const loginedUser = useSelector((state) => state['loginedInfos']['loginedId']['loginedId']);
     const [alarm, setAlarm] = useState(false);
+    const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
+    const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+    const [isAuctionMenuOpen, setIsAuctionMenuOpen] = useState(false);
 
     useEffect(() => {
         axios_session_check();
@@ -40,18 +43,38 @@ function Nav() {
         }
     }
 
+    // Toggle functions ------------------------------------------------------------------------------------------------------
+    const toggleAdminMenu = () => setIsAdminMenuOpen(!isAdminMenuOpen);
+    const toggleUserMenu = () => setIsUserMenuOpen(!isUserMenuOpen);
+    const toggleAuctionMenu = () => setIsAuctionMenuOpen(!isAuctionMenuOpen);
+
     // view -----------------------------------------------------------------------------------------------------------------
     if (loginedAdmin == 'super') {
         mainMenu = (
             <>
                 <Link to="/admin/home">어드민 홈</Link>
-                <Link to="/admin/AdminReg">어드민 등록</Link>
-                <Link to="/admin/admin_mgt">어드민 관리</Link>
+                <div className="menu-item" onClick={toggleAdminMenu}>
+                    어드민 관리
+                    {isAdminMenuOpen && (
+                        <div className="submenu">
+                            <Link to="/admin/AdminReg">어드민 등록</Link>
+                            <Link to="/admin/admin_mgt">어드민 관리</Link>
+                        </div>
+                    )}
+                </div>
                 <Link to="/admin/user_mgt">유저 관리</Link>
-                <Link to="/admin/auction_goods_mgt">경매 신청 물품 관리</Link>
-                <Link to="/admin/auction_goods_reg">경매 물품 등록</Link>
-                <Link to="/admin/auction_result">경매 결과 조회</Link>
+                <div className="menu-item" onClick={toggleAuctionMenu}>
+                    경매 관리
+                    {isAuctionMenuOpen && (
+                        <div className="submenu">
+                            <Link to="/admin/auction_goods_mgt">경매 신청 물품 관리</Link>
+                            <Link to="/admin/auction_goods_reg">경매 물품 등록</Link>
+                            <Link to="/admin/auction_result">경매 결과 조회</Link>
+                        </div>
+                    )}
+                </div>
                 <Link to="/admin/sales_mgt">매출 관리</Link>
+                <Link to="/admin/qna">문의글 관리</Link>
             </>
         );
 
@@ -64,11 +87,26 @@ function Nav() {
         mainMenu = (
             <>
                 <Link to="/admin/home">어드민 홈</Link>
-                <Link to="/admin/user_mgt">유저 관리</Link>
-                <Link to="/admin/auction_goods_mgt">경매 신청 물품 관리</Link>
-                <Link to="/admin/auction_goods_reg">경매 물품 등록</Link>
-                <Link to="/admin/auction_result">경매 결과 조회</Link>
+                <div className="menu-item" onClick={toggleUserMenu}>
+                    유저 관리
+                    {isUserMenuOpen && (
+                        <div className="submenu">
+                            <Link to="/admin/user_mgt">유저 관리</Link>
+                        </div>
+                    )}
+                </div>
+                <div className="menu-item" onClick={toggleAuctionMenu}>
+                    경매 관리
+                    {isAuctionMenuOpen && (
+                        <div className="submenu">
+                            <Link to="/admin/auction_goods_mgt">경매 신청 물품 관리</Link>
+                            <Link to="/admin/auction_goods_reg">경매 물품 등록</Link>
+                            <Link to="/admin/auction_result">경매 결과 조회</Link>
+                        </div>
+                    )}
+                </div>
                 <Link to="/admin/sales_mgt">매출 관리</Link>
+                <Link to="/admin/qna">문의글 관리</Link>
             </>
         );
 

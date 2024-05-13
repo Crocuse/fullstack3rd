@@ -48,74 +48,86 @@ import Qna from './component/Customer_center/Qna';
 import Faq from './component/Customer_center/Faq';
 import CenterNav from './component/Customer_center/CenterNav';
 import Test from './component/Test';
+import TopArrow from './component/include/TopArrow';
+import QnaAwnser from './component/Admin/QnaAwnser';
 
 function App() {
     // 폰트어썸 적용
     library.add(fas);
 
     return (
-        <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-                <BrowserRouter>
-                    <Routes>
-                        <Route
-                            path="*"
-                            element={
-                                <>
-                                    <Header />
-                                    <Nav />
-                                    <Routes>
-                                        <Route path="/test" element={<Test />}></Route>
-                                        <Route path="/" element={<Home />}></Route>
-                                        <Route path="/auction/current_list" element={<CurList />}></Route>
-                                        <Route path="/auction/regist_form" element={<RegForm />}></Route>
-                                        <Route path="/auction/auction_page" element={<AuctionPage />}></Route>
-                                        <Route path="/member/Signup_form" element={<SignUp />}></Route>
-                                        <Route path="/member/Login_form" element={<Login />}></Route>
-                                        <Route path="/member/Logout_confirm" element={<Logout />}></Route>
-                                        <Route path="/member/my_page" element={<MyPage />}>
-                                            <Route path="" element={<MyPageMenubar />}>
-                                                <Route path="modify_info" element={<ModifyInfo />} />
-                                                <Route path="modify_password" element={<ModifyPassword />} />
-                                                <Route path="mysells" element={<MySells />} />
-                                                <Route path="mywinnigbids" element={<MyWinnigBids />} />
-                                                <Route path="myregist" element={<MyRegist />} />
-                                                <Route path="mypoint" element={<MyPoint />} />
-                                                <Route path="member_delete" element={<MemberDelete />} />
+        <>
+            <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
+                    <BrowserRouter>
+                        <Routes>
+                            <Route
+                                path="*"
+                                element={
+                                    <>
+                                        <Header />
+                                        <Nav />
+                                        <Routes>
+                                            <Route path="/test" element={<Test />}></Route>
+                                            <Route path="/" element={<Home />}></Route>
+                                            <Route path="/auction/current_list" element={<CurList />}></Route>
+                                            <Route path="/auction/regist_form" element={<RegForm />}></Route>
+                                            <Route path="/auction/auction_page" element={<AuctionPage />}></Route>
+                                            <Route path="/member/Signup_form" element={<SignUp />}></Route>
+                                            <Route path="/member/Login_form" element={<Login />}></Route>
+                                            <Route path="/member/Logout_confirm" element={<Logout />}></Route>
+                                            <Route path="/member/my_page" element={<MyPage />}>
+                                                <Route path="" element={<MyPageMenubar />}>
+                                                    <Route path="modify_info" element={<ModifyInfo />} />
+                                                    <Route path="modify_password" element={<ModifyPassword />} />
+                                                    <Route path="mysells" element={<MySells />} />
+                                                    <Route path="mywinnigbids" element={<MyWinnigBids />} />
+                                                    <Route path="myregist" element={<MyRegist />} />
+                                                    <Route path="mypoint" element={<MyPoint />} />
+                                                    <Route path="member_delete" element={<MemberDelete />} />
+                                                </Route>
                                             </Route>
-                                        </Route>
 
-                                        <Route path="/auth/google/callback" element={<GoogleLogin />}></Route>
-                                        <Route path="/auth/naver/callback" element={<NaverLogin />}></Route>
-                                        <Route path="/point/Point_add_form" element={<PointAddForm />}></Route>
-                                        <Route path="/point/PayAPI" element={<PayAPI />} />
-                                        <Route path="/alarm/AuctionAlarm" element={<AuctionAlarm />} />
-                                        <Route path="/admin/home" element={<AdminHome />}></Route>
-                                        <Route path="/admin/AdminReg" element={<AdminReg />}></Route>
-                                        <Route path="/admin/auction_goods_mgt" element={<AuctionGoodsMgt />}></Route>
-                                        <Route path="/admin/auction_goods_reg" element={<AuctionGoodsReg />}></Route>
-                                        <Route path="/admin/auction_result" element={<AuctionResult />}></Route>
-                                        <Route path="/admin/sales_mgt" element={<SalesMgt />}></Route>
-                                        <Route path="/admin/user_mgt" element={<UserMgt />}></Route>
-                                        <Route path="/admin/admin_mgt" element={<AdminMgt />}></Route>
-                                        <Route path="/Customer_center" element={<CstCT />}>
-                                            <Route path="" element={<CenterNav />}>
-                                                <Route path="qna" element={<Qna />} />
-                                                <Route path="faq" element={<Faq />} />
+                                            <Route path="/auth/google/callback" element={<GoogleLogin />}></Route>
+                                            <Route path="/auth/naver/callback" element={<NaverLogin />}></Route>
+                                            <Route path="/point/Point_add_form" element={<PointAddForm />}></Route>
+                                            <Route path="/point/PayAPI" element={<PayAPI />} />
+                                            <Route path="/alarm/AuctionAlarm" element={<AuctionAlarm />} />
+                                            <Route path="/admin/home" element={<AdminHome />}></Route>
+                                            <Route path="/admin/AdminReg" element={<AdminReg />}></Route>
+                                            <Route path="/admin/Qna" element={<QnaAwnser />}></Route>
+                                            <Route
+                                                path="/admin/auction_goods_mgt"
+                                                element={<AuctionGoodsMgt />}
+                                            ></Route>
+                                            <Route
+                                                path="/admin/auction_goods_reg"
+                                                element={<AuctionGoodsReg />}
+                                            ></Route>
+                                            <Route path="/admin/auction_result" element={<AuctionResult />}></Route>
+                                            <Route path="/admin/sales_mgt" element={<SalesMgt />}></Route>
+                                            <Route path="/admin/user_mgt" element={<UserMgt />}></Route>
+                                            <Route path="/admin/admin_mgt" element={<AdminMgt />}></Route>
+                                            <Route path="/Customer_center" element={<CstCT />}>
+                                                <Route path="" element={<CenterNav />}>
+                                                    <Route path="qna" element={<Qna />} />
+                                                    <Route path="faq" element={<Faq />} />
+                                                </Route>
                                             </Route>
-                                        </Route>
-                                    </Routes>
+                                        </Routes>
 
-                                    <Footer />
-                                </>
-                            }
-                        />
-                        <Route path="/member/find_id" element={<FindId />} />
-                        <Route path="/member/find_pw" element={<FindPw />} />
-                    </Routes>
-                </BrowserRouter>
-            </PersistGate>
-        </Provider>
+                                        <Footer />
+                                    </>
+                                }
+                            />
+                            <Route path="/member/find_id" element={<FindId />} />
+                            <Route path="/member/find_pw" element={<FindPw />} />
+                        </Routes>
+                    </BrowserRouter>
+                </PersistGate>
+            </Provider>
+            <TopArrow />
+        </>
     );
 }
 
