@@ -20,7 +20,7 @@ const memberService = {
     isMember: async (req, res) => {
         let result = await MemberDao.isMember(req.query.id);
         res.json(result);
-      },
+    },
 
     isMail: async (req, res) => {
         let result = await MemberDao.isMail(req.body.mail);
@@ -32,36 +32,11 @@ const memberService = {
         let subject = `[비드버드] 회원가입 이메일 인증 코드입니다.`;
         let code = generateTemp(6);
 
-        let html = `
-            <div
-                style="
-                max-width: 600px;
-                padding: 20px;
-                background-color: #f5f5f5;
-                border-radius: 5px;
-                text-align: center;
-            "
-            >
-                <img src="https://i.imgur.com/D3lJNvg.png" />
-                <h3 style="font-size: 24px; margin-bottom: 20px">이메일 인증 안내</h3>
-                <div style="font-size: 16px; line-height: 1.5; margin-bottom: 20px">
-                    안녕하세요. 비드버드를 이용해주셔서 감사드립니다. <br />
-                    회원가입 화면에서 다음 코드를 이용하여 메일 인증을 완료해주세요.
-                </div>
-                <div
-                    style="
-                    background-color: #ffffff;
-                    border: 1px solid #dddddd;
-                    border-radius: 5px;
-                    padding: 20px;
-                    font-size: 20px;
-                    font-weight: bold;
-                "
-                >
-                    코드: <span style="color: #ff6600">${code}</span>
-                </div>
-            </div>
-        `;
+        let title = '이메일 인증 안내';
+        let text = `안녕하세요. 비드버드를 이용해주셔서 감사드립니다. <br />
+        회원가입 화면에서 다음 코드를 이용하여 메일 인증을 완료해주세요.`;
+        let html = mailService.generateCodeHTML(title, text, code);
+
         mailService.sendGmail(mail, subject, html);
 
         res.json(code);
@@ -69,9 +44,8 @@ const memberService = {
 
     signupConfirm: async (req, res) => {
         let post = req.body;
-        let result = await MemberDao.signupConfirm(post)
+        let result = await MemberDao.signupConfirm(post);
         res.json(result);
-        
     },
 
     googleLogin: (req, res) => {
@@ -107,306 +81,59 @@ const memberService = {
         });
     },
 
-    getMyInfo: (req, res) => {
-        let id = req.query.id;
-        DB.query('SELECT * FROM TBL_MEMBER WHERE M_ID = ?', [id], (err, member) => {
-            if (err || member.length == 0) {
-                console.log(err);
-                res.json('error');
-                return;
-            }
-            DB.query(
-                'SELECT P_CURRENT FROM TBL_POINT WHERE M_ID = ? ORDER BY P_REG_DATE DESC LIMIT 1',
-                [id],
-                (err, point) => {
-                    if (err) {
-                        console.log(err);
-                        res.json('error');
-                        return;
-                    }
-                    const selectedMember = {
-                        ...member[0],
-                        M_ADDR: member[0].M_ADDR.replace(/\//g, ' '),
-                        M_ID:
-                            member[0].M_ID.slice(0, 2) === 'N_'
-                                ? '네이버 로그인 회원입니다.'
-                                : member[0].M_ID.slice(0, 2) === 'G_'
-                                ? '구글 로그인 회원입니다.'
-                                : member[0].M_ID,
-                        M_SOCIAL_ID:
-                            member[0].M_SOCIAL_ID === null
-                                ? '소셜 로그인 회원이 아닙니다.'
-                                : member[0].M_SOCIAL_ID.slice(0, 2) === 'N_'
-                                ? '네이버 로그인 회원입니다.'
-                                : member[0].M_SOCIAL_ID.slice(0, 2) === 'G_'
-                                ? '구글 로그인 회원입니다.'
-                                : '소셜 로그인 회원이 아닙니다.',
-                    };
-                    let currentPoint = 0;
-                    if (point.length != 0) currentPoint = point[0].P_CURRENT;
-                    res.json({ selectedMember, currentPoint });
-                }
-            );
-        });
+    getMyInfo: async (req, res) => {
+        let result = await MemberDao.getMyInfo(req);
+        res.json(result);
     },
 
-    modifyPhone: (req, res) => {
-        let m_phone = req.body.m_phone;
-        let m_id = req.body.id;
-
-        DB.query(
-            'UPDATE TBL_MEMBER SET M_PHONE = ?, M_MOD_DATE = NOW() WHERE M_ID = ?',
-            [m_phone, m_id],
-            (err, rst) => {
-                if (err || rst.affectedRows == 0) {
-                    console.log(err);
-                    res.json('error');
-                    return;
-                }
-
-                res.json('modify success');
-            }
-        );
+    modifyPhone: async (req, res) => {
+        let result = await MemberDao.modifyPhone(req);
+        res.json(result);
     },
 
-    modifyAddr: (req, res) => {
-        let m_addr = req.body.m_addr;
-        let m_id = req.body.m_id;
-
-        DB.query('UPDATE TBL_MEMBER SET M_ADDR = ?, M_MOD_DATE = NOW() WHERE M_ID = ?', [m_addr, m_id], (err, rst) => {
-            if (err || rst.affectedRows == 0) {
-                console.log(err);
-                res.json('error');
-                return;
-            }
-
-            res.json('modify success');
-        });
+    modifyAddr: async (req, res) => {
+        let result = await MemberDao.modifyAddr(req);
+        res.json(result);
     },
 
-    checkPassword: (req, res) => {
-        let id = req.body.id;
-        let pw = req.body.pw;
-        DB.query('SELECT M_PW FROM TBL_MEMBER WHERE M_ID = ?', [id], (err, member) => {
-            if (err || member.affectedRows == 0) {
-                console.log(err);
-                res.json('error');
-                return;
-            }
-            if (bcrypt.compareSync(pw, member[0].M_PW)) res.json('success');
-            else res.json('fail');
-        });
+    checkPassword: async (req, res) => {
+        let result = await MemberDao.checkPassword(req);
+        res.json(result);
     },
 
-    socialIdCheck: (req, res) => {
-        let loginedId = req.query.loginedId;
-
-        DB.query('SELECT M_SOCIAL_ID FROM TBL_MEMBER WHERE M_ID = ?', [loginedId], (err, rst) => {
-            if (err) {
-                console.log(err);
-                res.json('error');
-                return;
-            }
-
-            if (rst.length > 0) res.json(true);
-            else res.json(false);
-        });
+    socialIdCheck: async (req, res) => {
+        let result = await MemberDao.socialIdCheck(req);
+        res.json(result);
     },
 
-    modifyPassword: (req, res) => {
-        let id = req.body.id;
-        let pw = req.body.pw;
-        DB.query(
-            'UPDATE TBL_MEMBER SET M_PW = ?, M_MOD_DATE = NOW() WHERE M_ID = ?',
-            [bcrypt.hashSync(pw, 10), id],
-            (err, member) => {
-                if (err || member.affectedRows == 0) {
-                    console.log('err: ', err);
-                    res.json('error');
-                    return;
-                }
-
-                res.json('modified');
-            }
-        );
+    modifyPassword: async (req, res) => {
+        let result = await MemberDao.modifyPassword(req);
+        res.json(result);
     },
 
-    getMyRegistList: (req, res) => {
-        let id = req.body.id;
-        let page = req.body.page || 1;
-        let limit = req.body.limit || 10;
-        let offset = (page - 1) * limit;
-
-        DB.query(
-            `SELECT GR.GR_NO, GR_NAME, GR_PRICE, GR_INFO, GR_APPROVAL, GR_RECEIPT, AS_START_DATE, GR_REJECTED_REASON  
-                FROM TBL_GOODS_REGIST AS GR 
-                LEFT JOIN TBL_AUCTION_SCHEDULE AS A ON GR.GR_NO = A.GR_NO 
-                WHERE GR.M_ID = ? 
-                ORDER BY GR.GR_NO DESC
-                LIMIT ? OFFSET ?`,
-            [id, limit, offset],
-            (err, list) => {
-                if (err) {
-                    console.log(err);
-                    res.json('error');
-                    return;
-                }
-
-                DB.query(
-                    `SELECT COUNT(*) AS total 
-                    FROM TBL_GOODS_REGIST AS GR 
-                    LEFT JOIN TBL_AUCTION_SCHEDULE AS A ON GR.GR_NO = A.GR_NO 
-                    WHERE GR.M_ID = ? `,
-                    [id],
-                    (err, rst) => {
-                        if (err) {
-                            console.log(err);
-                            res.json('error');
-                            return;
-                        }
-
-                        let total = rst[0].total;
-                        let totalPages = Math.ceil(total / limit);
-
-                        res.json({ list, totalPages });
-                    }
-                );
-            }
-        );
+    getMyRegistList: async (req, res) => {
+        let result = await MemberDao.getMyRegistList(req);
+        res.json(result);
     },
 
-    cancelGoods: (req, res) => {
-        let gr_no = req.query.gr_no;
-
-        DB.query('DELETE FROM TBL_GOODS_REGIST WHERE GR_NO = ?', [gr_no], (err, rst) => {
-            if (err) {
-                console.log(err);
-                res.json('error');
-                return;
-            }
-
-            res.json('deleted');
-        });
+    cancelGoods: async (req, res) => {
+        let result = await MemberDao.cancelGoods(req);
+        res.json(result);
     },
 
-    getMySells: (req, res) => {
-        let id = req.body.id;
-        let page = req.body.page || 1;
-        let limit = req.body.limit || 10;
-        let offset = (page - 1) * limit;
-
-        DB.query(
-            `SELECT AR.AR_IS_BID, AR.AR_POINT, AR.AR_REG_DATE, GR.GR_NAME, GR.GR_PRICE, GI.GI_NAME
-                FROM TBL_AUCTION_RESULT AS AR 
-                LEFT JOIN TBL_GOODS_REGIST AS GR ON AR.GR_NO = GR.GR_NO 
-                LEFT JOIN TBL_GOODS_IMG AS GI ON AR.GR_NO = GI.GR_NO
-                WHERE AR.AR_SELL_ID = ?
-                ORDER BY AR.AR_REG_DATE DESC 
-                LIMIT ? OFFSET ?`,
-            [id, limit, offset],
-            (err, list) => {
-                if (err) {
-                    console.log(err);
-                    res.json('error');
-                    return;
-                }
-
-                DB.query(
-                    `SELECT COUNT(*) AS total FROM TBL_AUCTION_RESULT AS AR 
-                LEFT JOIN TBL_GOODS_REGIST AS GR ON AR.GR_NO = GR.GR_NO 
-                LEFT JOIN TBL_GOODS_IMG AS GI ON AR.GR_NO = GI.GR_NO
-                WHERE AR.AR_SELL_ID = ?`,
-                    [id],
-                    (err, rst) => {
-                        if (err) {
-                            console.log(err);
-                            res.json('error');
-                            return;
-                        }
-
-                        let total = rst[0].total;
-                        let totalPages = Math.ceil(total / limit);
-                        res.json({ list, totalPages });
-                    }
-                );
-            }
-        );
+    getMySells: async (req, res) => {
+        let result = await MemberDao.getMySells(req);
+        res.json(result);
     },
 
-    getMyWinnigs: (req, res) => {
-        let id = req.body.id;
-        let page = req.body.page || 1;
-        let limit = req.body.limit || 10;
-        let offset = (page - 1) * limit;
-
-        DB.query(
-            `SELECT AR.GR_NO, GR_NAME, GR_PRICE, AR_POINT, AR_REG_DATE
-                    FROM TBL_AUCTION_RESULT AS AR
-                    LEFT JOIN TBL_GOODS_REGIST AS GR ON AR.GR_NO = GR.GR_NO
-                    WHERE AR.AR_BUY_ID = ? AND AR.AR_IS_BID = 1 
-                    ORDER BY AR.AR_REG_DATE DESC 
-                    LIMIT ? OFFSET ?`,
-            [id, limit, offset],
-            (err, winnigs) => {
-                if (err) {
-                    console.log(err);
-                    res.json('error');
-                    return;
-                }
-
-                DB.query(
-                    `SELECT COUNT(*) as total
-                    FROM TBL_AUCTION_RESULT AS AR
-                    LEFT JOIN TBL_GOODS_REGIST AS GR ON AR.GR_NO = GR.GR_NO
-                    WHERE AR.AR_BUY_ID = ? AND AR.AR_IS_BID = 1 `,
-                    [id],
-                    (err, rst) => {
-                        if (err) {
-                            console.log(err);
-                            res.json('error');
-                            return;
-                        }
-
-                        let total = rst[0].total;
-                        let totalPages = Math.ceil(total / limit);
-
-                        res.json({ winnigs, totalPages });
-                    }
-                );
-            }
-        );
+    getMyWinnigs: async (req, res) => {
+        let result = await MemberDao.getMyWinnigs(req);
+        res.json(result);
     },
 
-    getMyPointHistory: (req, res) => {
-        let id = req.body.id;
-        let page = req.body.page || 1;
-        let limit = req.body.limit || 10;
-        let offset = (page - 1) * limit;
-
-        DB.query(
-            'SELECT * FROM TBL_POINT WHERE M_ID = ? ORDER BY P_REG_DATE DESC LIMIT ? OFFSET ?',
-            [id, limit, offset],
-            (err, history) => {
-                if (err) {
-                    console.log(err);
-                    res.json('error');
-                    return;
-                }
-
-                DB.query('SELECT COUNT(*) AS total FROM TBL_POINT WHERE M_ID = ?', [id], (err, rst) => {
-                    if (err) {
-                        console.log(err);
-                        res.json('error');
-                        return;
-                    }
-
-                    let total = rst[0].total;
-                    let totalPages = Math.ceil(total / limit);
-
-                    res.json({ history, totalPages });
-                });
-            }
-        );
+    getMyPointHistory: async (req, res) => {
+        let result = await MemberDao.getMyPointHistory(req);
+        res.json(result);
     },
 
     logoutConfirm: (req, res) => {
@@ -415,153 +142,77 @@ const memberService = {
         });
     },
 
-    findId: (req, res) => {
-        let mail = req.body.mail;
+    findId: async (req, res) => {
+        let m_id = await MemberDao.findId(req);
 
-        DB.query('SELECT M_ID FROM TBL_MEMBER WHERE M_MAIL = ?', [mail], (err, m_id) => {
-            if (err) {
-                console.log(err);
+        if (m_id === null) {
+            res.json('error');
+            return;
+        }
+
+        if (m_id.length === 0) {
+            res.json('not_found');
+        } else if (m_id[0].M_ID.slice(0, 2) === 'G_') {
+            res.json('google_id');
+        } else if (m_id[0].M_ID.slice(0, 2) === 'N_') {
+            res.json('naver_id');
+        } else {
+            let mail = req.body.mail;
+            let subject = `[비드버드] 회원님의 아이디 정보입니다.`;
+            let title = `아이디 정보 안내`;
+            let text = `안녕하세요. 비드버드를 이용해주셔서 감사드립니다. <br />
+            회원님의 아이디 찾기 결과를 보내드립니다. <br />
+            비밀번호를 잊어버린 경우 비밀번호 찾기를 이용해주세요.`;
+            let code = `${m_id[0].M_ID}`;
+            let html = mailService.generateCodeHTML(title, text, code);
+
+            mailService.sendGmail(mail, subject, html);
+            res.json('mail_send');
+        }
+    },
+
+    findPw: async (req, res) => {
+        let mail = req.body.mail;
+        let m_id = await MemberDao.findId(req);
+
+        if (m_id === null) {
+            res.json('error');
+            return;
+        }
+
+        if (m_id.length === 0) {
+            res.json('not_found');
+        } else if (m_id[0].M_ID.slice(0, 2) === 'G_') {
+            res.json('google_id');
+        } else if (m_id[0].M_ID.slice(0, 2) === 'N_') {
+            res.json('naver_id');
+        } else {
+            // 임시 비밀번호 생성 (8자리)
+            let newPw = generateTemp(8);
+
+            req.body.pw = newPw;
+            let modifyRst = await MemberDao.modifyPassword(req);
+
+            if (modifyRst === 'error') {
                 res.json('error');
                 return;
             }
 
-            if (m_id.length === 0) {
-                res.json('not_found');
-            } else if (m_id[0].M_ID.slice(0, 2) === 'G_') {
-                res.json('google_id');
-            } else if (m_id[0].M_ID.slice(0, 2) === 'N_') {
-                res.json('naver_id');
-            } else {
-                let subject = `[비드버드] 회원님의 아이디 정보입니다.`;
-                let html = `
-                <div
-                style="
-                    max-width: 600px;
-                    padding: 20px;
-                    background-color: #f5f5f5;
-                    border-radius: 5px;
-                    text-align: center;
-                "
-                >
-                    <img src="https://i.imgur.com/D3lJNvg.png" />
-                    <h3 style="font-size: 24px; margin-bottom: 20px">아이디 정보 안내</h3>
-                    <div style="font-size: 16px; line-height: 1.5; margin-bottom: 20px">
-                        안녕하세요. 비드버드를 이용해주셔서 감사드립니다. <br />
-                        회원님의 아이디 찾기 결과를 보내드립니다. <br />
-                        비밀번호를 잊어버린 경우 비밀번호 찾기를 이용해주세요.
-                    </div>
-                    <div
-                        style="
-                            background-color: #ffffff;
-                            border: 1px solid #dddddd;
-                            border-radius: 5px;
-                            padding: 20px;
-                            font-size: 20px;
-                            font-weight: bold;
-                        "
-                    >
-                        아이디: <span style="color: #ff6600">${m_id[0].M_ID}</span>
-                    </div>
-                </div>
-                `;
+            let subject = `[비드버드] 회원님의 임시 비밀번호입니다.`;
+            let title = `임시 비밀번호 안내`;
+            let text = `안녕하세요. 비드버드를 이용해주셔서 감사드립니다. <br />
+            회원님의 계정 임시 비밀번호를 보내드립니다. <br />
+            로그인 후 보안을 위해 마이페이지 - 비밀번호 변경에서 비밀번호를 변경해주세요.`;
+            let html = mailService.generateCodeHTML(title, text, newPw);
 
-                mailService.sendGmail(mail, subject, html);
-                res.json('mail_send');
-            }
-        });
+            mailService.sendGmail(mail, subject, html);
+            res.json('mail_send');
+        }
     },
 
-    findPw: (req, res) => {
-        let mail = req.body.mail;
-        let id = req.body.id;
-
-        DB.query('SELECT M_ID FROM TBL_MEMBER WHERE M_MAIL = ? AND M_ID = ?', [mail, id], (err, m_id) => {
-            if (err) {
-                console.log(err);
-                res.json('error');
-                return;
-            }
-
-            if (m_id.length === 0) {
-                res.json('not_found');
-            } else if (m_id[0].M_ID.slice(0, 2) === 'G_') {
-                res.json('google_id');
-            } else if (m_id[0].M_ID.slice(0, 2) === 'N_') {
-                res.json('naver_id');
-            } else {
-                // 임시 비밀번호 생성 (10자리)
-                let newPw = generateTemp(10);
-
-                DB.query(
-                    'UPDATE TBL_MEMBER SET M_PW = ?, M_MOD_DATE = NOW() WHERE M_ID = ?',
-                    [bcrypt.hashSync(newPw, 10), id],
-                    (err, rst) => {
-                        if (err) {
-                            console.log(err);
-                            res.json('error');
-                            return;
-                        }
-
-                        let subject = `[비드버드] 회원님의 임시 비밀번호입니다.`;
-                        let html = `
-                    <div
-                    style="
-                        max-width: 600px;
-                        padding: 20px;
-                        background-color: #f5f5f5;
-                        border-radius: 5px;
-                        text-align: center;
-                    "
-                    >
-                        <img src="https://i.imgur.com/D3lJNvg.png" />
-                        <h3 style="font-size: 24px; margin-bottom: 20px">임시 비밀번호 안내</h3>
-                        <div style="font-size: 16px; line-height: 1.5; margin-bottom: 20px">
-                            안녕하세요. 비드버드를 이용해주셔서 감사드립니다. <br />
-                            회원님의 계정 임시 비밀번호를 보내드립니다. <br />
-                            로그인 후 보안을 위해 마이페이지 - 비밀번호 변경에서 비밀번호를 변경해주세요.
-                        </div>
-                        <div
-                            style="
-                                background-color: #ffffff;
-                                border: 1px solid #dddddd;
-                                border-radius: 5px;
-                                padding: 20px;
-                                font-size: 20px;
-                                font-weight: bold;
-                            "
-                        >
-                            임시 비밀번호: <span style="color: #ff6600">${newPw}</span>
-                        </div>
-                    </div>
-                    `;
-
-                        mailService.sendGmail(mail, subject, html);
-                        res.json('mail_send');
-                    }
-                );
-            }
-        });
-    },
-
-    memberDelete: (req, res) => {
-        let id = req.query.id;
-        let shortId = generateTemp(6);
-
-        DB.query(
-            `UPDATE TBL_MEMBER SET M_PW = 'Withdrawal member_${shortId}', M_MAIL = 'Withdrawal member_${shortId}', M_PHONE ='Withdrawal member_${shortId}', M_ADDR = 'Withdrawal member_${shortId}', M_STATUS = 1, M_MOD_DATE = NOW() WHERE M_ID = ?`,
-            [id],
-            (err, rst) => {
-                if (err) {
-                    console.log(err);
-                    res.json('error');
-                    return;
-                }
-
-                req.logout(() => {
-                    res.json('deleted');
-                });
-            }
-        );
+    memberDelete: async (req, res) => {
+        let result = await MemberDao.memberDelete(req);
+        res.json(result);
     },
 };
 
