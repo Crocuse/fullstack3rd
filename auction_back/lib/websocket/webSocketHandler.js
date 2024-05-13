@@ -9,7 +9,6 @@ function webSocketHandler(socket, io) {
     });
 
     socket.on('overBid', (socketData) => {
-        console.log('여ㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕㅕ기 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
         alarmService.notificataionOverBid(socketData, socket, io);
     });
 
