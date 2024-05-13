@@ -21,9 +21,6 @@ function AuctionAlarm() {
     }, [notificationOverBid]);
 
     useEffect(() => {
-        socket.on('connect', () => {
-            console.log('Connected to server!');
-        });
 
         socket.on('notificationOverBid', (data) => {
             console.log('Client NOTIFICATION OVER BID');
