@@ -5,7 +5,6 @@ module.exports = {
         console.log("[ALARMSERVICE] notificataionOverBid()");
         try {
             let grNo = socketData.grNo;
-            console.log(socketData.grNo);
             DB.query( // GR_NO로 두번째로 높은 입찰가와 해당 M_ID, 테이블 조인해서 GR_NAME 얻고, 최고가 갱신된 시간 얻기
                 `SELECT TGR.GR_NAME, TAC.M_ID, TAC.AC_POINT, TAC2.AC_REG_DATE AS highestBidDate
                 FROM TBL_AUCTION_CURRENT TAC
@@ -28,14 +27,11 @@ module.exports = {
                 `,
                 [grNo, grNo],
                 (err, id) => {
-
                     if (err) {
-                        socket.emit("notificationOverBidErr", { message: "ERROR 관리자에 문의하세요. <br />고객센터 : 031-1234-5678" });
+                        socket.emit("notificationOverBidErr", { message: "ERROR 관리자에 문의하세요. <br />고객센터 : 031-1234-5678", id: '', name: '', date: '' });
                     } else {
-                        console.log(id);
                         if (id.length > 0) {
-                            console.log("-------------------->>>>>>>", id[0].GR_NAME);
-                            socket.emit('notificationOverBid', { message: '상회 입찰이 발생하였습니다.', id: id[0].M_ID, name: id[0].GR_NAME, date: id[0].highestBidDate });
+                            io.emit('notificationOverBid', { message: '상회 입찰이 발생하였습니다.', id: id[0].M_ID, name: id[0].GR_NAME, date: id[0].highestBidDate });
                         }
                     }
                 }

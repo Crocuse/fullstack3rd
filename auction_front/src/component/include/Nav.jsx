@@ -140,7 +140,9 @@ function Nav() {
                                 <AuctionAlarm />
                             </div>
                         )}
-                        <img src="/img/bell.png" id="bell_img" />
+                        <img src="/img/bell.png"
+                            id="bell_img"
+                            className={alarm ? 'badge' : 'badge hide'} />
                     </Link>
                 </div>
                 <Link to="/member/my_page/modify_info">마이페이지</Link>
