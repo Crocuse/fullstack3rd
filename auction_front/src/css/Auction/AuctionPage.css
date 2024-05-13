@@ -25,6 +25,26 @@
     border-radius: 20px;
 }
 
+.auction_page_wrap .auction_semi_info .product{
+    height: 75%;
+}
+
+.auction_page_wrap .auction_semi_info .limit_time{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.auction_page_wrap .auction_semi_info .limit_time h1{
+    text-align: left;
+    margin-right: auto;
+}
+
+.auction_page_wrap .auction_semi_info .limit_time span{
+    font-size: 4em;
+    align-self: center;
+}
+
 .auction_page_wrap .auction_semi_info .auction_back_img .auction_img {
     display: flex;
     justify-content: center;
@@ -68,6 +88,9 @@
     display: flex;
     justify-content: center;
     margin: 0 40px 0 0;
+
+    position: relative;
+
 }
 
 .auction_page_wrap .auction_area .auction_bird #bid_bird{
@@ -83,6 +106,17 @@
     max-height: 70%;
     align-self: flex-start;
 }
+
+.auction_page_wrap .auction_area .auction_bird .bubble_text{
+    position: absolute;
+    top: 10%;
+    left: 63%;
+    width: 200px;
+    word-wrap: break-word;
+    transform: translateX(-50%);
+    font-weight: bold;
+}
+
 
 .auction_page_wrap .auction_area {
     margin: 20px auto;
