@@ -62,9 +62,7 @@ function Nav() {
                         </div>
                     )}
                 </div>
-                <div className="menu-item" onClick={toggleUserMenu}>
-                    <Link to="/admin/user_mgt">유저 관리</Link>
-                </div>
+                <Link to="/admin/user_mgt">유저 관리</Link>
                 <div className="menu-item" onClick={toggleAuctionMenu}>
                     경매 관리
                     {isAuctionMenuOpen && (
