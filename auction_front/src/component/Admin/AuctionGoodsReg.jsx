@@ -71,6 +71,7 @@ function AuctionGoodsReg() {
             {
                 field: 'AS_STATUS',
                 headerName: '대기상태',
+                width:150,
                 valueGetter: (params) => {
                     const { AS_START_DATE, AS_STATUS } = params.data;
                     if (AS_START_DATE === getTodayDate()) {
@@ -118,6 +119,7 @@ function AuctionGoodsReg() {
             {
                 field: "AS_LOCATION_NUM",
                 headerName: "자리위치번호",
+                width:133,
                 cellEditor: "agSelectCellEditor",
                 cellEditorParams: {
                     values: [1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -128,6 +130,7 @@ function AuctionGoodsReg() {
             {
                 field: "AS_START_DATE",
                 headerName: "경매날",
+                width:180,
                 cellEditor: "agDateStringCellEditor",
                 editable: (params) => editModeRows[params.data.GR_NO] || false,
                 cellEditorParams: {

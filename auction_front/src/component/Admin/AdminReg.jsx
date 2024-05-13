@@ -159,7 +159,7 @@ function AdminReg() {
     // view
     return(
         <div className="admin_reg_wrap">
-            <h2>ADMIN REGIST</h2>
+            <div className="admin-reg-wrap-title">ADMIN REGIST</div>
 
             <form method="post" name="admin_reg_form">
 

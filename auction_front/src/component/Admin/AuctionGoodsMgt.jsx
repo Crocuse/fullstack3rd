@@ -227,8 +227,8 @@ function AuctionGoodsMgt() {
   };
 
   return (
-    <article>
-      <div>AuctionGoodsMgt</div>
+    <article className="auction-goods-mgt">
+      <div className="auction-goods-mgt-title">AuctionGoodsMgt</div>
       <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }}>
         <AgGridReact
           rowClassRules={rowClassRules}
