@@ -13,6 +13,7 @@ import {setOverBidMsg} from '../../redux/action/setOverBidMsg';
 
 
 function AuctionPage() {
+    const today = new Date();
     const [asPrice, setAsPrice] = useState('');
     const [nowPrice, setNowPirce] = useState('');
     const [nextBid, setNextBid] = useState('');
@@ -21,6 +22,10 @@ function AuctionPage() {
     const [isBidType, setIsBidType] = useState(false);
     const [isIoSocket, setIsIoSocket] = useState(false);
     const [bidingLog, setBidingLog] = useState([]);
+    const [hour, setHour] = useState(23 - today.getHours());
+    const [minutes, setMinutes] = useState(59 - today.getMinutes());
+    const [seconds, setSeconds] = useState(59 - today.getSeconds());
+
     const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
     const loginedId = useSelector(state => state['loginedInfos']['loginedId']['loginedId']);
     const navigate = useNavigate();
@@ -35,12 +40,14 @@ function AuctionPage() {
         setLoaingModalShow(true);
         sessionCheck(sessionId, navigate);
         nowBidPrice();
-        if (product.GR_PRICE >= nowPrice)
+        if (product.GR_PRICE >= nowPrice){
             setNowPirce(product.GR_PRICE);
-
+        }
+        
         socket.on('bidmsg', (data) => {
             console.log(data);
             setBidingLog(data.log);
+
             if (data.bid !== ''){
                 if(!data.bidType)
                 {
@@ -92,6 +99,16 @@ function AuctionPage() {
         });
 
     }, [isIoSocket]);
+
+    useEffect(() => {
+        console.log("useEffect4");
+        const id = setInterval(() => {
+            setHour(23- today.getHours());
+            setMinutes(59- today.getMinutes());
+            setSeconds(59- today.getSeconds());
+        }, 1000);
+        return () => clearInterval(id);
+    });
 
     async function nowBidPrice() {
         console.log('nowBidPrice()');
@@ -248,18 +265,36 @@ function AuctionPage() {
                         <button><img src="/img/arrow_right.png" onClick={rightBtnClickHandler} /></button>
                     </div>
                     <div className="auction_info">
-                        <h1>{product.GR_NAME}</h1>
-                        <h3>시작가 | {product.GR_PRICE.toLocaleString('ko-KR')}원</h3>
-                        <h3>현재가 | {nowPrice.toLocaleString('ko-KR')}원</h3>
-                        <h3>판매자ID | {product.M_ID}</h3>
-                        <h3>물건 소개</h3>
-                        {product.GR_INFO}
+                        <div className="product">
+                            <h1>{product.GR_NAME}</h1>
+                            <h3>시작가 | {product.GR_PRICE.toLocaleString('ko-KR')}원</h3>
+                            <h3>현재가 | {nowPrice.toLocaleString('ko-KR')}원</h3>
+                            <h3>판매자ID | {product.M_ID}</h3>
+                            <h3>물건 소개</h3>
+                            {product.GR_INFO}
+                        </div>
+                        <div className="limit_time">
+                            <h1>남은 시간</h1>
+                            <span>
+                                {hour < 10 ? '0' + hour : hour}:{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div className="auction_area">
                     <div className="auction_bird">
                         <img id="bid_bird" src="/img/bid_bird_img.png" alt="" />
-                        <img id="bubble" src="/img/bubble.png" alt="" />
+                        <div>
+                            <img id="bubble" src="/img/bubble.png" alt="" />
+                            <span className="bubble_text">
+                                {bidingLog.length > 0 ?  bidingLog[bidingLog.length - 1].M_ID : ''} 님 께서
+                                {bidingLog.length > 0 ?  bidingLog[bidingLog.length - 1].AC_POINT.toLocaleString('ko-KR') : ''} 원에
+                                상회 입찰 하였습니다.<br/>
+                                남은 경매 시간 {hour < 10 ? '0' + hour : hour}:{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}입니다.
+
+                            </span>
+                        </div>
+                        
                     </div>
                     <div className="bubble_text">
 

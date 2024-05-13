@@ -165,11 +165,6 @@ const auctionService = {
                 console.log(error);
             }
         }
-
-        console.log('aaaaaaaaaaaaaaaaaaaaaaa', socketData.isBidType)
-        console.log('aaaaaaaaaaaaaaaaaaaaaaa', socketData.nextBid)
-        console.log('aaaaaaaaaaaaaaaaaaaaaaa', socketData.asPrice)
-
         socket.broadcast.emit('bidmsg', {
             id: socketData.loginedId,
             bid: socketData.nextBid,
