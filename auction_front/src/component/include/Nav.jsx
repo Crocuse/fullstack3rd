@@ -63,12 +63,7 @@ function Nav() {
                     )}
                 </div>
                 <div className="menu-item" onClick={toggleUserMenu}>
-                    유저 관리
-                    {isUserMenuOpen && (
-                        <div className="submenu">
-                            <Link to="/admin/user_mgt">유저 관리</Link>
-                        </div>
-                    )}
+                    <Link to="/admin/user_mgt">유저 관리</Link>
                 </div>
                 <div className="menu-item" onClick={toggleAuctionMenu}>
                     경매 관리
