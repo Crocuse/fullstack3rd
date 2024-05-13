@@ -12,25 +12,25 @@ function initializeSocket(server) {
     } else {
         corsOrigin = 'http://13.238.114.78:3000'
     }
-    
+
     const io = socketIO(server, {
         cors: {
             origin: corsOrigin,
             credentials: true
         }
     });
+    
+        io.on('connection', socket => {
+            console.log("WEBSOCKET CONNECTED!! ");
+            webSocketHandler(socket, io);
+        });
 
 
-    const overCountBidNameSpace = io.of("/overCountBid");
-    overCountBidNameSpace.on('connection', socket => {
-        console.log("OVER COUNT BID WEBSOCKET CONNECTED !");
-        overCountBidHandler(socket, io);
-    });
-
-    io.on('connection', socket => {
-        console.log("WEBSOCKET CONNECTED !!!! ");
-        webSocketHandler(socket, io);
-    });
+    // const overCountBidNameSpace = io.of("/overCountBid");
+    // overCountBidNameSpace.on('connection', socket => {
+    //     console.log("OVER COUNT BID WEBSOCKET CONNECTED !");
+    //     overCountBidHandler(socket, io);
+    // });
 
 }
 
