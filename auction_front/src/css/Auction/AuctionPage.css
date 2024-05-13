@@ -9,7 +9,7 @@
 }
 
 .auction_page_wrap .auction_semi_info .auction_back_img{
-    width: 700px;
+    width: 800px;
     height: 700px;
     background-color: #ddd;
     border-radius: 20px;
@@ -73,6 +73,12 @@
     height: 65px;
 }
 
+.auction_page_wrap .auction_area {
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+}
+
 .auction_page_wrap .auction_area .auction_progress{
     padding: 20px 20px;
     background-color: #ddd;
@@ -118,11 +124,7 @@
 }
 
 
-.auction_page_wrap .auction_area {
-    margin: 20px auto;
-    display: flex;
-    justify-content: center;
-}
+
 
 .auction_page_wrap .auction_area .auction_log{
     margin: 20px auto;

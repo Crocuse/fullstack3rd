@@ -32,11 +32,12 @@ function AuctionPage() {
     const location = useLocation();
     const product = location.state.product;
     const auctionLogRef = useRef(null);
-    const socket = io(`${SERVER_URL.SERVER_URL()}`)
+
     const dispatch = useDispatch();
 
     useEffect(() => {
         console.log("useEffect");
+        const socket = io(`${SERVER_URL.SERVER_URL()}`)
         setLoaingModalShow(true);
         sessionCheck(sessionId, navigate);
         nowBidPrice();
@@ -76,6 +77,7 @@ function AuctionPage() {
 
     useEffect(() => {
         console.log("useEffect3");
+        const socket = io(`${SERVER_URL.SERVER_URL()}`)
         const socketData = {
             loginedId,
             nextBid,
@@ -97,7 +99,11 @@ function AuctionPage() {
                 return null;
             }
         });
-
+        
+        return () => {
+            console.log("Socket disconnected.");
+            socket.disconnect();
+        }
     }, [isIoSocket]);
 
     useEffect(() => {
@@ -242,13 +248,21 @@ function AuctionPage() {
     const checkAsBid = (price) => {
         price = price.replaceAll(',', '');
 
-        let tmpPrice = Math.round(price / 100) * 100;
-        tmpPrice = Math.abs(price - tmpPrice);
-
-        if (tmpPrice !== 0) {
-            alert('10원 단위 금액은 사용할 수 없습니다.');
+        let tmpPrice = (nowPrice * 0.1) + nowPrice;        
+        if(price < tmpPrice) {
+            alert('현재 가격보다 10%이상 호가 해야 합니다.');
             return false;
         }
+
+        tmpPrice = Math.round(price / 100) * 100;
+        tmpPrice = Math.abs(price - tmpPrice);
+        console.log(tmpPrice);
+        if (tmpPrice !== 0) {
+            alert('10원 단위 이하의 금액은 사용할 수 없습니다.');
+            return false;
+        }
+
+
 
         return true;
     }

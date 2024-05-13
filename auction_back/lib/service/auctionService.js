@@ -90,8 +90,6 @@ const auctionService = {
         let asPrice = req.query.asPrice;
         let mId = req.user;
 
-        console.log('a>>>>>>>>>>>>>>>>>',asPrice);
-
         DB.query(`SELECT MAX(AC_POINT) AS max_price FROM TBL_AUCTION_CURRENT WHERE GR_NO = ?`,
             [grNo],
             (error, result) => {
@@ -146,7 +144,6 @@ const auctionService = {
     },
     bidmsg: async (socketData, socket) => {
         let loglist = [];
-        console.log('bbbbbbbbbbbbbbbbbbbbbbbbbb',socketData);
         if (socketData.grNo !== '') {
             try {
                 const result = await new Promise((resolve, reject) => {
