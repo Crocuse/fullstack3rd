@@ -4,6 +4,7 @@ const google = require('../config/google.json');
 const naver = require('../config/naver.json');
 const mailService = require('./gmailService');
 const generateTemp = require('../util/uuidGenerator');
+const MemberDao = require('../dao/MemberDao');
 
 const memberService = {
     sessionCheck: (req, res) => {
@@ -16,34 +17,14 @@ const memberService = {
         }
     },
 
-    isMember: (req, res) => {
-        let m_id = req.query.id;
+    isMember: async (req, res) => {
+        let result = await MemberDao.isMember(req.query.id);
+        res.json(result);
+      },
 
-        DB.query('SELECT COUNT(*) as count FROM TBL_MEMBER WHERE M_ID = ?', [m_id], (err, rst) => {
-            if (err) {
-                console.log(err);
-                res.json('error');
-                return;
-            }
-
-            if (rst[0].count > 0) res.json('is_member');
-            else res.json('not_member');
-        });
-    },
-
-    isMail: (req, res) => {
-        let m_mail = req.body.mail;
-
-        DB.query('SELECT COUNT(*) as count FROM TBL_MEMBER WHERE M_MAIL = ?', [m_mail], (err, rst) => {
-            if (err) {
-                console.log(err);
-                res.json('error');
-                return;
-            }
-
-            if (rst[0].count > 0) res.json('is_mail');
-            else res.json('not_mail');
-        });
+    isMail: async (req, res) => {
+        let result = await MemberDao.isMail(req.body.mail);
+        res.json(result);
     },
 
     mailCodeSend: (req, res) => {
@@ -86,22 +67,11 @@ const memberService = {
         res.json(code);
     },
 
-    signupConfirm: (req, res) => {
+    signupConfirm: async (req, res) => {
         let post = req.body;
-
-        DB.query(
-            'INSERT INTO TBL_MEMBER(M_ID, M_PW, M_MAIL, M_PHONE, M_ADDR) VALUES(?, ?, ?, ?, ?)',
-            [post.m_id, bcrypt.hashSync(post.m_pw, 10), post.m_mail, post.m_phone, post.m_addr],
-            (err, rst) => {
-                if (rst.affectedRows > 0) {
-                    res.json('success');
-                    return;
-                }
-
-                console.log(err);
-                res.json('fail');
-            }
-        );
+        let result = await MemberDao.signupConfirm(post)
+        res.json(result);
+        
     },
 
     googleLogin: (req, res) => {
@@ -118,7 +88,7 @@ const memberService = {
         res.json({ url: naverAuthURL });
     },
 
-    loginSuccess: (req, res) => {
+    loginSuccess: async (req, res) => {
         if (req.user == 'super') {
             res.json({
                 sessionID: req.sessionID,
@@ -127,21 +97,8 @@ const memberService = {
             });
             return;
         }
-
-        DB.query('SELECT * FROM TBL_ADMIN WHERE A_ID = ?', [req.user], (err, admin) => {
-            if (admin.length > 0) {
-                res.json({
-                    sessionID: req.sessionID,
-                    loginedId: req.user,
-                    loginedAdmin: 'admin',
-                });
-            } else {
-                res.json({
-                    sessionID: req.sessionID,
-                    loginedId: req.user,
-                });
-            }
-        });
+        let result = await MemberDao.loginSuccess(req);
+        res.json(result);
     },
 
     loginFail: (req, res) => {
