@@ -200,7 +200,7 @@ function ModifyInfo() {
                         {phoneModify === false ? (
                             <>
                                 <div className="info_title">연락처</div>
-                                <div>{memberInfo.M_PHONE}</div>
+                                <div>{memberInfo.M_PHONE === '--' ? '연락처를 등록해주세요.' : memberInfo.M_PHONE}</div>
                                 <button onClick={modifyPhoneBtnClick}>수정</button>
                             </>
                         ) : (
@@ -231,7 +231,7 @@ function ModifyInfo() {
                         {addrModify === false ? (
                             <>
                                 <div className="info_title">주소</div>
-                                <div>{memberInfo.M_ADDR}</div>
+                                <div>{memberInfo.M_ADDR === '' ? '주소를 등록해주세요.' : memberInfo.M_ADDR}</div>
 
                                 <button onClick={modifyAddrBtnClick}>수정</button>
                             </>

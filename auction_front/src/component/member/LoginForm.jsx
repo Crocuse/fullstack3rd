@@ -47,6 +47,10 @@ function LoginForm() {
         axios_naver_login();
     };
 
+    const kakaoLoginClick = () => {
+        axios_kakao_login();
+    };
+
     const enterPressHandler = (e) => {
         if (e.key === 'Enter') LoginBtnClickHandler();
     };
@@ -82,7 +86,9 @@ function LoginForm() {
             }
 
             dispatch(setLoginedId(response.data.sessionID, response.data.loginedAdmin, response.data.loginedId));
-            navigate('/');
+            if (response.data.loginedAdmin === 'super' || response.data.loginedAdmin === 'admin')
+                navigate('/amdin/home');
+            else navigate('/');
         } catch (error) {
             console.log(error);
             setLoaingModalShow(false);
@@ -102,6 +108,16 @@ function LoginForm() {
     async function axios_naver_login() {
         try {
             const response = await axios.get(`${SERVER_URL.SERVER_URL()}/member/naver_login`);
+
+            window.location.href = response.data.url;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function axios_kakao_login() {
+        try {
+            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/member/kakao_login`);
 
             window.location.href = response.data.url;
         } catch (error) {
@@ -147,17 +163,23 @@ function LoginForm() {
             </div>
 
             <div className="social_login_wrap">
+                <div className="kakao_login" onClick={kakaoLoginClick}>
+                    <div className="icon">
+                        <img src="/img/member/login_icon/kakao_2.png" />
+                    </div>
+                    <div className="login_txt">카카오 로그인</div>
+                </div>
+                <div className="naver_login" onClick={naverLoginClick}>
+                    <div className="icon">
+                        <img src="/img/member/login_icon/naver_2.png" />
+                    </div>
+                    <div className="login_txt">네이버 로그인</div>
+                </div>
                 <div className="google_login" onClick={googleLoginClick}>
                     <div className="icon">
                         <img src="/img/member/login_icon/google.png" />
                     </div>
                     <div className="login_txt">구글 로그인</div>
-                </div>
-                <div className="naver_login" onClick={naverLoginClick}>
-                    <div className="icon">
-                        <img src="/img/member/login_icon/naver.png" />
-                    </div>
-                    <div className="login_txt">네이버 로그인</div>
                 </div>
             </div>
 

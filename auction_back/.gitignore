@@ -25,6 +25,7 @@ yarn-error.log*
 ## passport login
 google.json
 naver.json
+kakao.json
 mailInfo.json
 
 mailSenderInfo.env

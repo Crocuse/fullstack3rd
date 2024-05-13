@@ -54,6 +54,10 @@ const FindPw = () => {
                 $('.wrong').html(
                     `네이버 계정으로 가입한 회원님은 별도의 비밀번호 찾기가 필요하지 않습니다. <br /> 네이버 로그인을 통해 서비스를 이용해주세요.`
                 );
+            } else if (response.data === 'kakao_id') {
+                $('.wrong').html(
+                    `카카오톡 계정으로 가입한 회원님은 별도의 비밀번호 찾기가 필요하지 않습니다. <br /> 카카오톡 로그인을 통해 서비스를 이용해주세요.`
+                );
             } else if (response.data === 'mail_send') {
                 $('.finded').css('display', 'block');
                 $('.find_txt').css('display', 'none');

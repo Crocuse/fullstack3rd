@@ -50,6 +50,7 @@ import CenterNav from './component/Customer_center/CenterNav';
 import Test from './component/Test';
 import TopArrow from './component/include/TopArrow';
 import QnaAwnser from './component/Admin/QnaAwnser';
+import KakaoLogin from './component/member/KakaoLogin';
 
 function App() {
     // 폰트어썸 적용
@@ -90,6 +91,7 @@ function App() {
 
                                             <Route path="/auth/google/callback" element={<GoogleLogin />}></Route>
                                             <Route path="/auth/naver/callback" element={<NaverLogin />}></Route>
+                                            <Route path="/auth/kakao/callback" element={<KakaoLogin />}></Route>
                                             <Route path="/point/Point_add_form" element={<PointAddForm />}></Route>
                                             <Route path="/point/PayAPI" element={<PayAPI />} />
                                             <Route path="/alarm/AuctionAlarm" element={<AuctionAlarm />} />
