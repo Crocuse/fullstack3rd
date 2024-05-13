@@ -90,8 +90,7 @@ const auctionService = {
         let asPrice = req.query.asPrice;
         let mId = req.user;
 
-        asPrice = Number(asPrice) + (asPrice * 0.1);
-        asPrice = Math.round(asPrice / 100) * 100
+        console.log('a>>>>>>>>>>>>>>>>>',asPrice);
 
         DB.query(`SELECT MAX(AC_POINT) AS max_price FROM TBL_AUCTION_CURRENT WHERE GR_NO = ?`,
             [grNo],
@@ -116,8 +115,38 @@ const auctionService = {
                 }
             })
     },
+    asBiding: (req, res) => {
+        let grNo = req.query.grNo;
+        let asPrice = req.query.asPrice;
+        let mId = req.user;
+        asPrice = asPrice.replaceAll(',','');
+
+        DB.query(`SELECT MAX(AC_POINT) AS max_price FROM TBL_AUCTION_CURRENT WHERE GR_NO = ?`,
+        [grNo],
+        (error, result) => {
+            if (error) {
+                console.log(error);
+            } else {
+                let maxPrice = result[0].max_price;
+                if (asPrice > maxPrice) {
+                    DB.query(`insert into TBL_AUCTION_CURRENT(m_id, ac_point, gr_no) values(?, ?, ?)`,
+                        [mId, asPrice, grNo],
+                        (error, result) => {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                res.json(result);
+                            }
+                        })
+                } else {
+                    res.json('fail');
+                }
+            }
+        })
+    },
     bidmsg: async (socketData, socket) => {
         let loglist = [];
+        console.log('bbbbbbbbbbbbbbbbbbbbbbbbbb',socketData);
         if (socketData.grNo !== '') {
             try {
                 const result = await new Promise((resolve, reject) => {
@@ -137,13 +166,20 @@ const auctionService = {
             }
         }
 
+        console.log('aaaaaaaaaaaaaaaaaaaaaaa', socketData.isBidType)
+        console.log('aaaaaaaaaaaaaaaaaaaaaaa', socketData.nextBid)
+        console.log('aaaaaaaaaaaaaaaaaaaaaaa', socketData.asPrice)
+
         socket.broadcast.emit('bidmsg', {
             id: socketData.loginedId,
             bid: socketData.nextBid,
             price: socketData.nowPrice,
+            asPrice: socketData.asPrice,
             log: loglist,
+            bidType : socketData.isBidType,
         });
-    }
+    },
+    
 }
 
 module.exports = auctionService;

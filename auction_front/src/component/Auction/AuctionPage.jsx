@@ -18,6 +18,7 @@ function AuctionPage() {
     const [nextBid, setNextBid] = useState('');
     const [imgIdx, setImgIdx] = useState(0);
     const [loadingModalShow, setLoaingModalShow] = useState(false);
+    const [isBidType, setIsBidType] = useState(false);
     const [isIoSocket, setIsIoSocket] = useState(false);
     const [bidingLog, setBidingLog] = useState([]);
     const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
@@ -40,10 +41,16 @@ function AuctionPage() {
         socket.on('bidmsg', (data) => {
             console.log(data);
             setBidingLog(data.log);
-            if (data.bid !== '')
-                setNextBid(nextBidfunc(data.bid));
-            if (data.price !== '') {
-                setNowPirce(data.bid);
+            if (data.bid !== ''){
+                if(!data.bidType)
+                {
+                    setNextBid(nextBidfunc(data.bid));
+                    setNowPirce(data.bid);
+                } else {
+                    let tmpAsPrice = data.asPrice.replaceAll(',', '');
+                    setNextBid(nextBidfunc(Number(tmpAsPrice)));
+                    setNowPirce(data.asPrice);
+                }
             }
         })
 
@@ -66,16 +73,14 @@ function AuctionPage() {
             loginedId,
             nextBid,
             nowPrice,
-            grNo: product.GR_NO
+            asPrice,
+            grNo: product.GR_NO,
+            isBidType : isBidType
         }
-
-        console.log(socketData);
         socket.emit('overBid', socketData);
         socket.emit('auctionRefresh', socketData);
         socket.on('notificationOverBid', (data) => {
-            console.log(data);
             if(data) {
-                console.log(data);
                 let message = data.message;
                 let id = data.id;
                 let name = data.name;
@@ -116,9 +121,32 @@ function AuctionPage() {
 
     async function normalBid() {
         console.log('normalBid()');
+        console.log(nextBid);
+        try {
+            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/biding?grNo=${product.GR_NO}&asPrice=${nextBid}`);
+            
+            if (response.data == 'fail') {
+                alert('입찰에 실패 했습니다.');
+                window.location.reload();
+                setLoaingModalShow(false);
+            } else {
+                alert('입찰에 성공 했습니다.');
+                nowBidPrice();
+                setLoaingModalShow(false);
+                setIsIoSocket(prev => !prev)
+                setIsBidType(false);
+            }
+        } catch (error) {
+            console.log(error);
+            setLoaingModalShow(false);
+        }
+    }
+
+    async function asBid() {
+        console.log('asBid()');
 
         try {
-            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/biding?grNo=${product.GR_NO}&asPrice=${nowPrice}`);
+            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/asBiding?grNo=${product.GR_NO}&asPrice=${asPrice}`);
 
             if (response.data == 'fail') {
                 alert('입찰에 실패 했습니다.');
@@ -129,6 +157,7 @@ function AuctionPage() {
                 nowBidPrice();
                 setLoaingModalShow(false);
                 setIsIoSocket(prev => !prev)
+                setIsBidType(true);
             }
         } catch (error) {
             console.log(error);
@@ -149,10 +178,12 @@ function AuctionPage() {
 
     const nextBidfunc = (nPrice) => {
         console.log('nextBidfunc');
-        let nextbid = nPrice + (nPrice * 0.05);
-        nextbid = Math.round(nextbid / 100) * 100;
-
-        return nextbid;
+        
+        let tmpnextbid = nPrice + (nPrice * 0.05);
+        console.log(tmpnextbid);
+        tmpnextbid = Math.round(tmpnextbid / 100) * 100;
+        return tmpnextbid;
+        
     }
 
     const leftBtnClickHandler = () => {
@@ -163,7 +194,6 @@ function AuctionPage() {
             tmp = product.imgs.length - 1;
         }
         setImgIdx(tmp);
-        console.log(tmp);
     }
 
     const rightBtnClickHandler = () => {
@@ -174,7 +204,6 @@ function AuctionPage() {
             tmp = 0;
         }
         setImgIdx(tmp);
-        console.log(tmp);
     }
 
     const normalBidBtnHandler = () => {
@@ -187,25 +216,24 @@ function AuctionPage() {
     const asBidBtnHandler = () => {
         console.log("asBidBtnHandler()");
         if (checkAsBid(asPrice)) {
-
+            sessionCheck(sessionId, navigate);
+            setLoaingModalShow(true);
+            asBid();
         }
     }
 
     const checkAsBid = (price) => {
         price = price.replaceAll(',', '');
-        let tmpPrice = price;
-        tmpPrice = Math.round(tmpPrice / 100) * 100;
-        tmpPrice -= price;
 
-        let tmpNowPrice = nowPrice;
-        tmpNowPrice = tmpNowPrice + (tmpNowPrice * 0.1)
+        let tmpPrice = Math.round(price / 100) * 100;
+        tmpPrice = Math.abs(price - tmpPrice);
+
         if (tmpPrice !== 0) {
             alert('10원 단위 금액은 사용할 수 없습니다.');
             return false;
         }
-        else if (tmpNowPrice) {
 
-        }
+        return true;
     }
 
     return (
