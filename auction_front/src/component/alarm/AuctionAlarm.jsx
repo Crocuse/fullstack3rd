@@ -21,8 +21,6 @@ function AuctionAlarm() {
     }, [notificationOverBid]);
 
     useEffect(() => {
-        const socket = io(SERVER_URL.SERVER_URL());
-
         socket.on('connect', () => {
             console.log('Connected to server!');
         });
@@ -41,8 +39,17 @@ function AuctionAlarm() {
             }
         });
 
+        socket.on('notificationOverBidErr', (data) => {
+                let message = data.message;
+                let id = data.id;
+                let name = data.name;
+                let date = data.date;
+                dispatch(setOverBidMsg({ id, message, name, date }));
+        });
+
         return () => {
             socket.off('notificationOverBid');
+            socket.off('notificationOverBidErr');
             socket.disconnect();
         };
     }, [socket]);
