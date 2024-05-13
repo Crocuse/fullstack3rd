@@ -8,7 +8,7 @@ import '../../css/Auction/AuctionPage.css';
 import LoadingModal from "../include/LoadingModal";
 import { io } from "socket.io-client";
 import { useDispatch } from 'react-redux';
-import {setOverBidMsg} from '../../redux/action/setOverBidMsg';
+import { setOverBidMsg } from '../../redux/action/setOverBidMsg';
 
 
 
@@ -41,17 +41,16 @@ function AuctionPage() {
         setLoaingModalShow(true);
         sessionCheck(sessionId, navigate);
         nowBidPrice();
-        if (product.GR_PRICE >= nowPrice){
+        if (product.GR_PRICE >= nowPrice) {
             setNowPirce(product.GR_PRICE);
         }
-        
+
         socket.on('bidmsg', (data) => {
             console.log(data);
             setBidingLog(data.log);
 
-            if (data.bid !== ''){
-                if(!data.bidType)
-                {
+            if (data.bid !== '') {
+                if (!data.bidType) {
                     setNextBid(nextBidfunc(data.bid));
                     setNowPirce(data.bid);
                 } else {
@@ -84,22 +83,22 @@ function AuctionPage() {
             nowPrice,
             asPrice,
             grNo: product.GR_NO,
-            isBidType : isBidType
+            isBidType: isBidType
         }
         socket.emit('overBid', socketData);
         socket.emit('auctionRefresh', socketData);
-        socket.on('notificationOverBid', (data) => {
-            if(data) {
-                let message = data.message;
-                let id = data.id;
-                let name = data.name;
-                let date = data.date;
-                dispatch(setOverBidMsg({id, message, name, date}));
-            } else {
-                return null;
-            }
-        });
-        
+        // socket.on('notificationOverBid', (data) => {
+        //     if(data) {
+        //         let message = data.message;
+        //         let id = data.id;
+        //         let name = data.name;
+        //         let date = data.date;
+        //         dispatch(setOverBidMsg({id, message, name, date}));
+        //     } else {
+        //         return null;
+        //     }
+        // });
+
         return () => {
             console.log("Socket disconnected.");
             socket.disconnect();
@@ -109,9 +108,9 @@ function AuctionPage() {
     useEffect(() => {
         console.log("useEffect4");
         const id = setInterval(() => {
-            setHour(23- today.getHours());
-            setMinutes(59- today.getMinutes());
-            setSeconds(59- today.getSeconds());
+            setHour(23 - today.getHours());
+            setMinutes(59 - today.getMinutes());
+            setSeconds(59 - today.getSeconds());
         }, 1000);
         return () => clearInterval(id);
     });
@@ -147,7 +146,7 @@ function AuctionPage() {
         console.log(nextBid);
         try {
             const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/biding?grNo=${product.GR_NO}&asPrice=${nextBid}`);
-            
+
             if (response.data == 'fail') {
                 alert('입찰에 실패 했습니다.');
                 window.location.reload();
@@ -201,12 +200,12 @@ function AuctionPage() {
 
     const nextBidfunc = (nPrice) => {
         console.log('nextBidfunc');
-        
+
         let tmpnextbid = nPrice + (nPrice * 0.05);
         console.log(tmpnextbid);
         tmpnextbid = Math.round(tmpnextbid / 100) * 100;
         return tmpnextbid;
-        
+
     }
 
     const leftBtnClickHandler = () => {
@@ -248,8 +247,8 @@ function AuctionPage() {
     const checkAsBid = (price) => {
         price = price.replaceAll(',', '');
 
-        let tmpPrice = (nowPrice * 0.1) + nowPrice;        
-        if(price < tmpPrice) {
+        let tmpPrice = (nowPrice * 0.1) + nowPrice;
+        if (price < tmpPrice) {
             alert('현재 가격보다 10%이상 호가 해야 합니다.');
             return false;
         }
@@ -301,14 +300,14 @@ function AuctionPage() {
                         <div>
                             <img id="bubble" src="/img/bubble.png" alt="" />
                             <span className="bubble_text">
-                                {bidingLog.length > 0 ?  bidingLog[bidingLog.length - 1].M_ID : ''} 님 께서
-                                {bidingLog.length > 0 ?  bidingLog[bidingLog.length - 1].AC_POINT.toLocaleString('ko-KR') : ''} 원에
-                                상회 입찰 하였습니다.<br/>
+                                {bidingLog.length > 0 ? bidingLog[bidingLog.length - 1].M_ID : ''} 님 께서
+                                {bidingLog.length > 0 ? bidingLog[bidingLog.length - 1].AC_POINT.toLocaleString('ko-KR') : ''} 원에
+                                상회 입찰 하였습니다.<br />
                                 남은 경매 시간 {hour < 10 ? '0' + hour : hour}:{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}입니다.
 
                             </span>
                         </div>
-                        
+
                     </div>
                     <div className="bubble_text">
 
