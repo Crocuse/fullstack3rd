@@ -87,17 +87,6 @@ function AuctionPage() {
         }
         socket.emit('overBid', socketData);
         socket.emit('auctionRefresh', socketData);
-        // socket.on('notificationOverBid', (data) => {
-        //     if(data) {
-        //         let message = data.message;
-        //         let id = data.id;
-        //         let name = data.name;
-        //         let date = data.date;
-        //         dispatch(setOverBidMsg({id, message, name, date}));
-        //     } else {
-        //         return null;
-        //     }
-        // });
 
         return () => {
             console.log("Socket disconnected.");
