@@ -11,13 +11,11 @@ function AuctionAlarm() {
     const id = useSelector(state => state.notificationOverBid.message.id);
     const name = useSelector(state => state.notificationOverBid.message.name);
     const date = useSelector(state => state.notificationOverBid.message.date);
-    console.log('여기ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ',date);
+    console.log('여기ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ', date);
     console.log(id);
 
     useEffect(() => {
 
-
-        
     }, [message]);
 
     return (
@@ -27,12 +25,12 @@ function AuctionAlarm() {
                     <p className="alarm-box">알람</p>
                 </div>
                 <div>
-                {loginedId === id && (<div>
+                    {loginedId === id && (<div>
                         <p>상품명: {name} </p>
                         <p> {message}</p>
                         <p>{date}</p>
                     </div>)}
-                    
+
 
                 </div>
             </div>
