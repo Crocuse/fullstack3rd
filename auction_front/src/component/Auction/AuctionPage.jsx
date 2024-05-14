@@ -22,14 +22,16 @@ function AuctionPage() {
     const [minutes, setMinutes] = useState(59 - today.getMinutes());
     const [seconds, setSeconds] = useState(59 - today.getSeconds());
     const [product, setProduct] = useState();
+    const [extendLevel, setExtendLevel] = useState(0);
+    const [highestBidder, setHighestBidder] = useState('');
 
     const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
     const loginedId = useSelector(state => state['loginedInfos']['loginedId']['loginedId']);
     const navigate = useNavigate();
-    const location = useLocation();
     const searchParams = new URLSearchParams(window.location.search);
-    const auctionLogRef = useRef(null);
     const grNo = searchParams.get('grNo');
+    const auctionLogRef = useRef(null);
+
     
     useEffect(() => {
         console.log("useEffect5");
@@ -51,7 +53,6 @@ function AuctionPage() {
             nowBidPrice();
         }
         
-        
         socket.on('bidmsg', (data) => {
             console.log(data);
             setBidingLog(data.log);
@@ -60,10 +61,12 @@ function AuctionPage() {
                 if (!data.bidType) {
                     setNextBid(nextBidfunc(data.bid));
                     setNowPirce(data.bid);
+                    setHighestBidder(data.loginedId)
                 } else {
                     let tmpAsPrice = data.asPrice.replaceAll(',', '');
                     setNextBid(nextBidfunc(Number(tmpAsPrice)));
                     setNowPirce(data.asPrice);
+                    setHighestBidder(data.loginedId)
                 }
             }
         })
@@ -106,12 +109,64 @@ function AuctionPage() {
     useEffect(() => {
         console.log("useEffect4");
         const id = setInterval(() => {
-            setHour(23 - today.getHours());
-            setMinutes(59 - today.getMinutes());
+            // setHour(23 - today.getHours());
+            // setMinutes(59 - today.getMinutes());
+            // setSeconds(59 - today.getSeconds());
+            setHour(0);
+            setMinutes(15);
             setSeconds(59 - today.getSeconds());
         }, 1000);
+        console.log(hour, minutes, seconds);
         return () => clearInterval(id);
     }, [today]);
+
+    useEffect(()=>{
+        console.log('extendLevel>>>>>>>>>>>>>>>>>>>>>>>>>>>', extendLevel);
+        switch(extendLevel) {
+            case 0:
+                if(hour === 0 && minutes < 30 && minutes > 20) {
+                    console.log('levle0')
+                    setExtendLevel(1);
+                }
+                break;
+            case 1:
+                if(hour === 0 && minutes < 30 && minutes > 20) {
+                    console.log('levle1')
+                    setExtendLevel(2);
+                }
+                break;
+            case 2:
+                if(hour === 0 && minutes < 30 && minutes > 20) {
+                    console.log('levle2')
+                    setExtendLevel(3);
+                }
+                break;
+            case 3:
+                if(hour === 0 && minutes < 30 && minutes > 20) {
+                    console.log('levle3')
+                    setExtendLevel(4);
+                }
+                break;
+            case 4:
+                if(hour === 0 && minutes < 30 && minutes > 20) {
+                    console.log('levle4')
+                    setExtendLevel(5);
+                }
+                break;
+            case 5:
+                if(hour === 0 && minutes < 30 && minutes > 20) {
+                    console.log('levle5')
+                    setExtendLevel(6);
+                }
+                break;
+            case 6:
+                if(hour === 0 && minutes < 30 && minutes > 20) {
+                    console.log('levle6')
+                    setExtendLevel(7);
+                }
+                break;
+        }
+    }, [highestBidder])
 
     async function fetchProductData(grNo) {
         try {
@@ -143,7 +198,7 @@ function AuctionPage() {
                     setNowPirce(nPrice);
                     setNextBid(nextBidfunc(nPrice));
                     setBidingLog(response.data);
-    
+                    setHighestBidder(response.data[maxIdx].M_ID)
                 } else {
                     console.log('length0');
                     let nPrice = product.GR_PRICE;
@@ -178,9 +233,6 @@ function AuctionPage() {
                     setIsBidType(false);
                 }
             }
-            
-
-            
         } catch (error) {
             console.log(error);
             setLoaingModalShow(false);
@@ -258,18 +310,29 @@ function AuctionPage() {
 
     const normalBidBtnHandler = () => {
         console.log("normalBidBtnHandler()");
-        sessionCheck(sessionId, navigate);
-        setLoaingModalShow(true);
-        normalBid();
+        if(checkId()) {
+            sessionCheck(sessionId, navigate);
+            setLoaingModalShow(true);
+            normalBid();
+        }
     }
 
     const asBidBtnHandler = () => {
         console.log("asBidBtnHandler()");
-        if (checkAsBid(asPrice)) {
+        if (checkAsBid(asPrice) && checkId()) {
             sessionCheck(sessionId, navigate);
             setLoaingModalShow(true);
             asBid();
         }
+    }
+
+    const checkId = () => {
+        console.log('checkId()');
+        if(highestBidder === loginedId){
+            alert('이미 최고 입찰자 입니다.');
+            return false;
+        }
+        return true;
     }
 
     const checkAsBid = (price) => {
