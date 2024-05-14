@@ -59,7 +59,7 @@ function CurrentList() {
 
     const productBtnClickHandler = (product) => {
         console.log('productBtnClickHandler()');
-        navigate(`/auction/auction_page`, {state:{product}});
+        navigate(`/auction/auction_page?grNo=${product.GR_NO}`);
     }
 
     return (

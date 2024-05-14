@@ -1,16 +1,12 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { sessionCheck } from "../../util/sessionCheck";
-import { redirect, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { SERVER_URL } from "../../config/server_url";
 import '../../css/Auction/AuctionPage.css';
 import LoadingModal from "../include/LoadingModal";
 import { io } from "socket.io-client";
-import { useDispatch } from 'react-redux';
-import { setOverBidMsg } from '../../redux/action/setOverBidMsg';
-
-
 
 function AuctionPage() {
     const today = new Date();
@@ -25,26 +21,37 @@ function AuctionPage() {
     const [hour, setHour] = useState(23 - today.getHours());
     const [minutes, setMinutes] = useState(59 - today.getMinutes());
     const [seconds, setSeconds] = useState(59 - today.getSeconds());
+    const [product, setProduct] = useState();
 
     const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
     const loginedId = useSelector(state => state['loginedInfos']['loginedId']['loginedId']);
     const navigate = useNavigate();
     const location = useLocation();
-    const product = location.state.product;
+    const searchParams = new URLSearchParams(window.location.search);
     const auctionLogRef = useRef(null);
-
-    const dispatch = useDispatch();
+    const grNo = searchParams.get('grNo');
+    
+    useEffect(() => {
+        console.log("useEffect5");
+        if (grNo) {
+            fetchProductData(grNo);
+        }
+    }, [grNo]);
 
     useEffect(() => {
         console.log("useEffect");
-        const socket = io(`${SERVER_URL.SERVER_URL()}`)
+        const socket = io(`${SERVER_URL.SERVER_URL()}`);
         setLoaingModalShow(true);
         sessionCheck(sessionId, navigate);
-        nowBidPrice();
-        if (product.GR_PRICE >= nowPrice) {
-            setNowPirce(product.GR_PRICE);
+        
+        if(product !== undefined) {
+            if (product.GR_PRICE >= nowPrice) {
+                setNowPirce(product.GR_PRICE);
+            } 
+            nowBidPrice();
         }
-
+        
+        
         socket.on('bidmsg', (data) => {
             console.log(data);
             setBidingLog(data.log);
@@ -64,7 +71,7 @@ function AuctionPage() {
         return () => {
             socket.off('bidmsg');
         }
-    }, [])
+    }, [product])
 
     useEffect(() => {
         console.log("useEffect2");
@@ -76,6 +83,8 @@ function AuctionPage() {
 
     useEffect(() => {
         console.log("useEffect3");
+        if(!product)
+            return;
         const socket = io(`${SERVER_URL.SERVER_URL()}`)
         const socketData = {
             loginedId,
@@ -102,28 +111,49 @@ function AuctionPage() {
             setSeconds(59 - today.getSeconds());
         }, 1000);
         return () => clearInterval(id);
-    });
+    }, [today]);
+
+    async function fetchProductData(grNo) {
+        try {
+
+            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/list_product?grNo=${grNo}`);
+            if(response.data == 'noProduct')
+                alert('상품이 없습니다.');
+            else{
+                console.log(response.data);
+                setProduct(response.data);
+
+                setLoaingModalShow(false);
+                
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     async function nowBidPrice() {
         console.log('nowBidPrice()');
 
         try {
-            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/bidingInfo?grNo=${product.GR_NO}`);
-            if (response.data.length > 0) {
-                let maxIdx = response.data.length - 1;
-                let nPrice = response.data[maxIdx].AC_POINT;
-                setNowPirce(nPrice);
-                setNextBid(nextBidfunc(nPrice));
-                setBidingLog(response.data);
-
-            } else {
-                console.log('length0');
-                let nPrice = product.GR_PRICE;
-                setNowPirce(nPrice);
-                setNextBid(nextBidfunc(nPrice));
-                setBidingLog([]);
+            if(product) {
+                const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/bidingInfo?grNo=${product.GR_NO}`);
+                if (response.data.length > 0) {
+                    let maxIdx = response.data.length - 1;
+                    let nPrice = response.data[maxIdx].AC_POINT;
+                    setNowPirce(nPrice);
+                    setNextBid(nextBidfunc(nPrice));
+                    setBidingLog(response.data);
+    
+                } else {
+                    console.log('length0');
+                    let nPrice = product.GR_PRICE;
+                    setNowPirce(nPrice);
+                    setNextBid(nextBidfunc(nPrice));
+                    setBidingLog([]);
+                }
+                setLoaingModalShow(false);
             }
-            setLoaingModalShow(false);
+            
 
         } catch (error) {
             console.log(error);
@@ -132,21 +162,25 @@ function AuctionPage() {
 
     async function normalBid() {
         console.log('normalBid()');
-        console.log(nextBid);
         try {
-            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/biding?grNo=${product.GR_NO}&asPrice=${nextBid}`);
-
-            if (response.data == 'fail') {
-                alert('입찰에 실패 했습니다.');
-                window.location.reload();
-                setLoaingModalShow(false);
-            } else {
-                alert('입찰에 성공 했습니다.');
-                nowBidPrice();
-                setLoaingModalShow(false);
-                setIsIoSocket(prev => !prev)
-                setIsBidType(false);
+            if(product) {
+                const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/biding?grNo=${product.GR_NO}&asPrice=${nextBid}`);
+                
+                if (response.data == 'fail') {
+                    alert('입찰에 실패 했습니다.');
+                    window.location.reload();
+                    setLoaingModalShow(false);
+                } else {
+                    alert('입찰에 성공 했습니다.');
+                    nowBidPrice();
+                    setLoaingModalShow(false);
+                    setIsIoSocket(prev => !prev)
+                    setIsBidType(false);
+                }
             }
+            
+
+            
         } catch (error) {
             console.log(error);
             setLoaingModalShow(false);
@@ -157,19 +191,24 @@ function AuctionPage() {
         console.log('asBid()');
 
         try {
-            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/asBiding?grNo=${product.GR_NO}&asPrice=${asPrice}`);
+            if(product) {
+                const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/asBiding?grNo=${product.GR_NO}&asPrice=${asPrice}`);
 
-            if (response.data == 'fail') {
-                alert('입찰에 실패 했습니다.');
-                window.location.reload();
-                setLoaingModalShow(false);
-            } else {
-                alert('입찰에 성공 했습니다.');
-                nowBidPrice();
-                setLoaingModalShow(false);
-                setIsIoSocket(prev => !prev)
-                setIsBidType(true);
+                    
+                if (response.data == 'fail') {
+                    alert('입찰에 실패 했습니다.');
+                    window.location.reload();
+                    setLoaingModalShow(false);
+                } else {
+                    alert('입찰에 성공 했습니다.');
+                    nowBidPrice();
+                    setLoaingModalShow(false);
+                    setIsIoSocket(prev => !prev)
+                    setIsBidType(true);
+                }
             }
+            
+
         } catch (error) {
             console.log(error);
             setLoaingModalShow(false);
@@ -262,18 +301,25 @@ function AuctionPage() {
                     <div className="auction_back_img">
                         <button onClick={leftBtnClickHandler}><img src="/img/arrow_left.png" /></button>
                         <div className="auction_img">
-                            <img src={`${SERVER_URL.SERVER_URL()}/goodsImg/${product.imgs[imgIdx]}`} alt="" />
+                            { product &&  (
+                                <img src={`${SERVER_URL.SERVER_URL()}/goodsImg/${product.imgs[imgIdx]}`} alt="" />
+                            )}
                         </div>
                         <button><img src="/img/arrow_right.png" onClick={rightBtnClickHandler} /></button>
                     </div>
                     <div className="auction_info">
                         <div className="product">
-                            <h1>{product.GR_NAME}</h1>
-                            <h3>시작가 | {product.GR_PRICE.toLocaleString('ko-KR')}원</h3>
-                            <h3>현재가 | {nowPrice.toLocaleString('ko-KR')}원</h3>
-                            <h3>판매자ID | {product.M_ID}</h3>
-                            <h3>물건 소개</h3>
-                            {product.GR_INFO}
+                            {
+                                product && (
+                                <>
+                                    <h1>{product.GR_NAME}</h1>
+                                    <h3>시작가 | {product.GR_PRICE.toLocaleString('ko-KR')}원</h3>
+                                    <h3>현재가 | {nowPrice.toLocaleString('ko-KR')}원</h3>
+                                    <h3>판매자ID | {product.M_ID}</h3>
+                                    <h3>물건 소개</h3>
+                                    {product.GR_INFO}
+                                </>
+                            )}
                         </div>
                         <div className="limit_time">
                             <h1>남은 시간</h1>
@@ -286,7 +332,6 @@ function AuctionPage() {
                 <div className="auction_area">
                     <div className="auction_bird">
                         <img id="bid_bird" src="/img/bid_bird_img.png" alt="" />
-                        <div>
                             <img id="bubble" src="/img/bubble.png" alt="" />
                             <span className="bubble_text">
                                 {bidingLog.length > 0 ? bidingLog[bidingLog.length - 1].M_ID : ''} 님 께서
@@ -295,7 +340,6 @@ function AuctionPage() {
                                 남은 경매 시간 {hour < 10 ? '0' + hour : hour}:{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}입니다.
 
                             </span>
-                        </div>
 
                     </div>
                     <div className="bubble_text">

@@ -115,12 +115,13 @@
 
 .auction_page_wrap .auction_area .auction_bird .bubble_text{
     position: absolute;
-    top: 10%;
-    left: 63%;
-    width: 200px;
+    top: 12%;
+    left: 71%;
+    width: 300px;
     word-wrap: break-word;
     transform: translateX(-50%);
     font-weight: bold;
+    font-size: 1.5em;
 }
 
 
