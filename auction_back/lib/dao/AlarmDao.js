@@ -32,9 +32,24 @@ module.exports = {
                     }
 
                     if (overBidInfo.length > 0) {
+                        let id = overBidInfo[0].M_ID;
+                        let name = overBidInfo[0].GR_NAME;
+                        let occurDate = overBidInfo[0].highestBidDate;
+                        let message = '상회 입찰이 발생하였습니다.'
+                        DB.query(`
+                        INSERT INTO TBL_ALARM_OVER_BID (M_ID, GR_NAME, AOB_TXT, AOB_OCCUR_DATE) 
+                        VALUES (?, ?, ?, ?)`,
+                            [id, name, message, occurDate],
+                            (err, result) => {
+                                console.log("결과 확인 ----------->  ", result);
+                            })
                         resolve(overBidInfo);
                     }
                 })
         })
+    },
+
+    insertAlarmInfo: () => {
+
     }
 }
