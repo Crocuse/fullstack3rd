@@ -17,6 +17,7 @@ function AuctionAlarm() {
 
     const [notification, setNotification] = useState(null);
     const [alarmInfo, setAlarmInfo] = useState([]);
+    const [alarmState, setAlarmState] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -73,18 +74,34 @@ function AuctionAlarm() {
 
     }, [loginedId]);
 
+
     const alarmOldReminderClickHandler = async (event, data) => {
         console.log('ALARMCLICKHANDLER()');
 
         console.log("알람 내용-->",data);
-        if(data.length > 0 ) {
-            event.preventDefault();
-            let result = await axiosSetReadState(data);
+        if(data !== null) {
+            console.log("여기 들ㅇㅓ오나---->",data.AOB_NO);
+            let date = data.AOB_OCCUR_DATE;
+            let id = data.M_ID;
+            let result = await axiosSetReadState(date, date);
             console.log("여기 오나?????",result);
+
+        } else {
+            console.log("여기 들ㅇㅓ오나---->",data);
+            event.preventDefault();
+
         }
     };
+    
 
-    const alarmOverBidClickHandler = () => {
+    const alarmOverBidClickHandler = async (notification) => {
+        console.log('ALARMOVERBIDCLICKHANDLER()')
+        console.log('노티피케이션---------------',notification.id);
+        console.log('노티피케이션---------------',notification.date);
+        let date = notification.date;
+        let id = notification.id;
+        let result = await axiosSetReadState(date, date);
+        console.log("상회입찰 알림 클릭하고 -------->",result);
 
     }
 
