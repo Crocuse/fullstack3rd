@@ -5,7 +5,7 @@ module.exports = {
     alarmOverBid: (grNo) => {
         return new Promise((resolve, reject) => {
             DB.query( // GR_NO로 두번째로 높은 입찰가와 해당 M_ID, 테이블 조인해서 GR_NAME 얻고, 최고가 갱신된 시간 얻기
-            `SELECT TGR.GR_NAME, TAC.M_ID, TAC.AC_POINT, TAC2.AC_REG_DATE AS highestBidDate
+                `SELECT TGR.GR_NAME, TAC.M_ID, TAC.AC_POINT, TAC2.AC_REG_DATE AS highestBidDate
             FROM TBL_AUCTION_CURRENT TAC
             JOIN TBL_GOODS_REGIST TGR ON TAC.GR_NO = TGR.GR_NO
             JOIN (
@@ -24,16 +24,17 @@ module.exports = {
             )
             
             `,
-            [grNo, grNo],
-            (err, overBidInfo) => {
-                if(err) {
-                    reject(err);
-                }
+                [grNo, grNo],
+                (err, overBidInfo) => {
+                    console.log('디비 뭐 나오는지 확인 ====================>', overBidInfo)
+                    if (err) {
+                        reject(err);
+                    }
 
-                if(overBidInfo.length > 0) {
-                    resolve(overBidInfo);
-                }
-            })
+                    if (overBidInfo.length > 0) {
+                        resolve(overBidInfo);
+                    }
+                })
         })
     }
 }

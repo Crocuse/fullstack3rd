@@ -132,7 +132,8 @@ function Nav() {
                     <Link
                         to="#"
                         id="bell_wrap"
-                        onClick={() => {
+                        onClick={(e) => {
+                            e.preventDefault();
                             setAlarm(!alarm);
                         }}
                     >
@@ -142,7 +143,7 @@ function Nav() {
                             </div>
                         )}
                         <img src="/img/bell.png" id="bell_img" />
-                        {loginedUser === alarmId && <div className="badge"></div>}
+                        {/* <div className="badge"></div> */}
                     </Link>
                 </div>
                 <Link to="/member/my_page/modify_info">마이페이지</Link>
