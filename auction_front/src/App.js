@@ -1,5 +1,5 @@
 import { Provider } from 'react-redux';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate, Outlet } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from './redux/store';
 
@@ -60,9 +60,9 @@ function App() {
     const queryClient = new QueryClient({
         defaultOptions: {
             queries: {
-                refetchOnWindowFocus: false, // 윈도우창을 다시 포커싱하면 데이터를 다시 가져옴
-                refetchOnMount: false, // 컴포넌트가 처음 생성되었을 때 데이터를 가져옴
-                refetchOnReconnect: false, // 네트워크가 다시 연결 되면 데이터를 다시 가져옴
+                refetchOnWindowFocus: false,
+                refetchOnMount: false,
+                refetchOnReconnect: false,
             },
         },
     });
@@ -74,67 +74,55 @@ function App() {
                     <PersistGate loading={null} persistor={persistor}>
                         <BrowserRouter>
                             <Routes>
-                                <Route
-                                    path="*"
-                                    element={
-                                        <>
-                                            <Header />
-                                            <Nav />
-                                            <Routes>
-                                                <Route path="/" element={<Home />}></Route>
-                                                <Route path="/auction/current_list" element={<CurList />}></Route>
-                                                <Route path="/auction/regist_form" element={<RegForm />}></Route>
-                                                <Route path="/auction/auction_page" element={<AuctionPage />}></Route>
-                                                <Route path="/member/Signup_form" element={<SignUp />}></Route>
-                                                <Route path="/member/Login_form" element={<Login />}></Route>
-                                                <Route path="/member/Logout_confirm" element={<Logout />}></Route>
-                                                <Route path="/member/my_page" element={<MyPage />}>
-                                                    <Route path="" element={<MyPageMenubar />}>
-                                                        <Route path="modify_info" element={<ModifyInfo />} />
-                                                        <Route path="modify_password" element={<ModifyPassword />} />
-                                                        <Route path="mysells" element={<MySells />} />
-                                                        <Route path="mywinnigbids" element={<MyWinnigBids />} />
-                                                        <Route path="myregist" element={<MyRegist />} />
-                                                        <Route path="mypoint" element={<MyPoint />} />
-                                                        <Route path="member_delete" element={<MemberDelete />} />
-                                                    </Route>
-                                                </Route>
+                                <Route path="/auth/google/callback" element={<GoogleLogin />}></Route>
+                                <Route path="/auth/naver/callback" element={<NaverLogin />}></Route>
+                                <Route path="/auth/kakao/callback" element={<KakaoLogin />}></Route>
 
-                                                <Route path="/auth/google/callback" element={<GoogleLogin />}></Route>
-                                                <Route path="/auth/naver/callback" element={<NaverLogin />}></Route>
-                                                <Route path="/auth/kakao/callback" element={<KakaoLogin />}></Route>
-                                                <Route path="/point/Point_add_form" element={<PointAddForm />}></Route>
-                                                <Route path="/point/PayAPI" element={<PayAPI />} />
-                                                <Route path="/alarm/AuctionAlarm" element={<AuctionAlarm />} />
-                                                <Route path="/admin/home" element={<AdminHome />}></Route>
-                                                <Route path="/admin/AdminReg" element={<AdminReg />}></Route>
-                                                <Route path="/admin/Qna" element={<QnaAwnser />}></Route>
-                                                <Route
-                                                    path="/admin/auction_goods_mgt"
-                                                    element={<AuctionGoodsMgt />}
-                                                ></Route>
-                                                <Route
-                                                    path="/admin/auction_goods_reg"
-                                                    element={<AuctionGoodsReg />}
-                                                ></Route>
-                                                <Route path="/admin/auction_result" element={<AuctionResult />}></Route>
-                                                <Route path="/admin/sales_mgt" element={<SalesMgt />}></Route>
-                                                <Route path="/admin/user_mgt" element={<UserMgt />}></Route>
-                                                <Route path="/admin/admin_mgt" element={<AdminMgt />}></Route>
-                                                <Route path="/Customer_center" element={<CstCT />}>
-                                                    <Route path="" element={<CenterNav />}>
-                                                        <Route path="qna" element={<Qna />} />
-                                                        <Route path="faq" element={<Faq />} />
-                                                    </Route>
-                                                </Route>
-                                            </Routes>
+                                <Route path="/" element={<Layout />}>
+                                    <Route index element={<Home />} />
+                                    <Route path="/auction/current_list" element={<CurList />}></Route>
+                                    <Route path="/auction/regist_form" element={<RegForm />}></Route>
+                                    <Route path="/auction/auction_page" element={<AuctionPage />}></Route>
+                                    <Route path="/member/Signup_form" element={<SignUp />}></Route>
+                                    <Route path="/member/Login_form" element={<Login />}></Route>
+                                    <Route path="/member/Logout_confirm" element={<Logout />}></Route>
+                                    <Route path="/member/my_page" element={<MyPage />}>
+                                        <Route path="" element={<MyPageMenubar />}>
+                                            <Route path="modify_info" element={<ModifyInfo />} />
+                                            <Route path="modify_password" element={<ModifyPassword />} />
+                                            <Route path="mysells" element={<MySells />} />
+                                            <Route path="mywinnigbids" element={<MyWinnigBids />} />
+                                            <Route path="myregist" element={<MyRegist />} />
+                                            <Route path="mypoint" element={<MyPoint />} />
+                                            <Route path="member_delete" element={<MemberDelete />} />
+                                        </Route>
+                                    </Route>
 
-                                            <Footer />
-                                        </>
-                                    }
-                                />
+                                    <Route path="/point/Point_add_form" element={<PointAddForm />}></Route>
+                                    <Route path="/point/PayAPI" element={<PayAPI />} />
+                                    <Route path="/alarm/AuctionAlarm" element={<AuctionAlarm />} />
+                                    <Route path="/admin/home" element={<AdminHome />}></Route>
+                                    <Route path="/admin/AdminReg" element={<AdminReg />}></Route>
+                                    <Route path="/admin/Qna" element={<QnaAwnser />}></Route>
+                                    <Route path="/admin/auction_goods_mgt" element={<AuctionGoodsMgt />}></Route>
+                                    <Route path="/admin/auction_goods_reg" element={<AuctionGoodsReg />}></Route>
+                                    <Route path="/admin/auction_result" element={<AuctionResult />}></Route>
+                                    <Route path="/admin/sales_mgt" element={<SalesMgt />}></Route>
+                                    <Route path="/admin/user_mgt" element={<UserMgt />}></Route>
+                                    <Route path="/admin/admin_mgt" element={<AdminMgt />}></Route>
+                                    <Route path="/Customer_center" element={<CstCT />}>
+                                        <Route path="" element={<CenterNav />}>
+                                            <Route path="qna" element={<Qna />} />
+                                            <Route path="faq" element={<Faq />} />
+                                        </Route>
+                                    </Route>
+                                </Route>
+
                                 <Route path="/member/find_id" element={<FindId />} />
                                 <Route path="/member/find_pw" element={<FindPw />} />
+
+                                {/* 잘못된 경로에 대해서는 / 경로로 리다이렉트 */}
+                                <Route path="*" element={<Navigate to="/" replace />} />
                             </Routes>
                         </BrowserRouter>
                     </PersistGate>
@@ -144,5 +132,14 @@ function App() {
         </>
     );
 }
+
+const Layout = () => (
+    <>
+        <Header />
+        <Nav />
+        <Outlet />
+        <Footer />
+    </>
+);
 
 export default App;
