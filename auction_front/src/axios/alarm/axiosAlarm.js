@@ -17,18 +17,19 @@ import { SERVER_URL } from '../../config/server_url';
         }
     };
 
-    export const axiosSetReadState = async (data) => {
+    export const axiosSetReadState = async (date, id) => {
        console.log('AXIOS SET READ STATE');
 
-       try {
-        let no = data.AOB_NO
+       try {        
         let result = await axios.put(`${SERVER_URL.SERVER_URL()}/alarm/alarmReadState`, {
-            no: no,
+            date: date,
+            id: id,
         });
-        console.log(result);
+       
+         return result.data;
         
        } catch (error) {
-        
+            console.log("AXIOS SET READ STATE ERROR", error);
        }
         
     }

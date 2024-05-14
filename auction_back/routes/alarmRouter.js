@@ -9,8 +9,7 @@ router.post('/alarmInfo', (req, res) => {
 
 router.put('/alarmReadState', (req, res) => {
     console.log('[ALARM ROUTER] /alarmReadState');
-    console.log(req.body);
-    alarmService.putAlarmReadState(req.body);
+    alarmService.putAlarmReadState(req,res);
 })
 
 module.exports = router;

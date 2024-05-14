@@ -63,6 +63,8 @@ module.exports = {
                 TBL_ALARM_OVER_BID.GR_NAME = TBL_GOODS_REGIST.GR_NAME
             WHERE 
                 TBL_ALARM_OVER_BID.M_ID = ? 
+            AND
+                TBL_ALARM_OVER_BID.AOB_READ = 0 
             ORDER BY 
                 TBL_ALARM_OVER_BID.AOB_REG_DATE DESC
             `,
@@ -77,12 +79,33 @@ module.exports = {
                         resolve(myAlarmInfo);
 
                     } else {
-                        resolve('null');
+                        resolve(null); //check
                     }
                 }
             )
         });
 
     },
+
+    updateReadState : (date, id) => {
+        return new Promise((resolve, reject) => {
+            DB.query(`
+            UPDATE 
+                TBL_ALARM_OVER_BID
+            SET
+                AOB_READ = 1
+            WHERE
+                M_ID = ? AND AOB_OCCUR_DATE = ?`,
+            [id, date],
+            (err, result) => {
+                if(err) {
+                    reject('fail');
+                }else {
+                    resolve('success');
+                }
+
+           });
+        });
+    }
 
 }
