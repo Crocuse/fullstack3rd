@@ -2,65 +2,49 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { sessionCheck } from '../../../util/sessionCheck';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { SERVER_URL } from '../../../config/server_url';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import '../../../css/member/mypage/MyPoint.css';
 import LoadingModal from '../../include/LoadingModal';
+import '../../../css/member/mypage/MyPoint.css';
 
 function MyPoint() {
-    // Hook -----------------------------------------------------------------------------------------------------------
     const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
     const loginedId = useSelector((state) => state['loginedInfos']['loginedId']['loginedId']);
     const navigate = useNavigate();
 
-    const [pointHistory, setPointHistory] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0);
-    const [totlaPoint, setTotalPoint] = useState(0);
-    const [loadingModalShow, setLoaingModalShow] = useState(false);
 
     useEffect(() => {
-        setLoaingModalShow(true);
         sessionCheck(sessionId, navigate);
-        axois_getMyPointHistory(currentPage);
-    }, [sessionId, navigate, currentPage]);
+    }, [sessionId, navigate]);
 
-    // Handler -----------------------------------------------------------------------------------------------------------
-    function pageChangeHandler(page) {
-        setCurrentPage(page);
-        axois_getMyPointHistory(page);
-    }
-
-    // Fucntion -----------------------------------------------------------------------------------------------------------
-
-    // Axios -----------------------------------------------------------------------------------------------------------
-    async function axois_getMyPointHistory(page) {
+    const fetchMyPointHistory = async ({ queryKey }) => {
+        const [, page] = queryKey;
         const response = await axios.post(`${SERVER_URL.SERVER_URL()}/member/get_my_point_history`, {
             id: loginedId,
-            page: page,
+            page,
             limit: 10,
         });
-        try {
-            if (response.data === 'error') {
-                alert('데이터를 불러오는데 실패했습니다.');
-                setLoaingModalShow(false);
-            } else {
-                setPointHistory(response.data.history || []);
-                if (response.data.history.length !== 0) {
-                    setTotalPoint(response.data.history[0].P_CURRENT);
-                }
-                setTotalPages(response.data.totalPages);
-                setLoaingModalShow(false);
-            }
-        } catch (error) {
-            console.log(error);
-            alert('통신 오류가 발생했습니다.');
-            setLoaingModalShow(false);
-        }
-    }
+        return response.data;
+    };
 
-    // View -----------------------------------------------------------------------------------------------------------
+    const { isLoading, error, data } = useQuery(['myPointHistory', currentPage], fetchMyPointHistory, {
+        keepPreviousData: true,
+    });
+
+    const pageChangeHandler = (page) => {
+        setCurrentPage(page);
+    };
+
+    if (isLoading) return <LoadingModal />;
+
+    if (error) return <div>Error: {error.message}</div>;
+
+    const { history, totalPages } = data || {};
+    const totalPoint = history?.[0]?.P_CURRENT || 0;
+
     return (
         <article className="my-point">
             <div className="title">
@@ -68,10 +52,10 @@ function MyPoint() {
             </div>
 
             <div className="current-point">
-                현재 내 포인트 :<span>{totlaPoint.toLocaleString()}</span>
+                현재 내 포인트 :<span>{totalPoint.toLocaleString()}</span>
             </div>
 
-            {pointHistory.length === 0 ? (
+            {history?.length === 0 ? (
                 <div className="not-wrap">
                     <div className="not-history">포인트 변동 내역이 존재하지 않습니다.</div>
                     <img src="/img/bid_bird_x.png" alt="No history" id="bidBirdX" />
@@ -88,7 +72,7 @@ function MyPoint() {
                             </tr>
                         </thead>
                         <tbody>
-                            {pointHistory.map((point, idx) => (
+                            {history.map((point, idx) => (
                                 <tr key={idx}>
                                     <td>{point.P_REG_DATE}</td>
                                     <td>
@@ -129,8 +113,6 @@ function MyPoint() {
                     </div>
                 </div>
             )}
-
-            {loadingModalShow === true ? <LoadingModal /> : null}
         </article>
     );
 }
