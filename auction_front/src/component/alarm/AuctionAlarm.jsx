@@ -18,13 +18,12 @@ function AuctionAlarm() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-    }, [notificationOverBid]);
-
-    useEffect(() => {
 
         socket.on('notificationOverBid', (data) => {
             console.log('Client NOTIFICATION OVER BID');
             if (data) {
+                console.log('소켓으로 쏘면 뭐가 나오나-------->', data);
+
                 let message = data.message;
                 let id = data.id;
                 let name = data.name;
@@ -37,11 +36,11 @@ function AuctionAlarm() {
         });
 
         socket.on('notificationOverBidErr', (data) => {
-                let message = data.message;
-                let id = data.id;
-                let name = data.name;
-                let date = data.date;
-                dispatch(setOverBidMsg({ id, message, name, date }));
+            let message = data.message;
+            let id = data.id;
+            let name = data.name;
+            let date = data.date;
+            dispatch(setOverBidMsg({ id, message, name, date }));
         });
 
         return () => {
@@ -49,7 +48,7 @@ function AuctionAlarm() {
             socket.off('notificationOverBidErr');
             socket.disconnect();
         };
-    }, [socket]);
+    }, [socket, notificationOverBid]);
 
 
     return (
