@@ -51,8 +51,6 @@ function ModifyPassword() {
     // Fucntion -----------------------------------------------------------------------------------------------------------
     function changeDisplayModufyWrap() {
         let socialIdMark = loginedId.substring(0, 2);
-        console.log('🚀 ~ changeDisplayModufyWrap ~ socialIdMark:', socialIdMark);
-
         if (socialIdMark == 'G_' || socialIdMark == 'N_') {
             $('.modify_password_wrap').css('display', 'none');
             $('.modify_password_wrap_social').css('display', 'block');

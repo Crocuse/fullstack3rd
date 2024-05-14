@@ -20,7 +20,7 @@ function Nav() {
 
     useEffect(() => {
         axios_session_check();
-    });
+    }, [sessionId]);
 
     const navigate = useNavigate();
 
@@ -133,8 +133,15 @@ function Nav() {
         m_menu = (
             <>
                 <div className="drop_down_wrap">
-                    <Link to="#" id="bell_wrap" onClick={(e) => { e.preventDefault(); toggleAlarm(); }} >
-                        <div className={showAlarm ? "drop_down_content" : "drop_down_content hidden"}>
+                    <Link
+                        to="#"
+                        id="bell_wrap"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            toggleAlarm();
+                        }}
+                    >
+                        <div className={showAlarm ? 'drop_down_content' : 'drop_down_content hidden'}>
                             <AuctionAlarm />
                         </div>
                         <img src="/img/bell.png" id="bell_img" />
