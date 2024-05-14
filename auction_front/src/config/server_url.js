@@ -1,3 +1,3 @@
 export const SERVER_URL = {
-    SERVER_URL: () => `http://localhost:3001`,
+    SERVER_URL: () =>  `${process.env.REACT_APP_API_URL+':'+process.env.REACT_APP_PORT}`,
 };

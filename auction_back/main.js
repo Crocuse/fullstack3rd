@@ -34,7 +34,7 @@ initializeSocket(server);
 if (os.version().includes('Windows')) {
     app.use(
         cors({
-            origin: ['http://localhost:3000', 'http://3.24.176.186:3000'],
+            origin: 'http://localhost:3000',
             credentials: true,
             optionsSuccessStatus: 200,
         })
@@ -42,7 +42,7 @@ if (os.version().includes('Windows')) {
 } else {
     app.use(
         cors({
-            origin: ['http://13.238.114.78:3000'],
+            origin: 'http://3.24.176.186:3000',
             credentials: true,
             optionsSuccessStatus: 200,
         })
