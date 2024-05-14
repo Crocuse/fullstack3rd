@@ -115,7 +115,7 @@ const memberService = {
                     : '소셜 로그인 회원이 아닙니다.',
         };
         let currentPoint = 0;
-        if (result.point.length != 0) result.currentPoint = point[0].P_CURRENT;
+        if (result.point.length != 0) currentPoint = result.point[0].P_CURRENT;
         res.json({ selectedMember, currentPoint });
     },
 

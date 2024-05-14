@@ -56,7 +56,7 @@ exports.passport = (app) => {
     app.get(
         '/auth/google',
         cors({
-            origin: '*',
+            origin: ['http://localhost:3000', 'http://3.24.176.186:3000'],
             methods: ['GET'],
         }),
         passport.authenticate('google', {
@@ -81,7 +81,7 @@ exports.passport = (app) => {
     app.post(
         '/auth/google/callback',
         cors({
-            origin: '*',
+            origin: ['http://localhost:3000', 'http://3.24.176.186:3000'],
             methods: ['POST'],
         }),
         async (req, res) => {
@@ -159,7 +159,7 @@ exports.passport = (app) => {
     app.get(
         '/auth/naver',
         cors({
-            origin: '*',
+            origin: ['http://localhost:3000', 'http://3.24.176.186:3000'],
             methods: ['GET'],
         }),
         passport.authenticate('naver', {
@@ -194,7 +194,7 @@ exports.passport = (app) => {
     app.post(
         '/auth/naver/callback',
         cors({
-            origin: '*',
+            origin: ['http://localhost:3000', 'http://3.24.176.186:3000'],
             methods: ['POST'],
         }),
         async (req, res) => {
@@ -276,7 +276,7 @@ exports.passport = (app) => {
     app.get(
         '/auth/kakao',
         cors({
-            origin: 'http://localhost:3000',
+            origin: ['http://localhost:3000', 'http://3.24.176.186:3000'],
             methods: ['GET'],
         }),
         passport.authenticate('kakao', {
@@ -310,7 +310,7 @@ exports.passport = (app) => {
     app.post(
         '/auth/kakao/callback',
         cors({
-            origin: 'http://localhost:3000',
+            origin: ['http://localhost:3000', 'http://3.24.176.186:3000'],
             methods: ['POST'],
         }),
         async (req, res) => {
