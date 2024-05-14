@@ -7,6 +7,7 @@
 
 html,
 body {
+    max-width: 100%;
     font-family: 'NanumSquareRound';
     -webkit-text-stroke: 1px;
     -webkit-text-stroke: 1px rgba(0, 0, 0, 0.1);
@@ -76,7 +77,8 @@ header a {
 
 @font-face {
     font-family: 'TTHakgyoansimMonggeulmonggeulR';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_keris@1.0/TTHakgyoansimMonggeulmonggeulR.woff2') format('woff2');
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_keris@1.0/TTHakgyoansimMonggeulmonggeulR.woff2')
+        format('woff2');
     font-weight: normal;
     font-style: normal;
 }
@@ -211,7 +213,6 @@ footer {
     flex-shrink: 0;
 }
 
-
 .drop_down_wrap .badge {
     width: 8px;
     height: 8px;
@@ -227,7 +228,6 @@ footer {
 .nav_wrap .drop_down_wrap .drop_down_content.hidden {
     display: none;
 }
-
 
 .nav_wrap .drop_down_wrap .drop_down_content {
     display: block;

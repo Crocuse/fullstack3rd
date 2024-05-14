@@ -16,20 +16,36 @@ function KakaoLogin() {
             const urlParams = new URLSearchParams(location.search);
             const code = urlParams.get('code');
 
-            try {
-                const response = await axios.post(`${SERVER_URL.SERVER_URL()}/auth/kakao/callback`, { code: code });
+            if (!code) {
+                // 최초 접속 시 kakaoAuthURL을 요청합니다.
+                try {
+                    const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auth/kakao`);
+                    const { url: kakaoAuthURL } = response.data;
 
-                const { success, sessionID, loginedId } = response.data;
-
-                if (success) {
-                    dispatch(setLoginedId(sessionID, '', loginedId));
+                    // 먼저 루트 경로로 리다이렉트합니다.
                     navigate('/');
-                } else {
+
+                    // 그 후 kakaoAuthURL로 리다이렉트합니다.
+                    window.location.href = kakaoAuthURL;
+                } catch (error) {
+                    console.error('카카오 로그인 URL 가져오기 실패:', error);
                     navigate('/member/Login_form');
                 }
-            } catch (error) {
-                console.error('카카오 로그인 콜백 처리 중 오류 발생:', error);
-                navigate('/member/Login_form');
+            } else {
+                // 카카오 인증 후 콜백 처리
+                try {
+                    const response = await axios.post(`${SERVER_URL.SERVER_URL()}/auth/kakao/callback`, { code });
+                    const { success, sessionID, loginedId } = response.data;
+                    if (success) {
+                        dispatch(setLoginedId(sessionID, '', loginedId));
+                        navigate('/');
+                    } else {
+                        navigate('/member/Login_form');
+                    }
+                } catch (error) {
+                    console.error('카카오 로그인 콜백 처리 중 오류 발생:', error);
+                    navigate('/member/Login_form');
+                }
             }
         };
 
