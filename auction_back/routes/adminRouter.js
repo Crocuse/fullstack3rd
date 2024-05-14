@@ -79,10 +79,6 @@ router.put('/goods_reject_reason', (req, res) => {
     adminService.goodsRejectReason(req, res);
 });
 
-router.get('/test', (req, res) => {
-    adminService.testSql(req, res);
-});
-
 router.get(`/QnaList`, (req, res) => {
     adminService.getQnaList(req, res);
 });
