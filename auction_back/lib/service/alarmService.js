@@ -17,5 +17,15 @@ module.exports = {
             socket.emit("notificationOverBidErr", { message: "ERROR 관리자에 문의하세요. <br />고객센터 : 031-1234-5678", id: '', name: '', date: '' });
             socket.disconnect();
         }
-    }
+    },
+
+    alarmInfo: async (req, res) => {
+        console.log("[ALARMSERVICE] alarmInfo()");
+
+        let id = req.body.loginedId;
+        let result = await AlarmDao.getMyAlarm(id);
+        console.log("!!!!!!!!!!!!----->>>", result)
+        res.json(result);
+    },
+
 }

@@ -7,9 +7,11 @@ const axiosGetAlarmInfo = async (loginedId) => {
         let result = await axios.post(`${SERVER_URL.SERVER_URL()}/alarm/alarmInfo`, {
             loginedId: loginedId
         });
-        console.log("axios 결과000", result);
+        let alarmInfo = result.data;
+        return alarmInfo;
+
     } catch (error) {
-        console.log("AXIOS GET ALARM INFO 에러 !!", error);
+        console.log("AXIOS GET ALARM INFO ERROR", error);
     }
 }
 

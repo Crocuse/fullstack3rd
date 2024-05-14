@@ -232,3 +232,8 @@ footer {
 .nav_wrap .drop_down_wrap .drop_down_content {
     display: block;
 }
+
+.alarm_container .alarmInfoInDB {
+    max-height: 120px;
+    overflow-y: auto;
+}
