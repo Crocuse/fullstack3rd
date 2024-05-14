@@ -45,7 +45,6 @@ function AuctionPage() {
         const socket = io(`${SERVER_URL.SERVER_URL()}`);
         setLoaingModalShow(true);
         sessionCheck(sessionId, navigate);
-        
         if(product !== undefined) {
             if (product.GR_PRICE >= nowPrice) {
                 setNowPirce(product.GR_PRICE);
@@ -110,61 +109,115 @@ function AuctionPage() {
         console.log("useEffect4");
         const id = setInterval(() => {
             // setHour(23 - today.getHours());
-            // setMinutes(59 - today.getMinutes());
+            //setMinutes(59 - today.getMinutes());
             // setSeconds(59 - today.getSeconds());
             setHour(0);
-            setMinutes(15);
+            setMinutes(42);
             setSeconds(59 - today.getSeconds());
+            isAuctionEnd();
         }, 1000);
-        console.log(hour, minutes, seconds);
+        
+
+        timeSetExtendLevel();
+
         return () => clearInterval(id);
     }, [today]);
 
+    const timeSetExtendLevel = () => {
+        if(hour === 0){
+            if(minutes < 30 && minutes > 20) {
+                console.log('levle0');
+                setExtendLevel(1);
+            } else if(minutes <= 35 && minutes > 30) {
+                console.log('levle1');
+                setExtendLevel(2);
+            } else if(minutes <= 40 && minutes > 35) {
+                console.log('levle2');
+                setExtendLevel(3);
+            } else if(minutes <= 45 && minutes > 40) {
+                console.log('levle3');
+                setExtendLevel(4);
+            } else if(minutes <= 50 && minutes > 45) {
+                console.log('levle4');
+                setExtendLevel(5);
+            } else if(minutes <= 55 && minutes > 50) {
+                console.log('levle5');
+                setExtendLevel(6);
+            } else if(minutes < 0 && minutes > 55) {
+                console.log('levle6');
+                setExtendLevel(7);
+            }
+        }
+    }
+
+    const isAuctionEnd = () =>{
+        if(hour === 0 && seconds === 0){
+            if(minutes >= 30 && extendLevel < 1) {
+                return true;
+            } else if(minutes >= 35 && extendLevel < 2) {
+                return true;
+            } else if(minutes >= 40 && extendLevel < 3) {
+                return true;
+            } else if(minutes >= 45 && extendLevel < 4) {
+                return true;
+            } else if(minutes >= 50 && extendLevel < 5) {
+                return true;
+            } else if(minutes >= 55 && extendLevel < 6) {
+                return true;
+            } else if(minutes >= 0 && extendLevel < 7) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     useEffect(()=>{
         console.log('extendLevel>>>>>>>>>>>>>>>>>>>>>>>>>>>', extendLevel);
-        switch(extendLevel) {
-            case 0:
-                if(hour === 0 && minutes < 30 && minutes > 20) {
-                    console.log('levle0')
-                    setExtendLevel(1);
-                }
-                break;
-            case 1:
-                if(hour === 0 && minutes < 30 && minutes > 20) {
-                    console.log('levle1')
-                    setExtendLevel(2);
-                }
-                break;
-            case 2:
-                if(hour === 0 && minutes < 30 && minutes > 20) {
-                    console.log('levle2')
-                    setExtendLevel(3);
-                }
-                break;
-            case 3:
-                if(hour === 0 && minutes < 30 && minutes > 20) {
-                    console.log('levle3')
-                    setExtendLevel(4);
-                }
-                break;
-            case 4:
-                if(hour === 0 && minutes < 30 && minutes > 20) {
-                    console.log('levle4')
-                    setExtendLevel(5);
-                }
-                break;
-            case 5:
-                if(hour === 0 && minutes < 30 && minutes > 20) {
-                    console.log('levle5')
-                    setExtendLevel(6);
-                }
-                break;
-            case 6:
-                if(hour === 0 && minutes < 30 && minutes > 20) {
-                    console.log('levle6')
-                    setExtendLevel(7);
-                }
-                break;
+        if(hour === 0){
+            switch(extendLevel) {
+                case 0:
+                    if(minutes < 30 && minutes > 20) {
+                        console.log('levle0');
+                        setExtendLevel(1);
+                    }
+                    break;
+                case 1:
+                    if(minutes < 35 && minutes > 30) {
+                        console.log('levle1');
+                        setExtendLevel(2);
+                    }
+                    break;
+                case 2:
+                    if(minutes < 40 && minutes > 35) {
+                        console.log('levle2');
+                        setExtendLevel(3);
+                    }
+                    break;
+                case 3:
+                    if(minutes < 45 && minutes > 40) {
+                        console.log('levle3');
+                        setExtendLevel(4);
+                    }
+                    break;
+                case 4:
+                    if(minutes < 50 && minutes > 45) {
+                        console.log('levle4');
+                        setExtendLevel(5);
+                    }
+                    break;
+                case 5:
+                    if(minutes < 55 && minutes > 50) {
+                        console.log('levle5');
+                        setExtendLevel(6);
+                    }
+                    break;
+                case 6:
+                    if(minutes < 0 && minutes > 55) {
+                        console.log('levle6');
+                        setExtendLevel(7);
+                    }
+                    break;
+            }    
         }
     }, [highestBidder])
 
@@ -245,7 +298,6 @@ function AuctionPage() {
         try {
             if(product) {
                 const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/asBiding?grNo=${product.GR_NO}&asPrice=${asPrice}`);
-
                     
                 if (response.data == 'fail') {
                     alert('입찰에 실패 했습니다.');
@@ -259,8 +311,6 @@ function AuctionPage() {
                     setIsBidType(true);
                 }
             }
-            
-
         } catch (error) {
             console.log(error);
             setLoaingModalShow(false);
@@ -282,7 +332,6 @@ function AuctionPage() {
         console.log('nextBidfunc');
 
         let tmpnextbid = nPrice + (nPrice * 0.05);
-        console.log(tmpnextbid);
         tmpnextbid = Math.round(tmpnextbid / 100) * 100;
         return tmpnextbid;
 
@@ -351,9 +400,6 @@ function AuctionPage() {
             alert('10원 단위 이하의 금액은 사용할 수 없습니다.');
             return false;
         }
-
-
-
         return true;
     }
 
@@ -397,10 +443,19 @@ function AuctionPage() {
                         <img id="bid_bird" src="/img/bid_bird_img.png" alt="" />
                             <img id="bubble" src="/img/bubble.png" alt="" />
                             <span className="bubble_text">
-                                {bidingLog.length > 0 ? bidingLog[bidingLog.length - 1].M_ID : ''} 님 께서
-                                {bidingLog.length > 0 ? bidingLog[bidingLog.length - 1].AC_POINT.toLocaleString('ko-KR') : ''} 원에
-                                상회 입찰 하였습니다.<br />
-                                남은 경매 시간 {hour < 10 ? '0' + hour : hour}:{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}입니다.
+                                {
+                                    bidingLog.length === 0 ? <>
+                                         남은 경매 시간 {hour < 10 ? '0' + hour : hour}:{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}입니다.    
+                                    </> :
+                                    <>
+                                         {bidingLog.length > 0 ? bidingLog[bidingLog.length - 1].M_ID : ''} 님 께서
+                                        {bidingLog.length > 0 ? bidingLog[bidingLog.length - 1].AC_POINT.toLocaleString('ko-KR') : ''} 원에
+                                        상회 입찰 하였습니다.<br />
+                                         남은 경매 시간 {hour < 10 ? '0' + hour : hour}:{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}입니다.    
+                                    </>
+                                }
+
+                                
 
                             </span>
 
