@@ -49,7 +49,36 @@ module.exports = {
         })
     },
 
-    insertAlarmInfo: () => {
 
-    }
+    getMyAlarm: (id) => {
+        return new Promise((resolve, reject) => {
+            DB.query(`
+            SELECT 
+                * 
+            FROM 
+                TBL_ALARM_OVER_BID 
+            WHERE 
+                M_ID = ? 
+            ORDER BY 
+                AOB_REG_DATE DESC
+            `,
+                [id],
+                (err, myAlarmInfo) => {
+                    console.log("내 알람정보 ---->>>", myAlarmInfo);
+                    if (err) {
+                        reject(err);
+                    }
+
+                    if (myAlarmInfo.length > 0) {
+                        resolve(myAlarmInfo);
+
+                    } else {
+                        resolve('null');
+                    }
+                }
+            )
+        });
+
+    },
+
 }
