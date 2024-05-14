@@ -32,9 +32,53 @@ module.exports = {
                     }
 
                     if (overBidInfo.length > 0) {
+                        let id = overBidInfo[0].M_ID;
+                        let name = overBidInfo[0].GR_NAME;
+                        let occurDate = overBidInfo[0].highestBidDate;
+                        let message = '상회 입찰이 발생하였습니다.'
+                        DB.query(`
+                        INSERT INTO TBL_ALARM_OVER_BID (M_ID, GR_NAME, AOB_TXT, AOB_OCCUR_DATE) 
+                        VALUES (?, ?, ?, ?)`,
+                            [id, name, message, occurDate],
+                            (err, result) => {
+                                console.log("결과 확인 ----------->  ", result);
+                            })
                         resolve(overBidInfo);
                     }
                 })
         })
-    }
+    },
+
+
+    getMyAlarm: (id) => {
+        return new Promise((resolve, reject) => {
+            DB.query(`
+            SELECT 
+                * 
+            FROM 
+                TBL_ALARM_OVER_BID 
+            WHERE 
+                M_ID = ? 
+            ORDER BY 
+                AOB_REG_DATE DESC
+            `,
+                [id],
+                (err, myAlarmInfo) => {
+                    console.log("내 알람정보 ---->>>", myAlarmInfo);
+                    if (err) {
+                        reject(err);
+                    }
+
+                    if (myAlarmInfo.length > 0) {
+                        resolve(myAlarmInfo);
+
+                    } else {
+                        resolve('null');
+                    }
+                }
+            )
+        });
+
+    },
+
 }
