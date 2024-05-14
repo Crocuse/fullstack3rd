@@ -96,6 +96,7 @@ app.use('/admin', require('./routes/adminRouter'));
 app.use('/auction', require('./routes/auctionRouter'));
 app.use('/point', require('./routes/pointRouter'));
 app.use('/customer_center', require('./routes/customerCenterRouter'));
+app.use('/alarm', require('./routes/alarmRouter'));
 // 라우터 설정 끗 -----------------------------------------------------------------------------------------------------------
 
 //app.listen(3001);

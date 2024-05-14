@@ -4,6 +4,7 @@ import io from 'socket.io-client';
 import { useDispatch, useSelector } from 'react-redux';
 import '../../css/Alarm/alarm.css';
 import { setOverBidMsg } from '../../redux/action/setOverBidMsg';
+import axiosGetAlarmInfo from '../../axios/alarm/axiosGetAlarmInfo';
 
 function AuctionAlarm() {
     const socket = io(SERVER_URL.SERVER_URL());
@@ -53,6 +54,11 @@ function AuctionAlarm() {
         };
     }, [socket, notificationOverBid]);
 
+    useEffect(() => {
+        axiosGetAlarmInfo(loginedId);
+    }, []);
+
+
 
     return (
         <>
@@ -68,6 +74,9 @@ function AuctionAlarm() {
 
                     </div>)}
 
+
+                </div>
+                <div>
 
                 </div>
             </div>
