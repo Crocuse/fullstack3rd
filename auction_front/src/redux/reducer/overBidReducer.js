@@ -1,5 +1,5 @@
 const initialState = {
-    message: { id: '', message: '', name: '', date: '' }
+    message: { id: '', message: '', name: '', date: '', grNo: '' }
 }
 
 const overBidReducer = (state = initialState, action) => {

@@ -4,24 +4,19 @@ import io from 'socket.io-client';
 import { useDispatch, useSelector } from 'react-redux';
 import '../../css/Alarm/alarm.css';
 import { setOverBidMsg } from '../../redux/action/setOverBidMsg';
-import axiosGetAlarmInfo from '../../axios/alarm/axiosGetAlarmInfo';
-import { contains } from 'jquery';
+import {axiosGetAlarmInfo} from '../../axios/alarm/axiosAlarm';
+import {axiosSetReadState} from '../../axios/alarm/axiosAlarm';
+import { Link } from 'react-router-dom';
 
 function AuctionAlarm() {
     const socket = io(SERVER_URL.SERVER_URL());
     const loginedId = useSelector((state) => state.loginedInfos.loginedId.loginedId);
 
     const notificationOverBid = useSelector(state => state.notificationOverBid);
-    const message = useSelector(state => state.notificationOverBid.message.message);
     const id = useSelector(state => state.notificationOverBid.message.id);
-    const name = useSelector(state => state.notificationOverBid.message.name);
-    const date = useSelector(state => state.notificationOverBid.message.date);
 
     const [notification, setNotification] = useState(null);
-    const [alarmInfo, setAlarmInfo] = useState('');
-    const [auctionItemName, setAuctionItemName] = useState('');
-    const [alarmMessage, setAlarmMessage] = useState('');
-    const [highestBidDate, setHighestBidDate] = useState('');
+    const [alarmInfo, setAlarmInfo] = useState([]);
 
     const dispatch = useDispatch();
 
@@ -36,8 +31,9 @@ function AuctionAlarm() {
                 let id = data.id;
                 let name = data.name;
                 let date = data.date;
-                dispatch(setOverBidMsg({ id, message, name, date }));
-                setNotification({ id, message, name, date });
+                let grNo = data.grNo;                
+                dispatch(setOverBidMsg({ id, message, name, date, grNo }));
+                setNotification({ id, message, name, date, grNo });
 
             } else {
                 return null;
@@ -49,7 +45,8 @@ function AuctionAlarm() {
             let id = data.id;
             let name = data.name;
             let date = data.date;
-            dispatch(setOverBidMsg({ id, message, name, date }));
+            let grNo = data.grNo;
+            dispatch(setOverBidMsg({ id, message, name, date, grNo }));
         });
 
         return () => {
@@ -74,9 +71,22 @@ function AuctionAlarm() {
         }
         getMyAlarm();
 
-    }, []);
+    }, [loginedId]);
 
+    const alarmOldReminderClickHandler = async (event, data) => {
+        console.log('ALARMCLICKHANDLER()');
 
+        console.log("알람 내용-->",data);
+        if(data.length > 0 ) {
+            event.preventDefault();
+            let result = await axiosSetReadState(data);
+            console.log("여기 오나?????",result);
+        }
+    };
+
+    const alarmOverBidClickHandler = () => {
+
+    }
 
     return (
         <div className="alarm_container">
@@ -84,30 +94,30 @@ function AuctionAlarm() {
                 <p className="alarm_box">알람</p>
             </div>
             <div>
-                {notification && loginedId === id && (
-                    <div>
+                {notification && loginedId === id && notification != '' && (
+                    <Link to={`/auction/auction_page?grNo=${notification.grNo}`}  onClick={() => alarmOverBidClickHandler(notification)}>
                         <p className='over_bid_name'>상품명: {notification.name} </p>
                         <p className='over_bid_message'> {notification.message}</p>
                         <p className='over_bid_date'>{notification.date}</p>
-                    </div>
+                    </Link>
                 )}
             </div>
             <div>
                 <div className='alarmInfoInDB'>
-                    {Array.isArray(alarmInfo) ? (       // 배열인 경우 true 아닐 경우 false 반환 
+                    {Array.isArray(alarmInfo) ? (       // Array.isArray는 배열인 경우 true 아닐 경우 false 반환 
                         alarmInfo.map((alarm, index) => (
-                            <div key={index}>
+                            <Link to={`/auction/auction_page?grNo=${alarm.GR_NO}`} key={index} onClick={(event) => alarmOldReminderClickHandler(event, alarm)}>
                                 <p className='over_bid_name'>상품명: {alarm.GR_NAME}</p>
                                 <p className='over_bid_message'>{alarm.AOB_TXT}</p>
                                 <p className='over_bid_date'>{alarm.AOB_OCCUR_DATE}</p>
-                            </div>
+                            </Link>
                         ))
                     ) : (
-                        <div>
+                        <Link to={`/auction/auction_page?grNo=${alarmInfo.GR_NO}`}  onClick={(event) => alarmOldReminderClickHandler(event, alarmInfo)} >  
                             <p className='over_bid_name'>상품명: {alarmInfo.GR_NAME}</p>
                             <p className='over_bid_message'>{alarmInfo.AOB_TXT}</p>
                             <p className='over_bid_date'>{alarmInfo.AOB_OCCUR_DATE}</p>
-                        </div>
+                        </Link>
                     )}
                 </div>
             </div>
