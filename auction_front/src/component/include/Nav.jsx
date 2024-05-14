@@ -12,7 +12,7 @@ function Nav() {
     const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
     const loginedAdmin = useSelector((state) => state['loginedInfos']['loginedId']['loginedAdmin']);
     const loginedUser = useSelector((state) => state['loginedInfos']['loginedId']['loginedId']);
-    const alarmId = useSelector(state => state.notificationOverBid.message.id);
+    const alarmId = useSelector((state) => state.notificationOverBid.message.id);
     const [alarm, setAlarm] = useState(false);
     const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -141,8 +141,8 @@ function Nav() {
                                 <AuctionAlarm />
                             </div>
                         )}
-                        <img src="/img/bell.png"  id="bell_img"  />
-                        {(loginedUser === alarmId) && <div className="badge"></div>}
+                        <img src="/img/bell.png" id="bell_img" />
+                        {loginedUser === alarmId && <div className="badge"></div>}
                     </Link>
                 </div>
                 <Link to="/member/my_page/modify_info">마이페이지</Link>
@@ -156,7 +156,6 @@ function Nav() {
                 <Link to="/auction/Regist_form">경매등록</Link>
                 <Link to="/point/Point_add_form">포인트충전</Link>
                 <Link to="/Customer_center">고객센터</Link>
-                <Link to="/test">테스트페이지❤</Link>
             </>
         );
 
