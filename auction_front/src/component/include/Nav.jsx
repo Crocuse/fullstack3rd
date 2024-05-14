@@ -13,16 +13,20 @@ function Nav() {
     const loginedAdmin = useSelector((state) => state['loginedInfos']['loginedId']['loginedAdmin']);
     const loginedUser = useSelector((state) => state['loginedInfos']['loginedId']['loginedId']);
     const alarmId = useSelector((state) => state.notificationOverBid.message.id);
-    const [alarm, setAlarm] = useState(false);
     const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const [isAuctionMenuOpen, setIsAuctionMenuOpen] = useState(false);
+    const [showAlarm, setShowAlarm] = useState(false);
 
     useEffect(() => {
         axios_session_check();
     });
 
     const navigate = useNavigate();
+
+    const toggleAlarm = () => {
+        setShowAlarm(!showAlarm);
+    };
 
     let mainMenu;
     let m_menu;
@@ -129,21 +133,12 @@ function Nav() {
         m_menu = (
             <>
                 <div className="drop_down_wrap">
-                    <Link
-                        to="#"
-                        id="bell_wrap"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            setAlarm(!alarm);
-                        }}
-                    >
-                        {alarm && (
-                            <div className="drop_down_content">
-                                <AuctionAlarm />
-                            </div>
-                        )}
+                    <Link to="#" id="bell_wrap" onClick={(e) => { e.preventDefault(); toggleAlarm(); }} >
+                        <div className={showAlarm ? "drop_down_content" : "drop_down_content hidden"}>
+                            <AuctionAlarm />
+                        </div>
                         <img src="/img/bell.png" id="bell_img" />
-                        {/* <div className="badge"></div> */}
+                        {loginedUser === alarmId && <div className="badge"></div>}
                     </Link>
                 </div>
                 <Link to="/member/my_page/modify_info">마이페이지</Link>

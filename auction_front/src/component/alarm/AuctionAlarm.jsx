@@ -15,6 +15,8 @@ function AuctionAlarm() {
     const name = useSelector(state => state.notificationOverBid.message.name);
     const date = useSelector(state => state.notificationOverBid.message.date);
 
+    const [notification, setNotification] = useState(null);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -29,6 +31,7 @@ function AuctionAlarm() {
                 let name = data.name;
                 let date = data.date;
                 dispatch(setOverBidMsg({ id, message, name, date }));
+                setNotification({ id, message, name, date });
 
             } else {
                 return null;
@@ -58,10 +61,10 @@ function AuctionAlarm() {
                     <p className="alarm_box">알람</p>
                 </div>
                 <div>
-                    {loginedId === id && (<div>
-                        <p className='over_bid_name'>상품명: {name} </p>
-                        <p className='over_bid_message'> {message}</p>
-                        <p className='over_bid_date'>{date}</p>
+                    {notification && loginedId === id && (<div>
+                        <p className='over_bid_name'>상품명: {notification.name} </p>
+                        <p className='over_bid_message'> {notification.message}</p>
+                        <p className='over_bid_date'>{notification.date}</p>
 
                     </div>)}
 

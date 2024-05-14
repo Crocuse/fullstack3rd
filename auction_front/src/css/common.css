@@ -76,8 +76,7 @@ header a {
 
 @font-face {
     font-family: 'TTHakgyoansimMonggeulmonggeulR';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_keris@1.0/TTHakgyoansimMonggeulmonggeulR.woff2')
-        format('woff2');
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_keris@1.0/TTHakgyoansimMonggeulmonggeulR.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
 }
@@ -223,4 +222,13 @@ footer {
 
 .drop_down_wrap .badge.hide {
     display: none;
+}
+
+.nav_wrap .drop_down_wrap .drop_down_content.hidden {
+    display: none;
+}
+
+
+.nav_wrap .drop_down_wrap .drop_down_content {
+    display: block;
 }
