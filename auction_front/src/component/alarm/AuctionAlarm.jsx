@@ -106,24 +106,26 @@ function AuctionAlarm() {
             <div>
                 <p className="alarm_box">알람</p>
             </div>
-            <div>
-                {notification && loginedId === id && notification != '' && (
-                    <Link to={`/auction/auction_page?grNo=${notification.grNo}`}  onClick={() => alarmOverBidClickHandler(notification)}>
-                        <p className='over_bid_name'>상품명: {notification.name} </p>
-                        <p className='over_bid_message'> {notification.message}</p>
-                        <p className='over_bid_date'>{notification.date}</p>
-                    </Link>
-                )}
-            </div>
-            <div>
-            <div className='alarmInfoInDB'>
-                {alarmInfo?.map((alarm, index) => (
-                    <Link to={`/auction/auction_page?grNo=${alarm.GR_NO}`} key={index} onClick={(event) => alarmOldReminderClickHandler(event, alarm)}>
-                        <p className='over_bid_name'>상품명: {alarm.GR_NAME}</p>
-                        <p className='over_bid_message'>{alarm.AOB_TXT}</p>
-                        <p className='over_bid_date'>{alarm.AOB_OCCUR_DATE}</p>
-                    </Link>
-                ))}
+            <div className='alram_description'>
+                <div>
+                    {notification && loginedId === id && notification != '' && (
+                        <Link to={`/auction/auction_page?grNo=${notification.grNo}`}  onClick={() => alarmOverBidClickHandler(notification)}>
+                            <p className='over_bid_name'>상품명: {notification.name} </p>
+                            <p className='over_bid_message'> {notification.message}</p>
+                            <p className='over_bid_date'>{notification.date}</p>
+                        </Link>
+                    )}
+                </div>
+                <div>
+                <div className='alarmInfoInDB'>
+                    {alarmInfo?.map((alarm, index) => (
+                        <Link to={`/auction/auction_page?grNo=${alarm.GR_NO}`} key={index} onClick={(event) => alarmOldReminderClickHandler(event, alarm)}>
+                            <p className='over_bid_name'>상품명: {alarm.GR_NAME}</p>
+                            <p className='over_bid_message'>{alarm.AOB_TXT}</p>
+                            <p className='over_bid_date'>{alarm.AOB_OCCUR_DATE}</p>
+                        </Link>
+                    ))}
+                </div>
             </div>
         </div>
         </div>
