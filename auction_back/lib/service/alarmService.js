@@ -24,17 +24,15 @@ module.exports = {
         
         let id = req.body.loginedId;
         let result = await AlarmDao.getMyAlarm(id);
-        console.log("!!!!!!!!!!!!----->>>", result)
         res.json(result);
     },
     
     putAlarmReadState: async (req, res) => {
         console.log("[ALARMSERVICE] putAlarmReadState()");
 
-        let no = req.body.no;
+        let date = req.body.date;
         let id = req.body.id;
-        let result = await AlarmDao.updateReadState(no, id);
-        console.log("여기 결과가 뭐냐면 --------",result);
+        let result = await AlarmDao.updateReadState(date, id);
         res.json(result);
     }
 

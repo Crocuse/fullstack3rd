@@ -83,7 +83,7 @@ function AuctionAlarm() {
             console.log("여기 들ㅇㅓ오나---->",data.AOB_NO);
             let date = data.AOB_OCCUR_DATE;
             let id = data.M_ID;
-            let result = await axiosSetReadState(date, date);
+            let result = await axiosSetReadState(date, id);
             console.log("여기 오나?????",result);
 
         } else {
@@ -100,7 +100,7 @@ function AuctionAlarm() {
         console.log('노티피케이션---------------',notification.date);
         let date = notification.date;
         let id = notification.id;
-        let result = await axiosSetReadState(date, date);
+        let result = await axiosSetReadState(date, id);
         console.log("상회입찰 알림 클릭하고 -------->",result);
 
     }
