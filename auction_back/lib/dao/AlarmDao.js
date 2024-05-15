@@ -70,7 +70,6 @@ module.exports = {
             `,
                 [id],
                 (err, myAlarmInfo) => {
-                    console.log("내 알람정보 ---->>>", myAlarmInfo);
                     if (err) {
                         reject(err);
                     }
@@ -100,8 +99,14 @@ module.exports = {
             (err, result) => {
                 if(err) {
                     reject('fail');
-                }else {
+                }
+
+                if(result && result.changedRows > 0) {
                     resolve('success');
+
+                } else {
+                    console.log("유효하지 않은 쿼리");
+                    reject(false);
                 }
 
            });
