@@ -233,7 +233,15 @@ footer {
     display: block;
 }
 
-.alarm_container .alarmInfoInDB {
+.alarm_container .alram_description {
     max-height: 120px;
     overflow-y: auto;
+}
+
+.alarm_container .alarm_box {
+    font-weight: bold;
+}
+
+.alarm_container .alram_description p {
+    font-size: 0.8em;
 }
