@@ -23,7 +23,7 @@ function PointAddForm() {
     }, []);
 
     const chargeAmountHandler = (e) => {
-        const inputValue = e.target.value.replace(/,/g, '');
+        const inputValue = e.target.value.replace(/[^0-9]/g, '');
         const numberValue = Number(inputValue);
         setChargeAmount(numberValue.toLocaleString());
     };
@@ -33,8 +33,6 @@ function PointAddForm() {
     };
 
     async function axios_get_my_point() {
-        console.log('[POINT ADD FORM.JSX] axios_get_my_point()');
-
         try {
             const response = await axios.post(`${SERVER_URL.SERVER_URL()}/point/getMyPoint`, {
                 loginedId: loginedId,
