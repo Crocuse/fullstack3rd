@@ -1,7 +1,7 @@
 import axios from "axios";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { sessionCheck } from "../../util/sessionCheck";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { SERVER_URL } from "../../config/server_url";
 import '../../css/Auction/AuctionPage.css';
@@ -24,6 +24,8 @@ function AuctionPage() {
     const [product, setProduct] = useState();
     const [extendLevel, setExtendLevel] = useState(0);
     const [highestBidder, setHighestBidder] = useState('');
+    const [isAuctionEnd, setIsAuctionEnd] = useState(false);
+    const [maxLevelBidId, setMaxLevelBidId] = useState([]);
 
     const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
     const loginedId = useSelector(state => state['loginedInfos']['loginedId']['loginedId']);
@@ -32,20 +34,20 @@ function AuctionPage() {
     const grNo = searchParams.get('grNo');
     const auctionLogRef = useRef(null);
 
-    
     useEffect(() => {
         console.log("useEffect5");
         if (grNo) {
             fetchProductData(grNo);
+            fetchExtendLevel(grNo);
         }
     }, [grNo]);
-
+    
     useEffect(() => {
-        console.log("useEffect");
+        console.log("useEffect");        
         const socket = io(`${SERVER_URL.SERVER_URL()}`);
         setLoaingModalShow(true);
         sessionCheck(sessionId, navigate);
-        if(product !== undefined) {
+        if (product !== undefined) {
             if (product.GR_PRICE >= nowPrice) {
                 setNowPirce(product.GR_PRICE);
             } 
@@ -72,6 +74,7 @@ function AuctionPage() {
 
         return () => {
             socket.off('bidmsg');
+            socket.disconnect();
         }
     }, [product])
 
@@ -108,131 +111,57 @@ function AuctionPage() {
     useEffect(() => {
         console.log("useEffect4");
         const id = setInterval(() => {
-            // setHour(23 - today.getHours());
-            //setMinutes(59 - today.getMinutes());
-            // setSeconds(59 - today.getSeconds());
-            setHour(0);
-            setMinutes(42);
+            setHour(23 - today.getHours());
+            setMinutes(59 - today.getMinutes());
             setSeconds(59 - today.getSeconds());
-            isAuctionEnd();
+            isAuctionEndFunc();
         }, 1000);
-        
-
-        timeSetExtendLevel();
-
         return () => clearInterval(id);
     }, [today]);
 
-    const timeSetExtendLevel = () => {
-        if(hour === 0){
-            if(minutes < 30 && minutes > 20) {
-                console.log('levle0');
-                setExtendLevel(1);
-            } else if(minutes <= 35 && minutes > 30) {
-                console.log('levle1');
-                setExtendLevel(2);
-            } else if(minutes <= 40 && minutes > 35) {
-                console.log('levle2');
-                setExtendLevel(3);
-            } else if(minutes <= 45 && minutes > 40) {
-                console.log('levle3');
-                setExtendLevel(4);
-            } else if(minutes <= 50 && minutes > 45) {
-                console.log('levle4');
-                setExtendLevel(5);
-            } else if(minutes <= 55 && minutes > 50) {
-                console.log('levle5');
-                setExtendLevel(6);
-            } else if(minutes < 0 && minutes > 55) {
-                console.log('levle6');
-                setExtendLevel(7);
-            }
-        }
-    }
-
-    const isAuctionEnd = () =>{
-        if(hour === 0 && seconds === 0){
-            if(minutes >= 30 && extendLevel < 1) {
-                return true;
-            } else if(minutes >= 35 && extendLevel < 2) {
-                return true;
-            } else if(minutes >= 40 && extendLevel < 3) {
-                return true;
-            } else if(minutes >= 45 && extendLevel < 4) {
-                return true;
-            } else if(minutes >= 50 && extendLevel < 5) {
-                return true;
-            } else if(minutes >= 55 && extendLevel < 6) {
-                return true;
-            } else if(minutes >= 0 && extendLevel < 7) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    useEffect(()=>{
-        console.log('extendLevel>>>>>>>>>>>>>>>>>>>>>>>>>>>', extendLevel);
-        if(hour === 0){
-            switch(extendLevel) {
-                case 0:
-                    if(minutes < 30 && minutes > 20) {
-                        console.log('levle0');
-                        setExtendLevel(1);
-                    }
-                    break;
-                case 1:
-                    if(minutes < 35 && minutes > 30) {
-                        console.log('levle1');
-                        setExtendLevel(2);
-                    }
-                    break;
-                case 2:
-                    if(minutes < 40 && minutes > 35) {
-                        console.log('levle2');
-                        setExtendLevel(3);
-                    }
-                    break;
-                case 3:
-                    if(minutes < 45 && minutes > 40) {
-                        console.log('levle3');
-                        setExtendLevel(4);
-                    }
-                    break;
-                case 4:
-                    if(minutes < 50 && minutes > 45) {
-                        console.log('levle4');
-                        setExtendLevel(5);
-                    }
-                    break;
-                case 5:
-                    if(minutes < 55 && minutes > 50) {
-                        console.log('levle5');
-                        setExtendLevel(6);
-                    }
-                    break;
-                case 6:
-                    if(minutes < 0 && minutes > 55) {
-                        console.log('levle6');
-                        setExtendLevel(7);
-                    }
-                    break;
-            }    
-        }
-    }, [highestBidder])
+    
 
     async function fetchProductData(grNo) {
+        console.log('fetchProductData');
         try {
-
             const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/list_product?grNo=${grNo}`);
-            if(response.data == 'noProduct')
+            if (response.data == 'noProduct')
                 alert('상품이 없습니다.');
-            else{
+            else {
                 console.log(response.data);
                 setProduct(response.data);
-
                 setLoaingModalShow(false);
-                
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function fetchExtendLevel(grNo) {
+        console.log('fetchExtendLevel');
+        try {
+            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/extend_level?grNo=${grNo}`);
+            if (response.data === '')
+                alert('상품이 없습니다.');
+            else {
+                let level = response.data[0].AC_EXTENDLEVEL;                
+                setExtendLevel(level);
+                getMaxLevelBidId();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function getMaxLevelBidId() {
+        console.log('getMaxLevelBidId');
+        try {
+            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/max_level_id_list?grNo=${grNo}`);
+            if (response.data === '')
+                alert('등록된 아이디가 없습니다.');
+            else {
+                let data = response.data
+                setMaxLevelBidId(data);
             }
         } catch (error) {
             console.error(error);
@@ -240,10 +169,9 @@ function AuctionPage() {
     }
 
     async function nowBidPrice() {
-        console.log('nowBidPrice()');
-
+        console.log('nowBidPrice');
         try {
-            if(product) {
+            if (product) {
                 const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/bidingInfo?grNo=${product.GR_NO}`);
                 if (response.data.length > 0) {
                     let maxIdx = response.data.length - 1;
@@ -251,7 +179,7 @@ function AuctionPage() {
                     setNowPirce(nPrice);
                     setNextBid(nextBidfunc(nPrice));
                     setBidingLog(response.data);
-                    setHighestBidder(response.data[maxIdx].M_ID)
+                    setHighestBidder(response.data[maxIdx].M_ID);
                 } else {
                     console.log('length0');
                     let nPrice = product.GR_PRICE;
@@ -261,29 +189,30 @@ function AuctionPage() {
                 }
                 setLoaingModalShow(false);
             }
-            
-
         } catch (error) {
             console.log(error);
         }
     }
 
-    async function normalBid() {
+    async function normalBid(level) {
         console.log('normalBid()');
         try {
-            if(product) {
-                const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/biding?grNo=${product.GR_NO}&asPrice=${nextBid}`);
-                
+            if (product) {
+                const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/biding?grNo=${product.GR_NO}&asPrice=${nextBid}&extendLevel=${level}`);
                 if (response.data == 'fail') {
                     alert('입찰에 실패 했습니다.');
                     window.location.reload();
                     setLoaingModalShow(false);
+                    timeSetExtendLevel(false);
                 } else {
                     alert('입찰에 성공 했습니다.');
                     nowBidPrice();
                     setLoaingModalShow(false);
-                    setIsIoSocket(prev => !prev)
+                    setIsIoSocket(prev => !prev);
                     setIsBidType(false);
+                    if (level > 6) {
+                        getMaxLevelBidId();
+                    }
                 }
             }
         } catch (error) {
@@ -292,23 +221,24 @@ function AuctionPage() {
         }
     }
 
-    async function asBid() {
+    async function asBid(level) {
         console.log('asBid()');
-
         try {
-            if(product) {
-                const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/asBiding?grNo=${product.GR_NO}&asPrice=${asPrice}`);
-                    
+            if (product) {
+                const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/asBiding?grNo=${product.GR_NO}&asPrice=${asPrice}&extendLevel=${level}`);
                 if (response.data == 'fail') {
                     alert('입찰에 실패 했습니다.');
                     window.location.reload();
                     setLoaingModalShow(false);
+                    timeSetExtendLevel(false);
                 } else {
                     alert('입찰에 성공 했습니다.');
                     nowBidPrice();
                     setLoaingModalShow(false);
-                    setIsIoSocket(prev => !prev)
-                    setIsBidType(true);
+                    setIsIoSocket(prev => !prev);
+                    if (level > 6) {
+                        getMaxLevelBidId();
+                    }
                 }
             }
         } catch (error) {
@@ -330,11 +260,9 @@ function AuctionPage() {
 
     const nextBidfunc = (nPrice) => {
         console.log('nextBidfunc');
-
         let tmpnextbid = nPrice + (nPrice * 0.05);
         tmpnextbid = Math.round(tmpnextbid / 100) * 100;
         return tmpnextbid;
-
     }
 
     const leftBtnClickHandler = () => {
@@ -359,43 +287,84 @@ function AuctionPage() {
 
     const normalBidBtnHandler = () => {
         console.log("normalBidBtnHandler()");
-        if(checkId()) {
+        if (minutes <= 5 && extendLevel > 6) {
+            alert('최종 입력 단계 입니다. 호가 입찰만 가능 합니다.');
+            return;
+        }
+        if (checkId()) {
             sessionCheck(sessionId, navigate);
             setLoaingModalShow(true);
-            normalBid();
+            setIsBidType(false);
+            handleExtendLevelOrBid(false);
         }
     }
 
     const asBidBtnHandler = () => {
         console.log("asBidBtnHandler()");
         if (checkAsBid(asPrice) && checkId()) {
+            if (minutes <= 5 && extendLevel > 6) {
+                //eslint-disable-next-line no-restricted-globals
+                if (!confirm('단 한번만 입찰이 가능 합니다. 이 금액으로 입력 하시겠습니까?'))
+                    return;
+            }
             sessionCheck(sessionId, navigate);
             setLoaingModalShow(true);
-            asBid();
+            setIsBidType(true);
+            handleExtendLevelOrBid(true);
         }
     }
 
+    const handleExtendLevelOrBid = (isBidType) => {
+        if (shouldExtendLevel()) {
+            const newLevel = extendLevel + 1;
+            setExtendLevel(newLevel);
+            performBid(newLevel, isBidType);
+        } else {
+            performBid(extendLevel, isBidType);
+        }
+    };
+
+    const performBid = (level, isBidType) => {
+        console.log('performBid()');
+        console.log('<<<<<<<<<<<<<<<<<<<<',level)
+        if (isBidType) {
+            asBid(level);
+        } else {
+            normalBid(level);
+        }
+    };
+
     const checkId = () => {
         console.log('checkId()');
-        if(highestBidder === loginedId){
-            alert('이미 최고 입찰자 입니다.');
-            return false;
+        sessionCheck(sessionId, navigate);
+
+        if (minutes <= 5 && extendLevel > 6) {
+            console.log(maxLevelBidId.length);
+            for(let i = 0; i<maxLevelBidId.length; i++){
+                console.log(maxLevelBidId[i]);
+                if(maxLevelBidId[i].M_ID === loginedId){
+                    alert('이미 입찰 이력이 있습니다.');
+                    return false;
+                }
+            }
+            return true;    
+        } else {
+            if (highestBidder === loginedId) {
+                alert('이미 최고 입찰자 입니다.');
+                return false;
+            }
         }
-        return true;
     }
 
     const checkAsBid = (price) => {
         price = price.replaceAll(',', '');
-
         let tmpPrice = (nowPrice * 0.1) + nowPrice;
         if (price < tmpPrice) {
             alert('현재 가격보다 10%이상 호가 해야 합니다.');
             return false;
         }
-
         tmpPrice = Math.round(price / 100) * 100;
         tmpPrice = Math.abs(price - tmpPrice);
-        console.log(tmpPrice);
         if (tmpPrice !== 0) {
             alert('10원 단위 이하의 금액은 사용할 수 없습니다.');
             return false;
@@ -403,6 +372,66 @@ function AuctionPage() {
         return true;
     }
 
+    const timeSetExtendLevel = (isSucces) => {
+        console.log('timeSetExtendLevel()');
+        if (!isSucces) {
+            let tmpLevel = extendLevel;
+            if (tmpLevel > 0) {
+                tmpLevel--;
+                setExtendLevel(tmpLevel);
+            }
+            return;
+        }
+        if (hour === 0) {
+            if (minutes < 40 && minutes > 30) {
+                console.log('levle1');
+                setExtendLevel(1);
+            } else if (minutes <= 30 && minutes > 25) {
+                console.log('levle2');
+                setExtendLevel(2);
+            } else if (minutes <= 25 && minutes > 20) {
+                console.log('levle3');
+                setExtendLevel(3);
+            } else if (minutes <= 20 && minutes > 15) {
+                console.log('levle4');
+                setExtendLevel(4);
+            } else if (minutes <= 15 && minutes > 10) {
+                console.log('levle5');
+                setExtendLevel(5);
+            } else if (minutes <= 10 && minutes > 5) {
+                console.log('levle6');
+                setExtendLevel(6);
+            } else if (minutes <= 5) {
+                console.log('levle7');
+                setExtendLevel(7);
+            }
+        }
+    }
+
+    const shouldExtendLevel = () => {
+        return hour === 0 && (
+            (minutes < 40 && minutes > 30 && extendLevel !== 1) ||
+            (minutes <= 30 && minutes > 25 && extendLevel !== 2) ||
+            (minutes <= 25 && minutes > 20 && extendLevel !== 3) ||
+            (minutes <= 20 && minutes > 15 && extendLevel !== 4) ||
+            (minutes <= 15 && minutes > 10 && extendLevel !== 5) ||
+            (minutes <= 10 && minutes > 5 && extendLevel !== 6) ||
+            (minutes <= 5 && extendLevel !== 7)
+        );
+    }
+
+    const isAuctionEndFunc = () => {
+        if (hour === 0 && seconds === 0) {
+            const endTimes = [30, 25, 20, 15, 10, 5];
+            const levels = [1, 2, 3, 4, 5, 6];
+            for (let i = 0; i < endTimes.length; i++) {
+                if (minutes <= endTimes[i] && extendLevel < levels[i]) {
+                    setIsAuctionEnd(true);
+                    break;
+                }
+            }
+        }
+    }
     return (
         <article>
             <div className="auction_page_wrap">
@@ -454,11 +483,7 @@ function AuctionPage() {
                                          남은 경매 시간 {hour < 10 ? '0' + hour : hour}:{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}입니다.    
                                     </>
                                 }
-
-                                
-
                             </span>
-
                     </div>
                     <div className="bubble_text">
 
@@ -491,7 +516,6 @@ function AuctionPage() {
             </div>
             {loadingModalShow === true ? <LoadingModal /> : null}
         </article>
-
     );
 }
 export default AuctionPage;

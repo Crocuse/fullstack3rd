@@ -35,5 +35,15 @@ router.get('/asBiding', (req, res) => {
     auctionService.asBiding(req, res);
 });
 
+router.get('/extend_level', (req, res) => {
+    console.log('/auction/extend_level');
+    auctionService.extendLevel(req, res);
+});
+
+router.get('/max_level_id_list', (req, res) => {
+    console.log('/auction/max_level_id_list');
+    auctionService.maxLevelIdList(req, res);
+});
+
 module.exports = router;
 
