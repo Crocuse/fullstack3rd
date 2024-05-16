@@ -58,9 +58,6 @@ function SignUpForm() {
 
     const mailCodeCheckBtnClick = () => {
         let inputCode = $('input[name="mail_code"]').val();
-        console.log('🚀 ~ mailCodeCheckBtnClick ~ mailCode:', mailCode);
-        console.log('🚀 ~ mailCodeCheckBtnClick ~ inputCode:', inputCode);
-
         if (inputCode === mailCode) {
             setMailCodeCheck(true);
             $('#mail_check_false').text('');
