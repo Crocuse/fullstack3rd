@@ -12,7 +12,6 @@ function customer_center() {
                     </div>
                     <h1>비드버드 고객센터</h1>
                     <div className="bidbird_info">
-                        <p>전화 : 031-123-4567</p>
                         <p>이메일 : bidbird_bidbird@gmail.com</p>
                         <p>카카오톡 채널 : '@비드버드' 검색</p>
                     </div>

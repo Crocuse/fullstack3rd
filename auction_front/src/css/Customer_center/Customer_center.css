@@ -11,7 +11,7 @@
     position: absolute;
     left: 0;
     box-sizing: border-box;
-    padding: 20px;
+    padding: 25px;
     background-color: #ececec;
     text-align: center;
     display: flex;
@@ -21,7 +21,7 @@
 }
 
 .customer_center_wrap .header_height {
-    height: 280px;
+    height: 268px;
 }
 
 .customer_center_wrap h1 {
