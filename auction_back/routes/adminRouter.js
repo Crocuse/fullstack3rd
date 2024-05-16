@@ -87,4 +87,8 @@ router.put(`/qna`, (req, res) => {
     adminService.updateQna(req, res);
 });
 
+router.delete(`/qna`, (req, res) => {
+    adminService.deleteQna(req, res);
+});
+
 module.exports = router;

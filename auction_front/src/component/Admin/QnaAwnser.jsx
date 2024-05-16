@@ -25,7 +25,7 @@ const QnaAwnser = () => {
     useEffect(() => {
         sessionCheck(sessionId, navigate);
         axios_getQnalist(currentPage);
-    }, [sessionId, navigate, temp, currentPage]);
+    }, [sessionId, navigate, temp, currentPage, selectQna]);
 
     // Handler ------------------------------------------------------------------------------------------------------------------------
 
@@ -138,6 +138,7 @@ const QnaAwnser = () => {
                         {qnaList[selectQna].Q_ANSWER === null ? (
                             <QnaBoard
                                 setLoaingModalShow={setLoaingModalShow}
+                                setSelectQna={setSelectQna}
                                 q_no={qnaList[selectQna].Q_NO}
                                 setTemp={setTemp}
                             />
