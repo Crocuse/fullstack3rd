@@ -138,16 +138,19 @@ function RegistForm() {
     }
 
     return (
-        <article>
+        <article className="regist_form">
+            <h1>상품 등록</h1>
             <div>
+                
                 <form action="" method="" name="">
-                상품 이름 <br/>
-                <input type="text" name="gr_name" value={grName} onChange={(e) => grNameChangeHandler(e)}/> <br/>
-                희망 가격 <br/>
-                <input type="number" name="gr_price" value={grPrice} onChange={(e) => grPriceChangeHandler(e)}/> <br/>
-                간단한 설명 <br/>
-                <input type="text" name="gr_info" value={grInfo} onChange={(e) => grInfoChangeHandler(e)}/> <br/>
-
+                <div className="regist_input_wrap">
+                    <span className="regist_text">상품 이름 </span>
+                    <input type="text" className="regist_input" name="gr_name" value={grName} onChange={(e) => grNameChangeHandler(e)}/> <br/><br/>
+                    <span className="regist_text">희망 가격 </span>
+                    <input type="number" className="regist_input" name="gr_price" value={grPrice} onChange={(e) => grPriceChangeHandler(e)}/> <br/><br/>
+                    <span className="regist_text">간단한 설명 </span>
+                    <input type="text" className="regist_input" name="gr_info" value={grInfo} onChange={(e) => grInfoChangeHandler(e)}/> <br/><br/>
+                </div>
                 <label
                     className={`upload_area${isActive ? ' active' : ''}`}
                     onDragEnter={DragStartHandler}
@@ -174,9 +177,10 @@ function RegistForm() {
                     )}
                 </label>
                 <br/>
-
-                <input type="button" value="Auction Regist" onClick={AuctionRegistBtnClickHandler} />
-                <input type="reset" value="RESET"/>
+                    <div className="regist_btn_wrap">
+                        <input className="regist_btn" type="button" value="Auction Regist" onClick={AuctionRegistBtnClickHandler} />
+                        <input className="regist_btn" type="reset" value="RESET"/>
+                    </div>    
                 </form>
             </div>    
         </article>

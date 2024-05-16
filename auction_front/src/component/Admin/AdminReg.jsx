@@ -164,7 +164,7 @@ function AdminReg() {
             <form method="post" name="admin_reg_form">
 
                 <div className="input_wrap">
-                    <label htmlFor="a_id">관리자 아이디</label><br/>
+                    <label htmlFor="a_id">관리자 아이디</label>
                     <input type="text" id="a_id" name="a_id" placeholder="아이디를 입력해주세요." onChange={IdChangeHandler}/>
                     <input type="button" value={"아이디 중복 검사"} onClick={IdCheckbtnClick}/>
                     <span id="id_check_false" className="check_msg"></span>
@@ -172,12 +172,12 @@ function AdminReg() {
                 </div>
 
                 <div className="input_wrap">
-                    <label htmlFor="a_pw">비밀번호</label><br/>
+                    <label htmlFor="a_pw">비밀번호</label>
                     <input type="password" id="a_pw" name="a_pw" placeholder="비밀번호를 입력해주세요." onChange={pwChangehandler}/>
                 </div>
 
                 <div className="input_wrap">
-                    <label htmlFor="a_pw_check">비밀번호 확인</label><br/>
+                    <label htmlFor="a_pw_check">비밀번호 확인</label>
                     <input type="password" id="a_pw_check" name="a_pw_check" placeholder="비밀번호 확인을 입력해주세요." onChange={pwChangehandler}/>
                 </div>
 
@@ -187,19 +187,19 @@ function AdminReg() {
                 </div>
 
                 <div className="input_wrap">
-                    <label htmlFor="a_name">관리자 이름</label><br/>
+                    <label htmlFor="a_name">관리자 이름</label>
                     <input type="text" id="a_name" name="a_name" placeholder="관리자 이름을 입력하세요"/>
                 </div>
 
                 <div className="input_wrap">
-                    <label>관리자 이메일</label><br/>
+                    <label>관리자 이메일</label>
                     <input type="text" name="mail1" />
                     @
                     <input type="text" name="mail2" />
                 </div>
                 
                 <div className="input_wrap">
-                    <label>관리자 연락처</label><br/>
+                    <label>관리자 연락처</label>
                     <select name="phone1">
                         <option value="010">010</option>
                         <option value="011">011</option>
