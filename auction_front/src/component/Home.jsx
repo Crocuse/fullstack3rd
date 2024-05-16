@@ -1,7 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../css/Home.css';
+import { axiosBidImg } from '../axios/home/axiosHome';
+import { useSelector } from 'react-redux';
 
 function Home() {
+    const loginedId = useSelector((state) => state.loginedInfos.loginedId.loginedId);
+
+    useEffect(() => {
+        bidImgList();
+
+    }, []);
+
+    const bidImgList = async () => {
+        let result = await axiosBidImg(loginedId);
+        console.log(result);
+    }
     return (
         <article>
             <div className="home_wrap">
