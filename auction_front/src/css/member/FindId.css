@@ -53,7 +53,6 @@
 }
 
 .find_id_wrap .finded button {
-    margin-top: 30px;
     padding: 8px 20px;
     background-color: #007bff;
     color: #fff;
@@ -64,11 +63,11 @@
 }
 
 .find_id_wrap .find_btn {
-    margin-top: 30px;
     text-align: center;
 }
 
 .find_id_wrap .find_btn input[type='button'] {
+    margin-top: 20px;
     padding: 10px 20px;
     background-color: #007bff;
     color: #fff;

@@ -229,10 +229,8 @@ const MemberDao = {
         });
     },
 
-    modifyPassword: (req) => {
+    modifyPassword: (id, pw) => {
         return new Promise((resolve, reject) => {
-            let id = req.body.id;
-            let pw = req.body.pw;
             DB.query(
                 'UPDATE TBL_MEMBER SET M_PW = ?, M_MOD_DATE = NOW() WHERE M_ID = ?',
                 [bcrypt.hashSync(pw, 10), id],
@@ -391,9 +389,8 @@ const MemberDao = {
         });
     },
 
-    findId: (req) => {
+    findId: (mail) => {
         return new Promise((resolve, reject) => {
-            let mail = req.body.mail;
             DB.query('SELECT M_ID FROM TBL_MEMBER WHERE M_MAIL = ?', [mail], (err, m_id) => {
                 if (err) {
                     console.log(err);
