@@ -56,7 +56,11 @@ function AuctionPage() {
         
         socket.on('bidmsg', (data) => {
             console.log(data);
-            setBidingLog(data.log);
+            setBidingLog(data.log.map(log => ({
+                ...log,
+                M_ID: maskId(log.M_ID)
+            })));
+
 
             if (data.bid !== '') {
                 if (!data.bidType) {
@@ -119,8 +123,6 @@ function AuctionPage() {
         return () => clearInterval(id);
     }, [today]);
 
-    
-
     async function fetchProductData(grNo) {
         console.log('fetchProductData');
         try {
@@ -178,7 +180,10 @@ function AuctionPage() {
                     let nPrice = response.data[maxIdx].AC_POINT;
                     setNowPirce(nPrice);
                     setNextBid(nextBidfunc(nPrice));
-                    setBidingLog(response.data);
+                    setBidingLog(response.data.map(log => ({
+                        ...log,
+                        M_ID: maskId(log.M_ID)
+                    })));
                     setHighestBidder(response.data[maxIdx].M_ID);
                 } else {
                     console.log('length0');
@@ -247,6 +252,11 @@ function AuctionPage() {
         }
     }
 
+    const maskId = (id) => {
+        if (id.length <= 2) return id;
+        return id.substring(0, 2) + '*'.repeat(id.length - 2);
+    };
+
     const asPriceChangeHandler = (e) => {
         console.log('asPriceChangeHandler()');
         let value = e.target.value;
@@ -287,7 +297,7 @@ function AuctionPage() {
 
     const normalBidBtnHandler = () => {
         console.log("normalBidBtnHandler()");
-        if (minutes <= 5 && extendLevel > 6) {
+        if (hour === 0 && minutes <= 5 && extendLevel > 6) {
             alert('최종 입력 단계 입니다. 호가 입찰만 가능 합니다.');
             return;
         }
@@ -302,7 +312,7 @@ function AuctionPage() {
     const asBidBtnHandler = () => {
         console.log("asBidBtnHandler()");
         if (checkAsBid(asPrice) && checkId()) {
-            if (minutes <= 5 && extendLevel > 6) {
+            if (hour === 0 && minutes <= 5 && extendLevel > 6) {
                 //eslint-disable-next-line no-restricted-globals
                 if (!confirm('단 한번만 입찰이 가능 합니다. 이 금액으로 입력 하시겠습니까?'))
                     return;
@@ -338,7 +348,7 @@ function AuctionPage() {
         console.log('checkId()');
         sessionCheck(sessionId, navigate);
 
-        if (minutes <= 5 && extendLevel > 6) {
+        if (hour === 0 && minutes <= 5 && extendLevel > 6) {
             console.log(maxLevelBidId.length);
             for(let i = 0; i<maxLevelBidId.length; i++){
                 console.log(maxLevelBidId[i]);
@@ -352,6 +362,8 @@ function AuctionPage() {
             if (highestBidder === loginedId) {
                 alert('이미 최고 입찰자 입니다.');
                 return false;
+            } else {
+                return true; 
             }
         }
     }
