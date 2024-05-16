@@ -9,6 +9,7 @@
 
 #alarm_container .alram_description_wrap p {
     font-size: 0.8em;
+    font-weight: normal;
 }
 
 #alarm_container .alram_description_wrap .alarm_description {
@@ -27,7 +28,7 @@
 #alarm_container .alarm_a:hover {
     background-color: #f5f5f5;
     cursor: pointer;
-    color: #2978ffc0;
+    color: #49a5f5;
 }
 
 #alarm_container .alarm_title {
