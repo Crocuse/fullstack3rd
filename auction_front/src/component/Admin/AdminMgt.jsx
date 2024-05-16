@@ -215,7 +215,7 @@ function AdminMgt() {
         
         <article className="admin-mgt">
             
-            <div className="admin-mgt-title">ADMIN MANAGEMENT</div>
+            <div className="admin-mgt-title">어드민 관리</div>
             <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }}>
                 <AgGridReact
                     rowData={rowData}

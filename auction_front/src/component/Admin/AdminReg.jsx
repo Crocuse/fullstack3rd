@@ -159,7 +159,7 @@ function AdminReg() {
     // view
     return(
         <div className="admin_reg_wrap">
-            <div className="admin-reg-wrap-title">ADMIN REGIST</div>
+            <div className="admin-reg-wrap-title">어드민 등록</div>
 
             <form method="post" name="admin_reg_form">
 

@@ -1,13 +1,18 @@
 /* AuctionResult.css */
 
 .auction-result {
-    padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 50px auto;
+  padding: 40px;
   }
   
   .auction-result-title {
+    color: #333;
     font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
+    text-align: center;
   }
   
 
