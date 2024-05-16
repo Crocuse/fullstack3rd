@@ -182,6 +182,20 @@ const auctionService = {
             }
         })
     },
+    endedAuction: (req, res) => {
+        let grNo = req.query.grNo;
+
+        DB.query(`SELECT M_ID FROM TBL_AUCTION_CURRENT WHERE GR_NO = ? AND AC_EXTENDLEVEL = 7;`,
+        [grNo],
+        (error, result) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log(result);
+                res.json(result);
+            }
+        })
+    },
     bidmsg: async (socketData, socket) => {
         let loglist = [];
         if (socketData.grNo !== '') {
