@@ -25,7 +25,6 @@ module.exports = {
              `,
                 [grNo, grNo],
                 (err, overBidInfo) => {
-                    console.log('디비 뭐 나오는지 확인 ====================>', overBidInfo)
                     if (err) {
                         reject(err);
                     }
@@ -40,7 +39,6 @@ module.exports = {
                         VALUES (?, ?, ?, ?)`,
                             [id, name, message, occurDate],
                             (err, result) => {
-                                console.log("결과 확인 ----------->  ", result);
                             })
                         resolve(overBidInfo);
                     }
@@ -78,7 +76,7 @@ module.exports = {
                         resolve(myAlarmInfo);
 
                     } else {
-                        resolve(null); //check
+                        resolve(null);
                     }
                 }
             )
@@ -86,7 +84,7 @@ module.exports = {
 
     },
 
-    updateReadState : (date, id) => {
+    updateReadState: (date, id) => {
         return new Promise((resolve, reject) => {
             DB.query(`
             UPDATE 
@@ -95,21 +93,21 @@ module.exports = {
                 AOB_READ = 1
             WHERE
                 M_ID = ? AND AOB_OCCUR_DATE = ?`,
-            [id, date],
-            (err, result) => {
-                if(err) {
-                    reject('fail');
-                }
+                [id, date],
+                (err, result) => {
+                    if (err) {
+                        reject('fail');
+                    }
 
-                if(result && result.changedRows > 0) {
-                    resolve('success');
+                    if (result && result.changedRows > 0) {
+                        resolve('success');
 
-                } else {
-                    console.log("유효하지 않은 쿼리");
-                    reject(false);
-                }
+                    } else {
+                        console.log("유효하지 않은 쿼리");
+                        reject(false);
+                    }
 
-           });
+                });
         });
     }
 

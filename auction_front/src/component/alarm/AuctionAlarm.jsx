@@ -3,52 +3,39 @@ import { SERVER_URL } from '../../config/server_url';
 import io from 'socket.io-client';
 import { useDispatch, useSelector } from 'react-redux';
 import '../../css/Alarm/alarm.css';
-import { setOverBidMsg } from '../../redux/action/setOverBidMsg';
 import { axiosGetAlarmInfo } from '../../axios/alarm/axiosAlarm';
 import { axiosSetReadState } from '../../axios/alarm/axiosAlarm';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { setAlarmInfo } from '../../redux/action/setAlarmInfo';
+import { sessionCheck } from '../../util/sessionCheck';
 
 function AuctionAlarm() {
     const socket = io(SERVER_URL.SERVER_URL());
+    const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
     const loginedId = useSelector((state) => state.loginedInfos.loginedId.loginedId);
 
-    const notificationOverBid = useSelector(state => state.notificationOverBid);
-    const id = useSelector(state => state.notificationOverBid.message.id);
     const alarmInfo = useSelector(state => state.alarmInfo);
 
-    const [notification, setNotification] = useState(null);
-    // const [alarmInfo, setAlarmInfo] = useState([]);
-    const [alarmState, setAlarmState] = useState(false);
+    const [updateAlarm, setUpdateAlarm] = useState(false);
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
+        sessionCheck(sessionId, navigate);
 
-        socket.on('notificationOverBid', (data) => {
+    }, [sessionId]);
+
+    useEffect(() => {
+        socket.on('notificationOverBid', () => {
             console.log('Client NOTIFICATION OVER BID');
-            if (data) {
 
-                let message = data.message;
-                let id = data.id;
-                let name = data.name;
-                let date = data.date;
-                let grNo = data.grNo;
-                dispatch(setOverBidMsg({ id, message, name, date, grNo }));
-                setNotification({ id, message, name, date, grNo });
+            getMyAlarm();
 
-            } else {
-                return null;
-            }
         });
 
         socket.on('notificationOverBidErr', (data) => {
-            let message = data.message;
-            let id = data.id;
-            let name = data.name;
-            let date = data.date;
-            let grNo = data.grNo;
-            dispatch(setOverBidMsg({ id, message, name, date, grNo }));
+            dispatch(setAlarmInfo('ERROR'));
         });
 
         return () => {
@@ -56,22 +43,37 @@ function AuctionAlarm() {
             socket.off('notificationOverBidErr');
             socket.disconnect();
         };
-    }, [socket, notificationOverBid]);
+    }, [socket]);
 
     useEffect(() => {
 
-        getMyAlarm();
+        if (unReadAlarm) {
+            getMyAlarm();
+        }
 
-    }, [loginedId]);
+    }, [updateAlarm]);
+
+    const unReadAlarm = () => {
+        if (alarmInfo !== '알림없음' && alarmInfo !== 'ERROR' && alarmInfo.length > 0) {
+            const hasUnReadAlarm = alarmInfo.some(alarmInfo => alarmInfo.AOB_READ === 0)
+            setUpdateAlarm(hasUnReadAlarm); // true
+
+        } else {
+            setUpdateAlarm(false);
+        }
+    }
 
     const getMyAlarm = async () => {
 
         try {
             let result = await axiosGetAlarmInfo(loginedId);
             console.log("getMyAlarm() -->", result);
-            if (result)
+            if (result !== null) {
                 dispatch(setAlarmInfo(result));
-            console.log("결과 체크--alarmInfo==== > ", alarmInfo);
+
+            } else {
+                dispatch(setAlarmInfo('알림없음'));
+            }
 
         } catch (error) {
 
@@ -86,7 +88,6 @@ function AuctionAlarm() {
             let date = data.AOB_OCCUR_DATE;
             let id = data.M_ID;
             let result = await axiosSetReadState(date, id);
-            console.log("결과 체크--1 > ", result);
             getMyAlarm();
 
         } else {
@@ -101,7 +102,6 @@ function AuctionAlarm() {
         let date = notification.date;
         let id = notification.id;
         let result = await axiosSetReadState(date, id);
-        console.log("결과 체크-- 2 --> ", result);
         getMyAlarm();
 
     }
@@ -113,25 +113,24 @@ function AuctionAlarm() {
             </div>
             <div className='alram_description'>
                 <div>
-                    {notification && loginedId === id && notification != '' && (
-                        <Link to={`/auction/auction_page?grNo=${notification.grNo}`} onClick={() => alarmOverBidClickHandler(notification)}>
-                            <p className='over_bid_name'>상품명: {notification.name} </p>
-                            <p className='over_bid_message'> {notification.message}</p>
-                            <p className='over_bid_date'>{notification.date}</p>
-                        </Link>
-                    )}
-                </div>
-                <div>
                     <div className='alarmInfoInDB'>
-                        {alarmInfo?.map((alarm, index) => (
-                            <Link to={`/auction/auction_page?grNo=${alarm.GR_NO}`} key={index} onClick={(event) => alarmOldReminderClickHandler(event, alarm)}>
-                                <p className='over_bid_name'>상품명: {alarm.GR_NAME}</p>
-                                <p className='over_bid_message'>{alarm.AOB_TXT}</p>
-                                <p className='over_bid_date'>{alarm.AOB_OCCUR_DATE}</p>
-                            </Link>
-                        ))}
+                        {Array.isArray(alarmInfo) ? (
+                            alarmInfo.map((alarm, index) => (
+                                <Link to={`/auction/auction_page?grNo=${alarm.GR_NO}`} key={index} onClick={(event) => alarmOldReminderClickHandler(event, alarm)}>
+                                    <p className='over_bid_name'>상품명: {alarm.GR_NAME}</p>
+                                    <p className='over_bid_message'>{alarm.AOB_TXT}</p>
+                                    <p className='over_bid_date'>{alarm.AOB_OCCUR_DATE}</p>
+                                </Link>
+                            ))
+                        ) : alarmInfo === '알림없음' ? (
+                            <p>알림이 없습니다.</p>
+                        ) : alarmInfo === 'ERROR' ? (
+                            <p>ERROR 관리자에 문의하세요. <br />고객센터 : 031-1234-5678</p>
+                        ) : null}
+
                     </div>
                 </div>
+
             </div>
         </div>
     );
