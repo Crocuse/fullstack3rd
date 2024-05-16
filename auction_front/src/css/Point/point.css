@@ -9,15 +9,13 @@
     margin-bottom: 220px;
 }
 
-
 .point_article .add_point_wrap {
     text-align: center;
-
 }
 
-.point_article .add_point_title>p {
+.point_article .add_point_title > p {
     color: #333;
-    font-size: 2.0em;
+    font-size: 2em;
     margin-bottom: 40px;
     text-align: center;
     font-weight: bold;
@@ -36,7 +34,6 @@
 
 .point_article .add_point_wrap .charge_amount_btn:hover {
     background-color: #1565c0;
-
 }
 
 .point_article .add_point_wrap .add_point_content div {
