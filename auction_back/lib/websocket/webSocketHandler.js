@@ -9,7 +9,7 @@ function webSocketHandler(socket, io) {
     });
 
     socket.on('overBid', (socketData) => {
-        console.log('오버비드 핸들러로 들어옴 ~~~~~~~~')
+        console.log('[WEBSOCKET HANDLER]OVER BID');
         alarmService.notificataionOverBid(socketData, socket, io);
     });
 

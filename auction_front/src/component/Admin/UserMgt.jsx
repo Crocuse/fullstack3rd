@@ -88,7 +88,7 @@ function UserMgt() {
             {
                 field: 'M_ADDR',
                 headerName: '유저 주소',
-                width:306,
+                width:308,
                 editable: (params) => editModeRows[params.data.M_ID] || false,
             },
             {

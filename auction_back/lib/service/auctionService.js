@@ -88,8 +88,15 @@ const auctionService = {
     biding: (req, res) => {
         let grNo = req.query.grNo;
         let asPrice = req.query.asPrice;
+        let extendLevel = req.query.extendLevel;
         let mId = req.user;
 
+        if(typeof mId === 'object') {
+            mId = mId.id;
+        }
+
+        console.log(mId);
+    
         DB.query(`SELECT MAX(AC_POINT) AS max_price FROM TBL_AUCTION_CURRENT WHERE GR_NO = ?`,
             [grNo],
             (error, result) => {
@@ -98,37 +105,42 @@ const auctionService = {
                 } else {
                     let maxPrice = result[0].max_price;
                     if (asPrice > maxPrice) {
-                        DB.query(`insert into TBL_AUCTION_CURRENT(m_id, ac_point, gr_no) values(?, ?, ?)`,
-                            [mId, asPrice, grNo],
+                        DB.query(`INSERT INTO TBL_AUCTION_CURRENT(M_ID, AC_POINT, GR_NO, AC_EXTENDLEVEL) VALUES(?, ?, ?, ?)`,
+                            [mId, asPrice, grNo, extendLevel],  // 수정된 부분
                             (error, result) => {
                                 if (error) {
                                     console.log(error);
                                 } else {
                                     res.json(result);
                                 }
-                            })
+                            });
                     } else {
                         res.json('fail');
                     }
                 }
-            })
+            });
     },
     asBiding: (req, res) => {
         let grNo = req.query.grNo;
         let asPrice = req.query.asPrice;
         let mId = req.user;
+        let extendLevel = req.query.extendLevel;
         asPrice = asPrice.replaceAll(',','');
 
-        DB.query(`SELECT MAX(AC_POINT) AS max_price FROM TBL_AUCTION_CURRENT WHERE GR_NO = ?`,
-        [grNo],
+        console.log('>>>>>>>>>>>>>>>>',extendLevel);
+
+        console.log
+
+         DB.query(`SELECT MAX(AC_POINT) AS max_price FROM TBL_AUCTION_CURRENT WHERE GR_NO = ?`,
+       [grNo],
         (error, result) => {
             if (error) {
                 console.log(error);
             } else {
                 let maxPrice = result[0].max_price;
                 if (asPrice > maxPrice) {
-                    DB.query(`insert into TBL_AUCTION_CURRENT(m_id, ac_point, gr_no) values(?, ?, ?)`,
-                        [mId, asPrice, grNo],
+                    DB.query(`INSERT INTO TBL_AUCTION_CURRENT(M_ID, AC_POINT, GR_NO, AC_EXTENDLEVEL) VALUES(?, ?, ?, ?)`,
+                        [mId, asPrice, grNo, extendLevel],
                         (error, result) => {
                             if (error) {
                                 console.log(error);
@@ -139,6 +151,34 @@ const auctionService = {
                 } else {
                     res.json('fail');
                 }
+            }
+        })
+    },
+    extendLevel: (req, res) => {
+        let grNo = req.query.grNo;
+
+        DB.query(`SELECT AC_EXTENDLEVEL FROM TBL_AUCTION_CURRENT WHERE GR_NO = ? ORDER BY AC_EXTENDLEVEL DESC LIMIT 1;`,
+        [grNo],
+        (error, result) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('>>>>>>>>>>>', result);
+                res.json(result);
+            }
+        })
+    },
+    maxLevelIdList: (req, res) => {
+        let grNo = req.query.grNo;
+
+        DB.query(`SELECT M_ID FROM TBL_AUCTION_CURRENT WHERE GR_NO = ? AND AC_EXTENDLEVEL = 7;`,
+        [grNo],
+        (error, result) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log(result);
+                res.json(result);
             }
         })
     },
@@ -171,7 +211,7 @@ const auctionService = {
             bidType : socketData.isBidType,
         });
     },
-    
+
 }
 
 module.exports = auctionService;

@@ -12,7 +12,6 @@ function Nav() {
     const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
     const loginedAdmin = useSelector((state) => state['loginedInfos']['loginedId']['loginedAdmin']);
     const loginedUser = useSelector((state) => state['loginedInfos']['loginedId']['loginedId']);
-    const alarmId = useSelector((state) => state.notificationOverBid.message.id);
     const alarmInfo = useSelector(state => state.alarmInfo);
     const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -22,9 +21,6 @@ function Nav() {
 
     useEffect(() => {
         axios_session_check();
-        console.log('showBadge: ====>', showBadge);
-        console.log('loginedUser: ====>', loginedUser);
-        console.log('alarmId: ====>', alarmId);
 
     }, [sessionId]);
 
@@ -61,21 +57,18 @@ function Nav() {
     }
     // badge -----------------------------------------------------------------------------------------------------------------
     const unReadAlarm = () => {
-        if (alarmInfo.length > 0) {
+        if (alarmInfo !== '알림없음' && alarmInfo.length > 0) {
             const hasUnReadAlarm = alarmInfo.some(alarmInfo => alarmInfo.AOB_READ === 0);
             if (hasUnReadAlarm) {
                 setShowBadge(true);
-                console.log('새로운 알람');
 
             } else {
                 setShowBadge(false);
-                console.log('새로운 알람 없음');
 
             }
 
         } else {
             setShowBadge(false);
-            console.log('새로운 알람 없음');
         }
     }
     // Toggle functions ------------------------------------------------------------------------------------------------------

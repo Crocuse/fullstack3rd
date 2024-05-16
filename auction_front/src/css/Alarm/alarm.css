@@ -1,3 +1,56 @@
-.alarm_container.show {
-    display: block;
+#alarm_container .alarm_box {
+    font-weight: bold;
+    margin: 0;
+}
+
+#alarm_container .alram_description_wrap .alarm_description {
+    height: 100px;
+}
+
+#alarm_container .alram_description_wrap p {
+    font-size: 0.8em;
+    font-weight: normal;
+}
+
+#alarm_container .alram_description_wrap .alarm_description {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+#alarm_container .alarm_a {
+    box-sizing: content-box;
+}
+
+#alarm_container {
+    cursor: default;
+}
+
+#alarm_container .alarm_a:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+    color: #49a5f5;
+}
+
+#alarm_container .alarm_title {
+    text-align: center;
+}
+
+#alarm_container {
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 220px;
+}
+
+#alarm_container .alram_description_wrap .alarmInfoInDB .over_bid_group {
+    margin-bottom: -7px !important;
+    margin-top: -7px !important;
+}
+
+#alarm_container .alram_description_wrap .alarmInfoInDB {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
