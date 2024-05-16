@@ -91,8 +91,12 @@ const auctionService = {
         let extendLevel = req.query.extendLevel;
         let mId = req.user;
 
-        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<>",extendLevel);
+        if(typeof mId === 'object') {
+            mId = mId.id;
+        }
 
+        console.log(mId);
+    
         DB.query(`SELECT MAX(AC_POINT) AS max_price FROM TBL_AUCTION_CURRENT WHERE GR_NO = ?`,
             [grNo],
             (error, result) => {
@@ -102,19 +106,19 @@ const auctionService = {
                     let maxPrice = result[0].max_price;
                     if (asPrice > maxPrice) {
                         DB.query(`INSERT INTO TBL_AUCTION_CURRENT(M_ID, AC_POINT, GR_NO, AC_EXTENDLEVEL) VALUES(?, ?, ?, ?)`,
-                            [mId, asPrice, grNo, extendLevel],
+                            [mId, asPrice, grNo, extendLevel],  // 수정된 부분
                             (error, result) => {
                                 if (error) {
                                     console.log(error);
                                 } else {
                                     res.json(result);
                                 }
-                            })
+                            });
                     } else {
                         res.json('fail');
                     }
                 }
-            })
+            });
     },
     asBiding: (req, res) => {
         let grNo = req.query.grNo;
