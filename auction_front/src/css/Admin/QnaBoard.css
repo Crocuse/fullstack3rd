@@ -29,4 +29,5 @@
     font-size: 1em;
     cursor: pointer;
     -webkit-text-stroke: 0;
+    margin-left: 10px;
 }

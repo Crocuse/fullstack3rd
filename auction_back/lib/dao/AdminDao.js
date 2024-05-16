@@ -1,30 +1,35 @@
 // dbSql.js
-const DB = require("../db/db");
+const DB = require('../db/db');
 const bcrypt = require('bcrypt');
 
-
 const AdminDao = {
-    
-    isMember:(id)=>{
+    isMember: (id) => {
         return new Promise((resolve, reject) => {
-          DB.query(`
+            DB.query(
+                `
           SELECT COUNT(*) as count FROM (
             SELECT M_ID as ID FROM TBL_MEMBER
             UNION ALL
             SELECT A_ID as ID FROM TBL_ADMIN
           ) AS combined WHERE ID = ?
-        `, [id],(err, rst) => {
-              if (err) {
-                  console.log(err);
-                  reject('error');
-              }
-              if (rst[0].count > 0) {resolve('is_member');}
-              else {resolve('not_member');}
-          });
-        });  
+        `,
+                [id],
+                (err, rst) => {
+                    if (err) {
+                        console.log(err);
+                        reject('error');
+                    }
+                    if (rst[0].count > 0) {
+                        resolve('is_member');
+                    } else {
+                        resolve('not_member');
+                    }
+                }
+            );
+        });
     },
 
-    adminRegistConfirm:(post)=>{
+    adminRegistConfirm: (post) => {
         return new Promise((resolve, reject) => {
             DB.query(
                 'INSERT INTO TBL_ADMIN(A_ID, A_PW, A_NAME, A_MAIL, A_PHONE) VALUES(?, ?, ?, ?, ?)',
@@ -36,11 +41,12 @@ const AdminDao = {
                     }
                     console.log(err);
                     resolve('fail');
-                });
+                }
+            );
         });
     },
 
-    adminList:()=>{
+    adminList: () => {
         return new Promise((resolve, reject) => {
             DB.query(`SELECT * FROM TBL_ADMIN ORDER BY A_REG_DATE ASC`, (err, admins) => {
                 if (err) {
@@ -52,7 +58,7 @@ const AdminDao = {
         });
     },
 
-    memberList:()=>{
+    memberList: () => {
         return new Promise((resolve, reject) => {
             DB.query(`SELECT * FROM TBL_MEMBER ORDER BY M_REG_DATE DESC`, (err, members) => {
                 if (err) {
@@ -64,20 +70,19 @@ const AdminDao = {
         });
     },
 
-    adminDelete:(id)=>{
+    adminDelete: (id) => {
         return new Promise((resolve, reject) => {
-            
-        DB.query(`DELETE FROM TBL_ADMIN WHERE A_ID =?`, [id], (err, result) => {
-            if (err) {
-                reject(null);
-            } else {
-                resolve(result.affectedRows);
-            }
-        });
+            DB.query(`DELETE FROM TBL_ADMIN WHERE A_ID =?`, [id], (err, result) => {
+                if (err) {
+                    reject(null);
+                } else {
+                    resolve(result.affectedRows);
+                }
+            });
         });
     },
 
-    memberDelete:(id,uuId)=>{
+    memberDelete: (id, uuId) => {
         return new Promise((resolve, reject) => {
             DB.query(
                 `UPDATE TBL_MEMBER SET M_STATUS = 1,
@@ -95,11 +100,12 @@ const AdminDao = {
                     } else {
                         resolve(result.affectedRows);
                     }
-                });
+                }
+            );
         });
     },
-    
-    adminModifyConfirm:(post)=>{
+
+    adminModifyConfirm: (post) => {
         return new Promise((resolve, reject) => {
             DB.query(
                 `UPDATE TBL_ADMIN SET A_NAME =?,A_PHONE=?,A_MAIL=?,A_MOD_DATE = NOW() WHERE A_ID =?`,
@@ -111,11 +117,12 @@ const AdminDao = {
                     } else {
                         resolve(result.affectedRows);
                     }
-                });
-        })
+                }
+            );
+        });
     },
 
-    memberModifyConfirm:(post)=>{
+    memberModifyConfirm: (post) => {
         return new Promise((resolve, reject) => {
             DB.query(
                 `UPDATE TBL_MEMBER SET M_MAIL =?,M_PHONE=?,M_ADDR=?, M_MOD_DATE = NOW() WHERE M_ID =?`,
@@ -127,11 +134,12 @@ const AdminDao = {
                     } else {
                         resolve(result.affectedRows);
                     }
-                });
+                }
+            );
         });
     },
 
-    goodsList:()=>{
+    goodsList: () => {
         return new Promise((resolve, reject) => {
             DB.query(
                 `SELECT 
@@ -156,11 +164,12 @@ const AdminDao = {
                     } else {
                         resolve(goods);
                     }
-                });
+                }
+            );
         });
     },
 
-    goodsStateChange:(post)=>{
+    goodsStateChange: (post) => {
         return new Promise((resolve, reject) => {
             DB.query(
                 `UPDATE TBL_GOODS_REGIST SET GR_APPROVAL=?, GR_RECEIPT=? ,GR_MOD_DATE=NOW() WHERE GR_NO = ?`,
@@ -194,11 +203,12 @@ const AdminDao = {
                     } else {
                         resolve('success');
                     }
-                });
+                }
+            );
         });
     },
 
-    goodsRegList:()=>{
+    goodsRegList: () => {
         return new Promise((resolve, reject) => {
             DB.query(
                 `SELECT 
@@ -221,7 +231,8 @@ const AdminDao = {
                     } else {
                         resolve(goods);
                     }
-                });
+                }
+            );
         });
     },
 
@@ -236,29 +247,31 @@ const AdminDao = {
                     } else {
                         resolve(count[0]['COUNT(*)']);
                     }
-            });
-        });
-    },
-    
-    updateAuctionSchedule: (as_state, as_start_date, as_location_num, gr_no) => {
-        return new Promise((resolve, reject) => {
-          DB.query(
-            `UPDATE TBL_AUCTION_SCHEDULE SET AS_STATUS = ?, AS_START_DATE = ?, AS_LOCATION_NUM = ?, AS_MOD_DATE = NOW() WHERE GR_NO = ?`,
-            [as_state, as_start_date, as_location_num, gr_no],
-            (err, result) => {
-              if (err) {
-                reject(err);
-              } else {
-                resolve(result);
-              }
-            }
-          );
+                }
+            );
         });
     },
 
-    auctionResultList:()=>{
+    updateAuctionSchedule: (as_state, as_start_date, as_location_num, gr_no) => {
         return new Promise((resolve, reject) => {
-                DB.query(`
+            DB.query(
+                `UPDATE TBL_AUCTION_SCHEDULE SET AS_STATUS = ?, AS_START_DATE = ?, AS_LOCATION_NUM = ?, AS_MOD_DATE = NOW() WHERE GR_NO = ?`,
+                [as_state, as_start_date, as_location_num, gr_no],
+                (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    },
+
+    auctionResultList: () => {
+        return new Promise((resolve, reject) => {
+            DB.query(
+                `
                     SELECT 
                     AR.GR_NO,
                     AR.AR_IS_BID,
@@ -276,18 +289,20 @@ const AdminDao = {
                     LEFT JOIN TBL_DELIVERY_GOODS AS DG ON AR.GR_NO = DG.GR_NO
                     ORDER BY
                     AR.AR_REG_DATE DESC
-                `, (err, results) => {
-                        if (err) {
-                            console.log(err);
-                            resolve(null);
-                        } else {
-                            resolve(results);
-                        }
-                    });
-            });
+                `,
+                (err, results) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(null);
+                    } else {
+                        resolve(results);
+                    }
+                }
+            );
+        });
     },
 
-    deliveryGoods:(gr_no)=>{
+    deliveryGoods: (gr_no) => {
         return new Promise((resolve, reject) => {
             DB.query(`UPDATE TBL_DELIVERY_GOODS SET DG_STATUS = 1 WHERE GR_NO = ?`, [gr_no], (err, result) => {
                 if (err) {
@@ -300,10 +315,10 @@ const AdminDao = {
         });
     },
 
-    getSalesData:()=>{
+    getSalesData: () => {
         return new Promise((resolve, reject) => {
-
-            DB.query(`
+            DB.query(
+                `
             SELECT 
             AR.GR_NO,
             AR.AR_IS_BID,
@@ -319,19 +334,20 @@ const AdminDao = {
                 JOIN
             TBL_AUCTION_SCHEDULE TAS ON AR.GR_NO = TAS.GR_NO
                 JOIN
-            TBL_GOODS_REGIST GR ON AR.GR_NO = GR.GR_NO`, 
-            (err, datas) => {
-                if (err) {
-                    console.log(err);
-                    resolve(null);
-                } else {
-                    resolve(datas);
+            TBL_GOODS_REGIST GR ON AR.GR_NO = GR.GR_NO`,
+                (err, datas) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(null);
+                    } else {
+                        resolve(datas);
+                    }
                 }
-            });
+            );
         });
     },
 
-    goodsRejectReason:(post)=>{
+    goodsRejectReason: (post) => {
         return new Promise((resolve, reject) => {
             DB.query(
                 `UPDATE TBL_GOODS_REGIST SET GR_REJECTED_REASON =?, GR_APPROVAL = 2 WHERE GR_NO =?`,
@@ -347,8 +363,8 @@ const AdminDao = {
             );
         });
     },
-    
-    getQnaList:(limit,offset)=>{
+
+    getQnaList: (limit, offset) => {
         return new Promise((resolve, reject) => {
             DB.query('SELECT COUNT(*) AS total FROM TBL_QNA', (err, countResult) => {
                 if (err) {
@@ -357,21 +373,25 @@ const AdminDao = {
                 } else {
                     let total = countResult[0].total;
                     let totalPages = Math.ceil(total / limit);
-    
-                    DB.query('SELECT * FROM TBL_QNA ORDER BY Q_NO DESC LIMIT ? OFFSET ?', [limit, offset], (err, list) => {
-                        if (err) {
-                            console.log(err);
-                            resolve(false);
-                        } else {
-                            resolve({ list, totalPages });
+
+                    DB.query(
+                        'SELECT * FROM TBL_QNA ORDER BY Q_NO DESC LIMIT ? OFFSET ?',
+                        [limit, offset],
+                        (err, list) => {
+                            if (err) {
+                                console.log(err);
+                                resolve(false);
+                            } else {
+                                resolve({ list, totalPages });
+                            }
                         }
-                    });
+                    );
                 }
             });
         });
     },
 
-    updateQna:(answer,q_no)=>{
+    updateQna: (answer, q_no) => {
         return new Promise((resolve, reject) => {
             DB.query(
                 `UPDATE TBL_QNA SET Q_ANSWER = ?, Q_ANSWER_DATE = NOW(), Q_MOD_DATE = NOW() WHERE Q_NO = ?`,
@@ -387,9 +407,18 @@ const AdminDao = {
         });
     },
 
-    
-
-
+    deleteQna: (q_no) => {
+        return new Promise((resolve, reject) => {
+            DB.query(`DELETE FROM TBL_QNA WHERE Q_NO = ?`, [q_no], (err, rst) => {
+                if (err) {
+                    console.log(err);
+                    resolve(false);
+                } else {
+                    resolve(true);
+                }
+            });
+        });
+    },
 };
 
 module.exports = AdminDao;

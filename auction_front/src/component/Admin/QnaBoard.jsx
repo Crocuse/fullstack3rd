@@ -59,6 +59,14 @@ const QnaBoard = (props) => {
         }
     };
 
+    const deleteQnaClick = () => {
+        let confirm = window.confirm('문의를 삭제하시겠습니까? 부적절한 내용의 문의만 삭제해주세요.');
+
+        if (!confirm) return;
+
+        axios_deleteQna();
+    };
+
     // Axios ------------------------------------------------------------------------------------------------------------------------
     async function axios_updateQNA(editorData) {
         try {
@@ -77,11 +85,30 @@ const QnaBoard = (props) => {
         }
     }
 
+    async function axios_deleteQna() {
+        try {
+            const response = await axios.delete(`${SERVER_URL.SERVER_URL()}/admin/qna`, {
+                params: { q_no: props.q_no },
+            });
+
+            if (response.data === true) {
+                alert('문의가 삭제되었습니다.');
+                props.setSelectQna(-1);
+            } else {
+                alert('서버 오류로 문의 삭제에 실패했습니다.');
+            }
+        } catch (error) {
+            console.log(error);
+            alert('통신 에러가 발생했습니다.');
+        }
+    }
+
     // View ------------------------------------------------------------------------------------------------------------------------
     return (
         <div className="qna_board_wrap">
             <div className="editor" ref={editorRef}></div>
             <div className="btn_wrap">
+                <button onClick={deleteQnaClick}>문의삭제</button>
                 <button onClick={writeQnaClick}>답변등록</button>
             </div>
         </div>
