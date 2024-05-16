@@ -13,20 +13,32 @@ function Nav() {
     const loginedAdmin = useSelector((state) => state['loginedInfos']['loginedId']['loginedAdmin']);
     const loginedUser = useSelector((state) => state['loginedInfos']['loginedId']['loginedId']);
     const alarmId = useSelector((state) => state.notificationOverBid.message.id);
+    const alarmInfo = useSelector(state => state.alarmInfo);
     const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const [isAuctionMenuOpen, setIsAuctionMenuOpen] = useState(false);
     const [showAlarm, setShowAlarm] = useState(false);
+    const [showBadge, setShowBadge] = useState(false);
 
     useEffect(() => {
         axios_session_check();
+        console.log('showBadge: ====>', showBadge);
+        console.log('loginedUser: ====>', loginedUser);
+        console.log('alarmId: ====>', alarmId);
+
     }, [sessionId]);
+
+
+    useEffect(() => {
+        unReadAlarm()
+    }, [alarmInfo]);
 
     const navigate = useNavigate();
 
     const toggleAlarm = () => {
         setShowAlarm(!showAlarm);
     };
+
 
     let mainMenu;
     let m_menu;
@@ -47,7 +59,25 @@ function Nav() {
             console.log(error);
         }
     }
+    // badge -----------------------------------------------------------------------------------------------------------------
+    const unReadAlarm = () => {
+        if (alarmInfo.length > 0) {
+            const hasUnReadAlarm = alarmInfo.some(alarmInfo => alarmInfo.AOB_READ === 0);
+            if (hasUnReadAlarm) {
+                setShowBadge(true);
+                console.log('새로운 알람');
 
+            } else {
+                setShowBadge(false);
+                console.log('새로운 알람 없음');
+
+            }
+
+        } else {
+            setShowBadge(false);
+            console.log('새로운 알람 없음');
+        }
+    }
     // Toggle functions ------------------------------------------------------------------------------------------------------
     const toggleAdminMenu = () => setIsAdminMenuOpen(!isAdminMenuOpen);
     const toggleUserMenu = () => setIsUserMenuOpen(!isUserMenuOpen);
@@ -145,7 +175,7 @@ function Nav() {
                             <AuctionAlarm />
                         </div>
                         <img src="/img/bell.png" id="bell_img" />
-                        {loginedUser === alarmId && <div className="badge"></div>}
+                        {showBadge && <div className="badge"></div>}
                     </Link>
                 </div>
                 <Link to="/member/my_page/modify_info">마이페이지</Link>
