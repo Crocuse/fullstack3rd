@@ -45,5 +45,10 @@ router.get('/max_level_id_list', (req, res) => {
     auctionService.maxLevelIdList(req, res);
 });
 
+router.get('/endedAuction', (req, res) => {
+    console.log('/auction/endedAuction');
+    auctionService.endedAuction(req, res);
+});
+
 module.exports = router;
 
