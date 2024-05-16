@@ -67,7 +67,6 @@ function AuctionAlarm() {
 
         try {
             let result = await axiosGetAlarmInfo(loginedId);
-            console.log("getMyAlarm() -->", result);
             if (result !== null) {
                 dispatch(setAlarmInfo(result));
 
