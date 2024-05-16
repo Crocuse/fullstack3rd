@@ -67,6 +67,7 @@ function AuctionGoodsReg() {
                 headerName: '경매시작가',
                 width: 130,
                 filter: 'agNumberColumnFilter',
+                valueFormatter: p =>  p.value.toLocaleString(),
             },
             {
                 field: 'AS_STATUS',
@@ -266,7 +267,7 @@ function AuctionGoodsReg() {
     return (
         <article className="auction-goods-reg">
         
-            <div className="auction-goods-reg-title">AuctionGoodsReg</div>
+            <div className="auction-goods-reg-title">경매 등록</div>
             <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }}>
                 <AgGridReact
                     ref={gridRef}

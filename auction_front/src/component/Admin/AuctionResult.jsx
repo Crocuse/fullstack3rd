@@ -81,6 +81,7 @@ function AuctionResult() {
                 headerName: '낙찰 포인트',
                 width: 130,
                 filter: 'agNumberColumnFilter',
+                valueFormatter: p =>  p.value.toLocaleString()
             },
             {
                 field: 'AR_REG_DATE',
@@ -170,7 +171,7 @@ function AuctionResult() {
 
     return (
         <article className="auction-result">
-            <div className="auction-result-title">AuctionResult</div>
+            <div className="auction-result-title">경매결과 조회</div>
             <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }}>
                 <AgGridReact
                     ref={gridRef}

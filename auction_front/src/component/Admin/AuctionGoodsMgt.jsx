@@ -34,7 +34,11 @@ function AuctionGoodsMgt() {
       { headerName: '상품번호', field: 'GR_NO', width: 104 },
       { headerName: '상품명', field: 'GR_NAME' },
       { headerName: '등록ID', field: 'M_ID', width: 120 },
-      { headerName: '상품가격', field: 'GR_PRICE', width: 107 },
+      { headerName: '상품가격', 
+        field: 'GR_PRICE', 
+        width: 107 ,
+        valueFormatter: p =>  p.value.toLocaleString()
+      },
       {
         headerName: '등록상태',
         field: 'GR_APPROVAL',
@@ -228,7 +232,7 @@ function AuctionGoodsMgt() {
 
   return (
     <article className="auction-goods-mgt">
-      <div className="auction-goods-mgt-title">AuctionGoodsMgt</div>
+      <div className="auction-goods-mgt-title">경매신청 물품 관리</div>
       <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }}>
         <AgGridReact
           rowClassRules={rowClassRules}

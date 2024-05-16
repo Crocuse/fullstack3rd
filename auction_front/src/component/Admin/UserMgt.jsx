@@ -66,7 +66,7 @@ function UserMgt() {
             },
             {
                 field: 'M_MAIL',
-                headerName: '멤버 이메일',
+                headerName: '유저 이메일',
                 editable: (params) => {
                     if (params.data.M_SOCIAL_ID) {
                         return false;
@@ -81,13 +81,13 @@ function UserMgt() {
             },
             {
                 field: 'M_PHONE',
-                headerName: '멤버 연락처',
+                headerName: '유저 연락처',
                 width: 125,
                 editable: (params) => editModeRows[params.data.M_ID] || false,
             },
             {
                 field: 'M_ADDR',
-                headerName: '멤버 주소',
+                headerName: '유저 주소',
                 width:306,
                 editable: (params) => editModeRows[params.data.M_ID] || false,
             },
@@ -106,7 +106,7 @@ function UserMgt() {
 
             },
             {   field: 'M_REG_DATE', 
-                headerName: '멤버 등록일',
+                headerName: '유저 등록일',
                 filter: "agDateColumnFilter",
                 width:180,
                 filterParams: {
@@ -127,7 +127,7 @@ function UserMgt() {
             },
             {
                     field: 'M_MOD_DATE',
-                    headerName: '멤버 수정일',
+                    headerName: '유저 수정일',
                     filter: 'agDateColumnFilter',
                     width:180,
                     filterParams: {
@@ -315,7 +315,7 @@ function UserMgt() {
 
     return (
         <article className="user-mgt">
-            <div className="user-mgt-title">MEMBER MANAGEMENT</div>
+            <div className="user-mgt-title">유저 관리</div>
             <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }}>
                 <AgGridReact
                     rowClassRules={rowClassRules}

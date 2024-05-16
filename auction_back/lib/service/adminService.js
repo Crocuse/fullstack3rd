@@ -45,7 +45,7 @@ const adminService = {
     },
 
     memberModifyConfirm:async (req, res) => {
-        let result = await AdminDao.adminModifyConfirm(req.body.data);
+        let result = await AdminDao.memberModifyConfirm(req.body.data);
         res.json(result);
     },
     goodsList:async (req, res) => {
