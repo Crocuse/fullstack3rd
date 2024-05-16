@@ -222,7 +222,7 @@ function ModifyInfo() {
                                 </div>
 
                                 <button onClick={modifyPhoneConfirmClick}>수정</button>
-                                <button onClick={modifyPhoneBtnClick}>수정 취소</button>
+                                <button onClick={modifyPhoneBtnClick}>취소</button>
                             </>
                         )}
                     </div>
@@ -259,7 +259,7 @@ function ModifyInfo() {
                                     <input type="text" name="extraAddress" id="extraAddress" placeholder="참고항목" />
                                 </div>
                                 <button onClick={modifyAddrConfirmClick}>수정</button>
-                                <button onClick={modifyAddrBtnClick}>수정 취소</button>
+                                <button onClick={modifyAddrBtnClick}>취소</button>
                             </>
                         )}
                     </div>

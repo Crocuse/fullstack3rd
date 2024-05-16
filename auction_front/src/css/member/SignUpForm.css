@@ -17,7 +17,12 @@
 
 .signup_wrap .input_wrap {
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.signup_wrap .input_wrap p {
+    margin: 0;
+    margin-bottom: 7px;
 }
 
 .signup_wrap .input_name {

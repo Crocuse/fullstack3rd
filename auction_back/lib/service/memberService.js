@@ -140,7 +140,9 @@ const memberService = {
     },
 
     modifyPassword: async (req, res) => {
-        let result = await MemberDao.modifyPassword(req);
+        let id = req.body.id;
+        let pw = req.body.pw;
+        let result = await MemberDao.modifyPassword(id, pw);
         res.json(result);
     },
 
@@ -176,6 +178,38 @@ const memberService = {
     },
 
     findId: async (req, res) => {
+        let mail = req.query.mail;
+        let m_id = await MemberDao.findId(mail);
+        if (m_id === null) {
+            res.json('error');
+            return;
+        }
+
+        if (m_id.length === 0) {
+            res.json('not_found');
+        } else if (m_id[0].M_ID.slice(0, 2) === 'G_') {
+            res.json('google_id');
+        } else if (m_id[0].M_ID.slice(0, 2) === 'N_') {
+            res.json('naver_id');
+        } else if (m_id[0].M_ID.slice(0, 2) === 'K_') {
+            res.json('kakao_id');
+        } else {
+            let mail = req.query.mail;
+            let subject = `[비드버드] 회원님의 아이디 정보입니다.`;
+            let title = `아이디 정보 안내`;
+            let text = `안녕하세요. 비드버드를 이용해주셔서 감사드립니다. <br />
+            회원님의 아이디 찾기 결과를 보내드립니다. <br />
+            비밀번호를 잊어버린 경우 비밀번호 찾기를 이용해주세요.`;
+            let code = `${m_id[0].M_ID}`;
+            let html = mailService.generateCodeHTML(title, text, code);
+
+            mailService.sendGmail(mail, subject, html);
+            res.json('mail_send');
+        }
+    },
+
+    findPw: async (req, res) => {
+        let mail = req.query.mail;
         let m_id = await MemberDao.findId(req);
 
         if (m_id === null) {
@@ -192,41 +226,10 @@ const memberService = {
         } else if (m_id[0].M_ID.slice(0, 2) === 'K_') {
             res.json('kakao_id');
         } else {
-            let mail = req.body.mail;
-            let subject = `[비드버드] 회원님의 아이디 정보입니다.`;
-            let title = `아이디 정보 안내`;
-            let text = `안녕하세요. 비드버드를 이용해주셔서 감사드립니다. <br />
-            회원님의 아이디 찾기 결과를 보내드립니다. <br />
-            비밀번호를 잊어버린 경우 비밀번호 찾기를 이용해주세요.`;
-            let code = `${m_id[0].M_ID}`;
-            let html = mailService.generateCodeHTML(title, text, code);
-
-            mailService.sendGmail(mail, subject, html);
-            res.json('mail_send');
-        }
-    },
-
-    findPw: async (req, res) => {
-        let mail = req.body.mail;
-        let m_id = await MemberDao.findId(req);
-
-        if (m_id === null) {
-            res.json('error');
-            return;
-        }
-
-        if (m_id.length === 0) {
-            res.json('not_found');
-        } else if (m_id[0].M_ID.slice(0, 2) === 'G_') {
-            res.json('google_id');
-        } else if (m_id[0].M_ID.slice(0, 2) === 'N_') {
-            res.json('naver_id');
-        } else {
             // 임시 비밀번호 생성 (8자리)
             let newPw = generateTemp(8);
 
-            req.body.pw = newPw;
-            let modifyRst = await MemberDao.modifyPassword(req);
+            let modifyRst = await MemberDao.modifyPassword(m_id[0].M_ID, newPw);
 
             if (modifyRst === 'error') {
                 res.json('error');

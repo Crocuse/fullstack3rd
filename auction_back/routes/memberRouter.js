@@ -62,7 +62,7 @@ router.get('/social_id_check', (req, res) => {
     memberService.socialIdCheck(req, res);
 });
 
-router.post('/modify_password', (req, res) => {
+router.put('/modify_password', (req, res) => {
     console.log('/modify_password');
     memberService.modifyPassword(req, res);
 });
@@ -91,11 +91,11 @@ router.get('/logout_confirm', (req, res) => {
     memberService.logoutConfirm(req, res);
 });
 
-router.post('/find_id', (req, res) => {
+router.get('/find_id', (req, res) => {
     memberService.findId(req, res);
 });
 
-router.post('/find_pw', (req, res) => {
+router.get('/find_pw', (req, res) => {
     memberService.findPw(req, res);
 });
 

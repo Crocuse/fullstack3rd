@@ -94,7 +94,7 @@ function ModifyPassword() {
 
     async function axios_modify_password(id, pw) {
         try {
-            const response = await axios.post(`${SERVER_URL.SERVER_URL()}/member/modify_password`, { id, pw });
+            const response = await axios.put(`${SERVER_URL.SERVER_URL()}/member/modify_password`, { id, pw });
 
             if (response.data === 'error') alert('비밀번호 변경에 오류가 발생했습니다.');
             else if (response.data === 'modified') {
