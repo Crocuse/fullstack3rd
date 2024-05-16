@@ -10,7 +10,6 @@ export const axiosGetAlarmInfo = async (loginedId) => {
             loginedId: loginedId
         });
         let alarmInfo = result.data;
-        console.log('엑시오스 결과', alarmInfo);
         return alarmInfo;
 
     } catch (error) {

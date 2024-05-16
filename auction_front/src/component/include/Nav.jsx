@@ -61,17 +61,14 @@ function Nav() {
             const hasUnReadAlarm = alarmInfo.some(alarmInfo => alarmInfo.AOB_READ === 0);
             if (hasUnReadAlarm) {
                 setShowBadge(true);
-                console.log('새로운 알람');
 
             } else {
                 setShowBadge(false);
-                console.log('새로운 알람 없음');
 
             }
 
         } else {
             setShowBadge(false);
-            console.log('새로운 알람 없음');
         }
     }
     // Toggle functions ------------------------------------------------------------------------------------------------------
