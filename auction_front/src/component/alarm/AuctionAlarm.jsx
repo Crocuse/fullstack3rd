@@ -106,19 +106,19 @@ function AuctionAlarm() {
     }
 
     return (
-        <div className="alarm_container">
-            <div>
+        <div id="alarm_container">
+            <div className='alarm_title'>
                 <p className="alarm_box">알람</p>
             </div>
-            <div className='alram_description'>
-                <div>
+            <div className='alram_description_wrap'>
+                <div className='alarm_description'>
                     <div className='alarmInfoInDB'>
                         {Array.isArray(alarmInfo) ? (
                             alarmInfo.map((alarm, index) => (
-                                <Link to={`/auction/auction_page?grNo=${alarm.GR_NO}`} key={index} onClick={(event) => alarmOldReminderClickHandler(event, alarm)}>
-                                    <p className='over_bid_name'>상품명: {alarm.GR_NAME}</p>
-                                    <p className='over_bid_message'>{alarm.AOB_TXT}</p>
-                                    <p className='over_bid_date'>{alarm.AOB_OCCUR_DATE}</p>
+                                <Link className='alarm_a' to={`/auction/auction_page?grNo=${alarm.GR_NO}`} key={index} onClick={(event) => alarmOldReminderClickHandler(event, alarm)}>
+                                    <p className='over_bid_group'>상품명: {alarm.GR_NAME}    <br />
+                                        {alarm.AOB_TXT} <br />
+                                        {alarm.AOB_OCCUR_DATE}</p>
                                 </Link>
                             ))
                         ) : alarmInfo === '알림없음' ? (
