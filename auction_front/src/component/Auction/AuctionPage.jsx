@@ -579,7 +579,7 @@ function AuctionPage() {
                                         </div>
                                     ))
                                 }
-                            </div>
+                            </div> 
                         </div>
                         <div className="auction_btn">
                             <button onClick={normalBidBtnHandler} disabled={isAuctionEnd}>입찰({nextBid.toLocaleString('ko-KR')}₩)</button><br />
