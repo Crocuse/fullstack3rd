@@ -234,6 +234,9 @@ function AuctionPage() {
 
     async function endedAuction() {
         console.log('endedAuction()');
+
+        if(product.M_ID === undefined) 
+            product.M_ID = null;
         
         const ended = {
             grNo,
@@ -474,8 +477,9 @@ function AuctionPage() {
 
         const endTimes = [30, 25, 20, 15, 10, 5];
         const levels = [1, 2, 3, 4, 5, 6];
+
         for (let i = 0; i < endTimes.length; i++) {
-            if (minutes <= endTimes[i] && extendLevel < levels[i]) {
+            if (hour === 0 && minutes <= endTimes[i] && extendLevel < levels[i]) {
                 return true;
             }
         }
