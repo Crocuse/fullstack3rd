@@ -237,7 +237,55 @@ const auctionService = {
             bidType : socketData.isBidType,
         });
     },
+    modifyGoodsConfirm:(req,res)=>{
+        
 
+            let post = req.body;
+            let files = req.files;
+           
+            DB.query(`UPDATE 
+                        TBL_GOODS_REGIST 
+                    SET 
+                        GR_NAME =?,
+                        GR_PRICE =?,
+                        GR_INFO =?,
+                        GR_MOD_DATE = NOW()
+                    WHERE 
+                        GR_NO = ?
+                        `,
+                [post.grName, post.grPrice, post.grInfo, post.grNo],
+                (error, result) => {
+                    if (error) {
+                        console.log(error)
+                        for (let i = 0; i < files.length; i++) {
+                            fs.unlink(`C:/acution/goodsImg/${req.file.filename}`, (error) => {
+                                console.log('UPLOADED FILE DELETE COMPLETED!!');
+                            });
+                        }
+                        res.json('fail');
+
+                    } else {
+
+                        DB.query(`DELETE FROM TBL_GOODS_IMG WHERE GR_NO = ?`,[post.grNo],(err,rst)=>{
+
+                            if(err){
+                                console.log(err);
+                            } else {
+                                for (let i = 0; i < files.length; i++) {
+                                    DB.query('INSERT INTO TBL_GOODS_IMG(GI_NAME, GR_NO) VALUES(?, ?)',
+                                        [files[i].filename, post.grNo],
+                                        (error, result) => {
+                                            if (error)
+                                                console.log(error);
+                                    });
+                                }
+                                res.json('success');
+                            }
+                        })
+                    }
+                });
+            
+    },
 }
 
 module.exports = auctionService;

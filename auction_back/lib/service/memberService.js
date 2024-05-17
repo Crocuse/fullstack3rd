@@ -258,10 +258,6 @@ const memberService = {
         res.json(result);
     },
 
-    modifyGoodsConfirm: async (req,res)=>{
-        let result = await MemberDao.modifyGoodsConfirm(req);
-        res.json(result);
-    }
 };
 
 module.exports = memberService;
