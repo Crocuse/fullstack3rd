@@ -1,10 +1,35 @@
-.slick-prev,
+.slick-prev {
+    font-size: 20px;
+    color: #1565c0;
+    margin-right: -100px;
+}
+
 .slick-next {
     font-size: 20px;
     color: #1565c0;
+    margin-left: -100px;
 }
 
-.slick-prev:before, .slick-next:before {
+.slick-prev:before,
+.slick-next:before {
     color: #1565c0;
     font-size: 50px;
+}
+
+.slick-slide img {
+    max-width: 300px;
+}
+
+/* .slick-slider .slick-track, */
+.slick-slider .slick-list {
+    margin: 40px 80px 0 80px;
+    padding: 10px;
+}
+
+.preview_wrap {
+    height: 500px;
+}
+
+.slick-slider {
+    height: 400px;
 }
