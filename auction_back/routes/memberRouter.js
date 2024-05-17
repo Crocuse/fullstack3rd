@@ -1,5 +1,6 @@
 const express = require('express');
 const memberService = require('../lib/service/memberService');
+const uploads = require('../lib/config/uploads');
 const router = express.Router();
 
 router.post('/session_check', (req, res) => {
@@ -102,5 +103,13 @@ router.get('/find_pw', (req, res) => {
 router.get('/delete', (req, res) => {
     memberService.memberDelete(req, res);
 });
+
+router.get('/modify_goods_select',(req,res)=>{
+    memberService.modifyGoodsSelect(req,res);
+});
+
+router.post('/modify_goods_confirm',uploads.UPLOAD_GOODS_MIDDLEWARE(),(req,res)=>{
+    memberService.modifyGoodsConfirm(req,res);
+})
 
 module.exports = router;
