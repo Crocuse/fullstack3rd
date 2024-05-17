@@ -1,0 +1,121 @@
+.login_wrap {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 40px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.login_wrap h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.login_wrap .input_wrap {
+    margin-bottom: 20px;
+}
+
+.login_wrap .input_wrap p {
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.login_wrap .input_wrap input[type='text'],
+.login_wrap .input_wrap input[type='password'] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.login_wrap .massage_wrap {
+    margin-bottom: 20px;
+}
+
+.login_wrap .massage_wrap p {
+    text-align: center;
+    color: red;
+}
+
+.login_wrap .btns {
+    text-align: center;
+}
+
+.login_wrap .btns input[type='button'] {
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #49a5f5;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1em;
+}
+
+.login_wrap .find_member {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.login_wrap .find_member a {
+    margin: 0 10px;
+    color: #666;
+    text-decoration: none;
+}
+
+.login_wrap .social_login_wrap {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.login_wrap .social_login_wrap > div {
+    width: 90%;
+    margin: 0 auto;
+    padding: 5px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    line-height: 16px;
+    margin-bottom: 7px;
+}
+
+.login_wrap .social_login_wrap .kakao_login {
+    background-color: #fddc3f;
+}
+
+.login_wrap .social_login_wrap .naver_login {
+    background-color: #00c73c;
+}
+
+.login_wrap .social_login_wrap .icon {
+    position: relative;
+    left: 10px;
+}
+
+.login_wrap .social_login_wrap .icon img {
+    width: 20px;
+    height: 20px;
+    line-height: 10px;
+}
+
+.login_wrap .social_login_wrap .login_txt {
+    width: 100%;
+    position: relative;
+    right: 10px;
+    font-size: 16px;
+    color: #333;
+    margin: 0 15px;
+    text-align: center;
+}
+
+.login_wrap .social_login_wrap .naver_login .login_txt {
+    color: #fff;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+}

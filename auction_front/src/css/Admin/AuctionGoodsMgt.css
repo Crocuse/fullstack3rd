@@ -1,0 +1,28 @@
+/* AuctionGoodsReg.css */
+.auction-goods-mgt {
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 50px auto;
+    padding: 40px;
+    /* box-sizing: border-box; */
+  }
+  
+  .auction-goods-mgt-title {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+
+  .row-red {
+    background-color: #ffcccb;
+  }
+  
+  .row-green {
+    background-color: #c3e6cb;
+  }
+  
+  .row-yellow {
+    background-color: #fff3cd;
+  }

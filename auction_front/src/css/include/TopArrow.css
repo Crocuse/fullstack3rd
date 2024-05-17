@@ -1,0 +1,11 @@
+#top-arrow {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    z-index: 99;
+    cursor: pointer;
+}
+
+#top-arrow img {
+    width: 60px;
+}

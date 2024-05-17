@@ -1,0 +1,94 @@
+.member_modify_wrap {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.member_modify_wrap .title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.member_modify_wrap .my_infos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.member_modify_wrap .my_infos > div {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.member_modify_wrap .info_title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.member_modify_wrap .phone div,
+.member_modify_wrap .adress div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.member_modify_wrap .phone input,
+.member_modify_wrap .adress input {
+    margin-right: 10px;
+    border: 1px solid #969696;
+    border-radius: 3px;
+    padding: 4px;
+}
+
+.member_modify_wrap .phone select {
+    margin-right: 5px;
+    border: 1px solid #969696;
+    border-radius: 3px;
+    padding: 4px;
+}
+
+.member_modify_wrap .phone input {
+    width: 100px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.member_modify_wrap .adress #roadAddress,
+.member_modify_wrap .adress #detailAddress,
+.member_modify_wrap .adress #extraAddress {
+    width: 300px;
+}
+
+.member_modify_wrap .adress input[type='button'] {
+    background-color: #0080ff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.member_modify_wrap .adress input[type='button']:hover {
+    background-color: #0066cc;
+}
+
+.member_modify_wrap button {
+    background-color: #0080ff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 10px;
+}
+
+.member_modify_wrap button:hover {
+    background-color: #0066cc;
+}

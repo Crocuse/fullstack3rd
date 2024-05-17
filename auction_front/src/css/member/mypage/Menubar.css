@@ -1,0 +1,24 @@
+.menubar_wrap {
+    display: flex;
+    justify-content: center;
+    background-color: #f5f5f5;
+    margin-top: 5px;
+    padding: 10px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.menubar_wrap a {
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.menubar_wrap a:hover {
+    background-color: #0080ff;
+    color: #fff;
+    font-weight: 100;
+}

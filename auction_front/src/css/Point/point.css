@@ -1,0 +1,104 @@
+.point_article .add_point_wrap {
+    text-align: center;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 100px auto;
+    max-width: 450px;
+    padding: 40px 20px;
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+.point_article .add_point_title > p {
+    color: #333;
+    font-size: 2em;
+    margin: 0;
+    margin-bottom: 40px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.point_article .add_point_wrap .charge_amount_btn {
+    background-color: #1e88e5;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 10px;
+    padding: 10px 15px;
+}
+
+.point_article .add_point_wrap .charge_amount_btn:hover {
+    background-color: #1565c0;
+}
+
+.point_article .add_point_wrap .add_point_content div {
+    margin-top: 10px;
+}
+
+.point_article .add_point_wrap .add_point_wrap .span_txt {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.point_article .add_point_wrap .poin_page_input {
+    width: 200px;
+    height: 30px;
+    padding: 5px;
+    margin: 0 6px 0 6px;
+    border-width: 0;
+    outline: #1e88e5;
+    background-color: f5f5f5;
+    text-align: right;
+    font-weight: bold;
+    font-size: 1.2em;
+    border-radius: 8px;
+}
+
+.point_article .add_point_wrap .poin_page_input::placeholder {
+    font-size: 0.7em;
+}
+
+.point_article .add_point_wrap .point_btn_wrap {
+    margin-top: 35px;
+}
+
+.point_article .add_point_wrap .point_btn_wrap input[type='button'] {
+    font-size: 1em;
+    padding: 10px 20px;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+}
+
+.point_article .notion {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.point_article .notion-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #666;
+    margin-bottom: 20px;
+}
+.point_article .notion-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+.point_article .notion-list li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    line-height: 1.6;
+    color: #666;
+}
+.point_article .notion-list li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #999;
+}

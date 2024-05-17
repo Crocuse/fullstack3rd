@@ -1,0 +1,28 @@
+.current_wrap table {
+    margin: 20px auto;
+    
+}
+
+.current_wrap td.product img {
+    max-width: 200px;
+    max-height: 200px;
+    min-width: 200px;
+    min-height: 200px;
+}
+
+.current_wrap .table-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+  
+.current_wrap table {
+    border-collapse: collapse;
+}
+  
+.current_wrap td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
