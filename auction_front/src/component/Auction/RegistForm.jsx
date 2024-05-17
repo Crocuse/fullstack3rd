@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { sessionCheck } from "../../util/sessionCheck";
 
-function RegistForm() {
+function RegistForm(props) {
     const [grName, setGrName] = useState('');
     const [grPrice, setGrPrice] = useState('');
     const [grInfo, setGrInfo] = useState('');
@@ -16,14 +16,26 @@ function RegistForm() {
     const DragStartHandler = () => setIsActive(true);
     const DragEndHandler = () => setIsActive(false);
 
+    const { modifyGoods, setShowModifyModal, isModify } = props;
+
     const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
     const navigate = useNavigate();
     
     useEffect(() => {
         sessionCheck(sessionId, navigate);
-
         console.log(sessionId);
-    })
+        console.log(isModify);
+        console.log(modifyGoods);
+        if (isModify && modifyGoods) {
+            setGrName(modifyGoods.goods.GR_NAME);
+            setGrPrice(modifyGoods.goods.GR_PRICE);
+            setGrInfo(modifyGoods.goods.GR_INFO);
+        }
+        if (modifyGoods.images) {
+            const initialImages = modifyGoods.images.map((image) => `C:\\acution\\goodsImg\\${image.GI_NAME}`);
+            setImg(initialImages);
+        }
+    },[isModify,modifyGoods])
 
     const AuctionRegistBtnClickHandler = () => {
         console.log('AuctionRegistBtnClickHandler()');
@@ -54,23 +66,41 @@ function RegistForm() {
         formData.append('grPrice', grPrice)
         formData.append('grInfo', grInfo)
 
+        if(isModify) formData.append('grNo',modifyGoods.goods.GR_NO);
+
         for(let i = 0; i<img.length; i++){
             formData.append('gr_imgs', files[i]);
         }
 
         try{
-            const response = await axios.post(`${SERVER_URL.SERVER_URL()}/auction/regist_form`, formData,{
-                headers: {
-                    'Content-Type' : 'multipart/form-data'
+            if(isModify) {
+                const response = await axios.post(`${SERVER_URL.SERVER_URL()}/member/modify_goods_confirm`, formData,{
+                    headers: {
+                        'Content-Type' : 'multipart/form-data'
+                    }
+                });
+    
+                if(response.data == 'success') {
+                    alert('수정이 완료 되었습니다.');
+                    
+                } else {
+                    alert('수정에 실패 했습니다.');
+                    
                 }
-            });
-
-            if(response.data == 'success') {
-                alert('등록이 완료 되었습니다.');
-                navigate('/');
             } else {
-                alert('등록에 실패 했습니다.');
-                navigate('/auction/Regist_form');
+                const response = await axios.post(`${SERVER_URL.SERVER_URL()}/auction/regist_form`, formData,{
+                    headers: {
+                        'Content-Type' : 'multipart/form-data'
+                    }
+                });
+    
+                if(response.data == 'success') {
+                    alert('등록이 완료 되었습니다.');
+                    navigate('/');
+                } else {
+                    alert('등록에 실패 했습니다.');
+                    navigate('/auction/Regist_form');
+                }
             }
         } catch(error) {
             console.log(error);
@@ -137,19 +167,35 @@ function RegistForm() {
         setImg(tempImg);
     }
 
+    const AuctionModifyBtnClickHandler = async () =>{
+        await postTransferFile();
+        await setShowModifyModal(false);
+    }
+
+    const resetBtnClickHandler = () =>{
+        if(isModify == undefined){
+            setGrName('')
+            setGrPrice('')
+            setGrInfo('')
+        } else if(isModify == true){
+            setGrName(modifyGoods.goods.GR_NAME);
+            setGrPrice(modifyGoods.goods.GR_PRICE);
+            setGrInfo(modifyGoods.goods.GR_INFO);
+        }
+    }
+
     return (
         <article className="regist_form">
-            <h1>상품 등록</h1>
+            <h1>{isModify ?'상품 수정' :'상품 등록'}</h1>
             <div>
-                
                 <form action="" method="" name="">
                 <div className="regist_input_wrap">
                     <span className="regist_text">상품 이름 </span>
-                    <input type="text" className="regist_input" name="gr_name" value={grName} onChange={(e) => grNameChangeHandler(e)}/> <br/><br/>
+                    <input type="text" className="regist_input" name="gr_name" defaultValue={grName} onChange={(e) => grNameChangeHandler(e)}/> <br/><br/>
                     <span className="regist_text">희망 가격 </span>
-                    <input type="number" className="regist_input" name="gr_price" value={grPrice} onChange={(e) => grPriceChangeHandler(e)}/> <br/><br/>
+                    <input type="number" className="regist_input" name="gr_price" defaultValue={grPrice} onChange={(e) => grPriceChangeHandler(e)}/> <br/><br/>
                     <span className="regist_text">간단한 설명 </span>
-                    <input type="text" className="regist_input" name="gr_info" value={grInfo} onChange={(e) => grInfoChangeHandler(e)}/> <br/><br/>
+                    <input type="text" className="regist_input" name="gr_info" defaultValue={grInfo} onChange={(e) => grInfoChangeHandler(e)}/> <br/><br/>
                 </div>
                 <label
                     className={`upload_area${isActive ? ' active' : ''}`}
@@ -178,8 +224,12 @@ function RegistForm() {
                 </label>
                 <br/>
                     <div className="regist_btn_wrap">
-                        <input className="regist_btn" type="button" value="Auction Regist" onClick={AuctionRegistBtnClickHandler} />
-                        <input className="regist_btn" type="reset" value="RESET"/>
+                        <input className="regist_btn" type="button" value={isModify==true ?"Auction Modify" : "Auction Regist"} 
+                        onClick={isModify == true 
+                            ? 
+                          AuctionModifyBtnClickHandler 
+                        : AuctionRegistBtnClickHandler} />
+                        <input className="regist_btn" type="reset" value="RESET" onClick={resetBtnClickHandler}/>
                     </div>    
                 </form>
             </div>    

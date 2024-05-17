@@ -424,6 +424,83 @@ const MemberDao = {
             );
         });
     },
+
+    modifyGoodsSelect:(req)=>{
+        return new Promise((resolve, reject) => {
+            let gr_no = req.query.gr_no;
+
+            DB.query(
+                `SELECT * FROM TBL_GOODS_REGIST WHERE GR_NO = ?`,[gr_no],(err,goods)=>{
+                    if(err){
+                        console.log(err);
+                        reject(err);
+                        return;
+                    } else {
+                        DB.query(`
+                            SELECT * FROM TBL_GOODS_IMG WHERE GR_NO = ?
+                        `,[gr_no],(err,images)=>{
+                            if(err){
+                                console.log(err);
+                                reject(err);
+                                return;
+                            } else {
+                                resolve({ goods: goods[0], images });
+                            }
+                        })
+                    }
+                });
+        })
+    },
+
+    modifyGoodsConfirm:(req)=>{
+        return new Promise((resolve, reject) => {
+
+            let post = req.body;
+            let files = req.files;
+           
+            DB.query(`UPDATE 
+                        TBL_GOODS_REGIST 
+                    SET 
+                        GR_NAME =?,
+                        GR_PRICE =?,
+                        GR_INFO =?,
+                        GR_MOD_DATE = NOW()
+                    WHERE 
+                        GR_NO = ?
+                        `,
+                [post.grName, post.grPrice, post.grInfo, post.grNo],
+                (error, result) => {
+                    if (error) {
+                        console.log(error)
+                        for (let i = 0; i < files.length; i++) {
+                            fs.unlink(`C:/acution/goodsImg/${req.file.filename}`, (error) => {
+                                console.log('UPLOADED FILE DELETE COMPLETED!!');
+                            });
+                        }
+                        resolve('fail');
+
+                    } else {
+
+                        DB.query(`DELETE FROM TBL_GOODS_IMG WHERE GR_NO = ?`,[post.grNo],(err,rst)=>{
+
+                            if(err){
+                                console.log(err);
+                            } else {
+                                for (let i = 0; i < files.length; i++) {
+                                    DB.query('INSERT INTO TBL_GOODS_IMG(GI_NAME, GR_NO) VALUES(?, ?)',
+                                        [files[i].filename, post.grNo],
+                                        (error, result) => {
+                                            if (error)
+                                                console.log(error);
+                                    });
+                                }
+                                resolve('success');
+                            }
+                        })
+                    }
+                });
+            })
+    },
 };
 
 module.exports = MemberDao;

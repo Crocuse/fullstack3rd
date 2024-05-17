@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../../css/member/mypage/MyRegist.css';
 import LoadingModal from '../../include/LoadingModal';
 import $ from 'jquery';
+import RegistForm from '../../Auction/RegistForm';
 
 function MyRegist() {
     // Hook -----------------------------------------------------------------------------------------------------------
@@ -22,6 +23,10 @@ function MyRegist() {
     const [temp, setTemp] = useState(false);
     const [showRjReason, setShowRjReason] = useState(false);
     const [selectedIdx, setSelectedIdx] = useState(0);
+    const [modifyGoods, setModifyGoods] = useState([]);
+    const [modifyGoodsImgs, setModifyGoodsImgs] = useState([]); 
+    const [showModifyModal,setShowModifyModal] = useState(false);
+    
 
     useEffect(() => {
         setLoaingModalShow(true);
@@ -56,6 +61,14 @@ function MyRegist() {
 
     function reasonModalCloseBtn() {
         setShowRjReason(false);
+    }
+
+    function registModifyClick(GR_NO) {
+        let confirm = window.confirm('해당 경매를 수정하시겠습니까?');
+        if (!confirm) return;
+
+        setLoaingModalShow(true);
+        axios_modifyGoods(GR_NO);
     }
 
     // Funtion -----------------------------------------------------------------------------------------------------------
@@ -116,6 +129,25 @@ function MyRegist() {
         }
     }
 
+    async function axios_modifyGoods(GR_NO){
+        try {
+            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/member/modify_goods_select`, {
+                params: {
+                    gr_no: GR_NO,
+                },
+            });
+            console.log(response.data);
+            setModifyGoods(response.data);
+            setShowModifyModal(true);
+        } catch (error) {
+            console.log(error);
+            alert('통신 오류가 발생했습니다.');
+
+        } finally {
+            setLoaingModalShow(false);
+        }
+    }
+
     // View -----------------------------------------------------------------------------------------------------------
     return (
         <article className="my-regist">
@@ -141,6 +173,7 @@ function MyRegist() {
                                         <th>승인상태</th>
                                         <th>발송상태</th>
                                         <th>경매일</th>
+                                        <th>수정</th>
                                         <th>등록취소</th>
                                         <th>안내</th>
                                     </tr>
@@ -168,11 +201,19 @@ function MyRegist() {
                                             </td>
                                             <td>{list.GR_RECEIPT === 0 ? '발송 대기중' : '물품 수령'}</td>
                                             <td>{list.AS_START_DATE === null ? '-' : list.AS_START_DATE}</td>
+                                            <td>{list.GR_RECEIPT === 0 && list.GR_APPROVAL === 0 
+                                                    ? 
+                                                    <a
+                                                        href="#none"
+                                                        onClick={() => registModifyClick(list.GR_NO)}
+                                                    >
+                                                        수정
+                                                    </a> : null}</td>
                                             <td>
                                                 {list.GR_APPROVAL === 0 || list.GR_RECEIPT === 0 ? (
                                                     <a
                                                         href="#none"
-                                                        onClick={() => registCancelClick(list.GR_NO, list.GR_APPROVAL)}
+                                                        onClick={() => registCancelClick(list.GR_NO)}
                                                     >
                                                         취소
                                                     </a>
@@ -267,7 +308,12 @@ function MyRegist() {
                     </div>
                 </div>
             ) : null}
-
+            {showModifyModal === true ? 
+                <div className='regist_modal_wrap'>
+                    <RegistForm modifyGoods={modifyGoods} setShowModifyModal={setShowModifyModal} isModify={true}/>
+                </div> 
+                : 
+                null}
             {loadingModalShow === true ? <LoadingModal /> : null}
         </article>
     );
