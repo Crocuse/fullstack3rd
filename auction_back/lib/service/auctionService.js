@@ -34,7 +34,7 @@ const auctionService = {
             });
     },
     currentList: (req, res) => {
-        DB.query(`SELECT * FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE = '2024-05-04' ORDER BY AS_LOCATION_NUM ASC`,
+        DB.query(`SELECT * FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE = '2024-05-18' ORDER BY AS_LOCATION_NUM ASC`,
             //DB.query(`SELECT * FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE = DATE_ADD(CURDATE())`,
             [],
             (error, list) => {
@@ -127,28 +127,25 @@ const auctionService = {
         let extendLevel = req.query.extendLevel;
         asPrice = asPrice.replaceAll(',','');
 
-        console.log('>>>>>>>>>>>>>>>>',extendLevel);
-
-        console.log
-
          DB.query(`SELECT MAX(AC_POINT) AS max_price FROM TBL_AUCTION_CURRENT WHERE GR_NO = ?`,
        [grNo],
         (error, result) => {
             if (error) {
                 console.log(error);
             } else {
-                let maxPrice = result[0].max_price;
-                if (asPrice > maxPrice) {
+                let maxPrice = result[0].max_price;                
+                if (asPrice > maxPrice || extendLevel > 6) {
                     DB.query(`INSERT INTO TBL_AUCTION_CURRENT(M_ID, AC_POINT, GR_NO, AC_EXTENDLEVEL) VALUES(?, ?, ?, ?)`,
-                        [mId, asPrice, grNo, extendLevel],
-                        (error, result) => {
-                            if (error) {
-                                console.log(error);
-                            } else {
-                                res.json(result);
-                            }
-                        })
-                } else {
+                    [mId, asPrice, grNo, extendLevel],
+                    (error, result) => {
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            res.json(result);
+                        }
+                    })
+                } 
+                else {
                     res.json('fail');
                 }
             }
@@ -183,16 +180,20 @@ const auctionService = {
         })
     },
     endedAuction: (req, res) => {
-        let grNo = req.query.grNo;
+        let post = req.body;
 
-        DB.query(`SELECT M_ID FROM TBL_AUCTION_CURRENT WHERE GR_NO = ? AND AC_EXTENDLEVEL = 7;`,
-        [grNo],
+        console.log(post);
+        if(post.isBid === 0)
+            post.buyId = null;
+
+        DB.query(`INSERT INTO TBL_AUCTION_RESULT(GR_NO, AR_IS_BID, AR_SELL_ID, AR_BUY_ID, AR_POINT) VALUES(?, ?, ?, ?, ?)`,
+        [post.grNo, post.isBid, post.sellId, post.buyId, post.point],
         (error, result) => {
             if (error) {
                 console.log(error);
             } else {
                 console.log(result);
-                res.json(result);
+                res.json('success');
             }
         })
     },
