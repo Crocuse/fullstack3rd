@@ -24,7 +24,6 @@ function MyRegist() {
     const [showRjReason, setShowRjReason] = useState(false);
     const [selectedIdx, setSelectedIdx] = useState(0);
     const [modifyGoods, setModifyGoods] = useState([]);
-    const [modifyGoodsImgs, setModifyGoodsImgs] = useState([]); 
     const [showModifyModal,setShowModifyModal] = useState(false);
     
 
@@ -310,7 +309,12 @@ function MyRegist() {
             ) : null}
             {showModifyModal === true ? 
                 <div className='regist_modal_wrap'>
-                    <RegistForm modifyGoods={modifyGoods} setShowModifyModal={setShowModifyModal} isModify={true}/>
+                    <div className='regist_modal'>
+                        <div className='close_btn' onClick={() => setShowModifyModal(false)}>
+                            <FontAwesomeIcon icon="fa-solid fa-times" />
+                        </div>
+                            <RegistForm modifyGoods={modifyGoods} setShowModifyModal={setShowModifyModal} isModify={true} setTemp={setTemp}/>
+                    </div>
                 </div> 
                 : 
                 null}
