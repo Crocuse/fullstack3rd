@@ -74,7 +74,7 @@ function RegistForm(props) {
 
         try{
             if(isModify) {
-                const response = await axios.post(`${SERVER_URL.SERVER_URL()}/member/modify_goods_confirm`, formData,{
+                const response = await axios.post(`${SERVER_URL.SERVER_URL()}/auction/modify_goods_confirm`, formData,{
                     headers: {
                         'Content-Type' : 'multipart/form-data'
                     }
@@ -170,6 +170,7 @@ function RegistForm(props) {
     const AuctionModifyBtnClickHandler = async () =>{
         await postTransferFile();
         await setShowModifyModal(false);
+        
     }
 
     const resetBtnClickHandler = () =>{

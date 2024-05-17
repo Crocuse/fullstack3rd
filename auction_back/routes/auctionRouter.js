@@ -50,5 +50,9 @@ router.post('/endedAuction', (req, res) => {
     auctionService.endedAuction(req, res);
 });
 
+router.post('/modify_goods_confirm',upload.UPLOAD_GOODS_MIDDLEWARE(),(req,res)=>{
+    auctionService.modifyGoodsConfirm(req,res);
+});
+
 module.exports = router;
 

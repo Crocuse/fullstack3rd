@@ -108,8 +108,6 @@ router.get('/modify_goods_select',(req,res)=>{
     memberService.modifyGoodsSelect(req,res);
 });
 
-router.post('/modify_goods_confirm',uploads.UPLOAD_GOODS_MIDDLEWARE(),(req,res)=>{
-    memberService.modifyGoodsConfirm(req,res);
-})
+
 
 module.exports = router;
