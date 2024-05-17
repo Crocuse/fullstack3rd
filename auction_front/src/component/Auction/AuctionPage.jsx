@@ -115,12 +115,9 @@ function AuctionPage() {
     useEffect(() => {
         console.log("useEffect4");
         const id = setInterval(() => {
-            setHour(0);
-            setMinutes(0);
-            setSeconds(0);
-            // setHour(23 - today.getHours());
-            // setMinutes(59 - today.getMinutes());
-            // setSeconds(59 - today.getSeconds());
+            setHour(23 - today.getHours());
+            setMinutes(59 - today.getMinutes());
+            setSeconds(59 - today.getSeconds());
             setIsAuctionEnd(isAuctionEndFunc());
         }, 1000);
         return () => clearInterval(id);
