@@ -63,26 +63,38 @@ function RegistForm(props) {
             formData.append('gr_imgs', files[i]);
         }
 
-        try {
-            const url = isModify 
-                ? `${SERVER_URL.SERVER_URL()}/auction/modify_goods_confirm`
-                : `${SERVER_URL.SERVER_URL()}/auction/regist_form`;
-
-            const response = await axios.post(url, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
+        try{
+            if(isModify) {
+                const response = await axios.post(`${SERVER_URL.SERVER_URL()}/auction/modify_goods_confirm`, formData,{
+                    headers: {
+                        'Content-Type' : 'multipart/form-data'
+                    }
+                });
+    
+                if(response.data == 'success') {
+                    alert('수정이 완료 되었습니다.');
+                    props.setTemp(prev => !prev);
+                    
+                } else {
+                    alert('수정에 실패 했습니다.');
+                    
                 }
-            });
-
-            if (response.data === 'success') {
-                alert(isModify ? '수정이 완료 되었습니다.' : '등록이 완료 되었습니다.');
-                if (!isModify) navigate('/');
-                else setShowModifyModal(false);
             } else {
-                alert(isModify ? '수정에 실패 했습니다.' : '등록에 실패 했습니다.');
-                if (!isModify) navigate('/auction/Regist_form');
+                const response = await axios.post(`${SERVER_URL.SERVER_URL()}/auction/regist_form`, formData,{
+                    headers: {
+                        'Content-Type' : 'multipart/form-data'
+                    }
+                });
+    
+                if(response.data == 'success') {
+                    alert('등록이 완료 되었습니다.');
+                    navigate('/');
+                } else {
+                    alert('등록에 실패 했습니다.');
+                    navigate('/auction/Regist_form');
+                }
             }
-        } catch (error) {
+        } catch(error) {
             console.log(error);
         }
     }
