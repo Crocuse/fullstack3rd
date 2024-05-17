@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import '../css/Home.css';
-import { axiosBidImg } from '../axios/home/axiosHome';
+import { axiosPreview } from '../axios/home/axiosHome';
 import { useSelector } from 'react-redux';
 import SlickBidImage from './carousel/SlickBidImage';
 
@@ -13,7 +13,7 @@ function Home() {
     }, []);
 
     const bidImgList = async () => {
-        let result = await axiosBidImg(loginedId);
+        let result = await axiosPreview();
         console.log(result);
     }
     return (
@@ -53,26 +53,7 @@ function Home() {
                 </div>
                 <div className="second_sec">
                     <div className="current_bid_sec">
-                        {/* <div>진행 중인 경매</div> */}
-                        {/* <div className="current_bid_img">
-                            <div>
-                                <a href="#">
-                                    <img src="/img/arrow_left.png" className="bid_list_btn" />
-                                </a>
-                            </div>
-                            <div>
-                                <a href="#">img</a>
-                            </div>
-                            <div>
-                                <a href="#">
-                                    <img src="/img/arrow_right.png" className="bid_list_btn" />
-                                </a>
-                            </div>
-                        </div> */}
                         <SlickBidImage />
-                    </div>
-                    <div>
-                        <a href="#">자세히 보기</a>
                     </div>
                 </div>
 

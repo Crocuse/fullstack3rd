@@ -1,12 +1,15 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import '../../css/carousel/SlickBidImage.css';
+import { axiosPreview } from "../../axios/home/axiosHome";
+import { SERVER_URL } from '../../config/server_url';
+
 
 function SlickBidImage() {
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 3,
@@ -17,55 +20,35 @@ function SlickBidImage() {
     draggable: true,
   };
 
-  const slickRef = useRef(null);
+  const [bidImgList, setBidImgList] = useState([]);
 
-  const previous = useCallback(() => slickRef.current.slickPrev(), [slickRef]);
-  const next = useCallback(() => slickRef.current.slickNext(), [slickRef]);
+  useEffect(() => {
+    console.log('[SLICK BID IMAGE] useEffect');
+    let bidImageList = async () => {
+      let data = await axiosPreview();
+      if (data) {
+        setBidImgList(data);
+
+      }
+    }
+    bidImageList();
+  }, [])
+  // const slickRef = useRef(null);
+
+  // const previous = useCallback(() => slickRef.current.slickPrev(), [slickRef]);
+  // const next = useCallback(() => slickRef.current.slickNext(), [slickRef]);
 
   return (
-    <div>
-    <h2> 진행 중인 경매</h2>
-    <Slider {...settings} ref={slickRef} >
-      <div>
-      {/* <div onClick={previous}>
-        <img
-            src={"/img/arrow_left.png"}
-        />
-      </div> */}
-        <h3>1</h3>
-      </div>
-      <div>
-        <h3>2</h3>
-      </div>
-      <div>
-        <h3>3</h3>
-      </div>
-      <div>
-        <h3>4</h3>
-      </div>
-      <div>
-        <h3>5</h3>
-      </div>
-      <div>
-        <h3>6</h3>
-      </div>
-      <div>
-        <h3>7</h3>
-      </div>
-      <div>
-        <h3>8</h3>
-      </div>
-      <div>
-        <h3>9</h3>
-      </div>
-      {/* <div onClick={next}>
-      <img
-        src={"/img/arrow_left.png"}
-      />
-    </div> */}
-      
-    </Slider>
-  </div>
+    <div className="preview_wrap">
+      <h2> 진행 중인 경매</h2>
+      <Slider {...settings} >
+        {bidImgList.map((image, index) => (
+          <div key={index}>
+            <img src={`${SERVER_URL.SERVER_URL()}/goodsImg/${image.GI_NAME}`} />
+          </div>
+        ))}
+      </Slider>
+    </div>
   );
 }
 

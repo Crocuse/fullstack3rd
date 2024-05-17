@@ -1,4 +1,3 @@
-const DB = require('../db/db');
 const AlarmDao = require('../dao/AlarmDao');
 
 module.exports = {
