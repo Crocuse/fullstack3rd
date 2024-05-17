@@ -182,20 +182,31 @@ const auctionService = {
     endedAuction: (req, res) => {
         let post = req.body;
 
-        console.log(post);
         if(post.isBid === 0)
             post.buyId = null;
 
-        DB.query(`INSERT INTO TBL_AUCTION_RESULT(GR_NO, AR_IS_BID, AR_SELL_ID, AR_BUY_ID, AR_POINT) VALUES(?, ?, ?, ?, ?)`,
-        [post.grNo, post.isBid, post.sellId, post.buyId, post.point],
+        DB.query(`SELECT GR_NO FROM TBL_AUCTION_RESULT WHERE GR_NO = ?`,
+        [post.grNo],
         (error, result) => {
-            if (error) {
+            if(error) {
                 console.log(error);
             } else {
-                console.log(result);
-                res.json('success');
+                if(result.length < 1){
+                    DB.query(`INSERT INTO TBL_AUCTION_RESULT(GR_NO, AR_IS_BID, AR_SELL_ID, AR_BUY_ID, AR_POINT) VALUES(?, ?, ?, ?, ?)`,
+                    [post.grNo, post.isBid, post.sellId, post.buyId, post.point],
+                    (error, result) => {
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            console.log(result);
+                            res.json('success');
+                        }
+                    })
+                }
             }
         })
+
+        
     },
     bidmsg: async (socketData, socket) => {
         let loglist = [];
