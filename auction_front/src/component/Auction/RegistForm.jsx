@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import $ from "jquery";
+import React, { useEffect, useState, useRef } from "react";
 import '../../css/Auction/RegistForm.css'
 import axios from "axios";
 import { SERVER_URL } from "../../config/server_url";
@@ -13,8 +12,13 @@ function RegistForm(props) {
     const [grInfo, setGrInfo] = useState('');
     const [isActive, setIsActive] = useState(false);
     const [img, setImg] = useState([]);
+
+    const [files, setFiles] = useState([]);
+
     const DragStartHandler = () => setIsActive(true);
     const DragEndHandler = () => setIsActive(false);
+
+    const fileInputRef = useRef(null);
 
     const { modifyGoods, setShowModifyModal, isModify } = props;
 
@@ -31,7 +35,7 @@ function RegistForm(props) {
             setGrPrice(modifyGoods.goods.GR_PRICE);
             setGrInfo(modifyGoods.goods.GR_INFO);
         }
-        if (modifyGoods.images) {
+        if (isModify && modifyGoods.images) {
             const initialImages = modifyGoods.images.map((image) => `C:\\acution\\goodsImg\\${image.GI_NAME}`);
             setImg(initialImages);
         }
@@ -58,8 +62,8 @@ function RegistForm(props) {
     async function postTransferFile() {
         console.log('postTransferFile()');
 
-        let gr_imgs = $('input[name="gr_imgs"]');
-        let files = gr_imgs[0].files;
+        let files = fileInputRef.current.files;
+        console.log(files);
 
         const formData = new FormData();
         formData.append('grName', grName)
@@ -68,9 +72,12 @@ function RegistForm(props) {
 
         if(isModify) formData.append('grNo',modifyGoods.goods.GR_NO);
 
-        for(let i = 0; i<img.length; i++){
+        for(let i = 0; i<files.length; i++){
+            console.log(files[i]);
             formData.append('gr_imgs', files[i]);
         }
+
+
 
         try{
             if(isModify) {
@@ -82,7 +89,7 @@ function RegistForm(props) {
     
                 if(response.data == 'success') {
                     alert('수정이 완료 되었습니다.');
-                    
+                    props.setTemp(prev => !prev);
                 } else {
                     alert('수정에 실패 했습니다.');
                     
@@ -126,15 +133,16 @@ function RegistForm(props) {
         console.log('DropHandler()');
         e.preventDefault();
         setIsActive(false);
-        const files = e.dataTransfer.files;
+        const newFiles = e.dataTransfer.files;
         showAddImg(files);
+        setFiles(prevFiles => [...prevFiles, ...newFiles]);
     }    
 
     const uploadChangeHandler = (e) => {
         console.log('uploadHandler()');
-        
-        const files = e.target.files;
+        const newFiles = e.target.files;
         showAddImg(files);
+        setFiles(prevFiles => [...prevFiles, ...newFiles]);
     };
 
     const showAddImg = (files) => {
@@ -167,7 +175,7 @@ function RegistForm(props) {
         setImg(tempImg);
     }
 
-    const AuctionModifyBtnClickHandler = async () =>{
+    const AuctionModifyBtnClickHandler = async () => {
         await postTransferFile();
         await setShowModifyModal(false);
         
@@ -189,7 +197,7 @@ function RegistForm(props) {
         <article className="regist_form">
             <h1>{isModify ?'상품 수정' :'상품 등록'}</h1>
             <div>
-                <form action="" method="" name="">
+                <form>
                 <div className="regist_input_wrap">
                     <span className="regist_text">상품 이름 </span>
                     <input type="text" className="regist_input" name="gr_name" defaultValue={grName} onChange={(e) => grNameChangeHandler(e)}/> <br/><br/>
@@ -205,12 +213,12 @@ function RegistForm(props) {
                     onDragLeave={DragEndHandler}
                     onDrop={DropHandler}
                 >
-                    <input type="file" name="gr_imgs" className="gr_img" onChange={(e) => uploadChangeHandler(e)} multiple/>
+                    <input type="file" name="gr_imgs" className="gr_img" onChange={(e) => uploadChangeHandler(e)} multiple ref={fileInputRef}/>
                     {img.length !== 0 ? (
                         img.map((image, index) => (
                             <div key={index} className="img_angle">                                    
                                 <img className="add_img" src={image} /><br/>
-                                <button className="delete_btn" onClick={(e) => deleteBtnHandler(index, e)}><img src="/img/delete_FILL0_wght400_GRAD0_opsz24.png" alt="" /></button>      
+                                <button className="delete_btn" onClick={(e) => deleteBtnHandler(index, e)}><img src="/img/delete_FILL0_wght400_GRAD0_opsz24.png" /></button>      
                             </div>
                         ))
                     ) : (
