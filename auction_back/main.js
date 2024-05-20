@@ -9,6 +9,10 @@ const cors = require('cors');
 const flash = require('express-flash');
 const os = require('os');
 const server = require('http').createServer(app);
+const https = require('https');
+const httpPort = 80;
+const httpsPort = 443;
+const options = require('./lib/config/pem_config').options;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -51,14 +55,14 @@ if (os.version().includes('Windows')) {
 // CORS END -----------------------------------------------------------------------------------------------------------
 
 // session setting START -----------------------------------------------------------------------------------------------------------
-const options = {
+const sessionOptions = {
     host: 'auctiondb.c5ekqsck8dcp.ap-southeast-2.rds.amazonaws.com',
     port: 3306,
     user: 'root',
     password: '12345678',
     database: 'DB_BIDBIRD',
 };
-const sessionStore = new MySQLStore(options);
+const sessionStore = new MySQLStore(sessionOptions);
 
 const maxAge = 1000 * 60 * 30;
 const sessionObj = {
@@ -99,5 +103,11 @@ app.use('/customer_center', require('./routes/customerCenterRouter'));
 app.use('/alarm', require('./routes/alarmRouter'));
 // 라우터 설정 끗 -----------------------------------------------------------------------------------------------------------
 
-//app.listen(3001);
-server.listen(3001);
+https.createServer(options, app).listen(httpsPort, () => {
+    console.log(`HTTPS: Express listening on port ${httpsPort}`);
+});
+
+// HTTP 서버
+app.listen(httpPort, () => {
+    console.log(`HTTP: Express listening on port ${httpPort}`);
+});
