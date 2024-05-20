@@ -23,6 +23,7 @@
         "apexcharts": "^3.49.0",
         "axios": "^1.6.8",
         "chart.js": "^4.4.2",
+        "chartjs-plugin-datalabels": "^2.2.0",
         "jquery": "^3.7.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",

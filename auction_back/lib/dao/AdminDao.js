@@ -334,7 +334,8 @@ const AdminDao = {
                 JOIN
             TBL_AUCTION_SCHEDULE TAS ON AR.GR_NO = TAS.GR_NO
                 JOIN
-            TBL_GOODS_REGIST GR ON AR.GR_NO = GR.GR_NO`,
+            TBL_GOODS_REGIST GR ON AR.GR_NO = GR.GR_NO
+            ORDER BY AR_REG_DATE DESC`,
                 (err, datas) => {
                     if (err) {
                         console.log(err);

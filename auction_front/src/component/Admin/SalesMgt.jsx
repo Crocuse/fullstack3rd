@@ -8,8 +8,9 @@ import { sessionCheck } from "../../util/sessionCheck";
 import "../../css/Admin/SalesMgt.css";
 import { DatePicker, Checkbox } from "antd";
 import LoadingModal from "../include/LoadingModal";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-Chart.register(BarController, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
+Chart.register(BarController, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend, ChartDataLabels);
 
 const { RangePicker } = DatePicker;
 
@@ -42,6 +43,7 @@ function SalesMgt() {
   const [selectedLocations, setSelectedLocations] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [displayCount, setDisplayCount] = useState(10);
 
   useEffect(() => {
     sessionCheck(sessionId, navigate);
@@ -59,7 +61,6 @@ function SalesMgt() {
       );
     });
   }, [salesDataList, selectedDates, selectedLocations]);
-  
 
   const categories = useMemo(() => {
     return [...new Set(salesDataList.map((data) => formatDate(new Date(data.AR_REG_DATE))))];
@@ -73,13 +74,15 @@ function SalesMgt() {
     if (chartRef.current) {
       const canvas = chartRef.current;
       const ctx = canvas.getContext("2d");
-  
+
       canvas.width = 800;
       canvas.height = 200;
-  
+
+      const filteredCategories = categories.filter((date) => selectedDates.includes(date)).sort().slice(-displayCount);
+
       const createDataset = (locationNum) => ({
         label: `${locationNum}번 경매`,
-        data: categories.map((date) => {
+        data: filteredCategories.map((date) => {
           const filteredLocationData = filteredData.filter(
             (data) =>
               formatDate(new Date(data.AR_REG_DATE)) === date &&
@@ -89,20 +92,12 @@ function SalesMgt() {
         }),
         backgroundColor: `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.7)`,
       });
-  
+
       const datasets = selectedLocations.map((locationNum) => createDataset(locationNum));
-  
-      const filteredCategories = categories.filter((date) => selectedDates.includes(date));
-  
-      console.log("filteredCategories:", filteredCategories);
-      console.log("selectedDates:", selectedDates);
-  
+
       const chartData = {
         labels: filteredCategories,
-        datasets: datasets.map((dataset) => ({
-          ...dataset,
-          data: dataset.data.filter((_, index) => selectedDates.includes(categories[index])),
-        })),
+        datasets: datasets,
       };
 
       const chartOptions = {
@@ -129,6 +124,30 @@ function SalesMgt() {
           legend: {
             position: "right",
           },
+          datalabels: {
+            display: (context) => context.datasetIndex === selectedLocations.length - 1,
+            formatter: (value, context) => {
+              if (context.datasetIndex === selectedLocations.length - 1) {
+                const date = chartData.labels[context.dataIndex];
+                const sum = salesDataList.reduce((total, data) => {
+                  if (
+                    formatDate(new Date(data.AR_REG_DATE)) === date &&
+                    selectedLocations.includes(data.AS_LOCATION_NUM)
+                  ) {
+                    return total + data.AR_POINT;
+                  }
+                  return total;
+                }, 0);
+                return sum.toLocaleString();
+              }
+              return null;
+            },
+            font: {
+              weight: 'bold',
+            },
+            anchor: 'end',
+            align: 'top',
+          },
         },
         scales: {
           x: {
@@ -154,7 +173,7 @@ function SalesMgt() {
         chart.destroy();
       };
     }
-  }, [filteredData, selectedDates, selectedLocations, categories, salesDataList]);
+  }, [filteredData, selectedDates, selectedLocations, categories, salesDataList, displayCount]);
 
   async function axios_sales_data() {
     setIsLoading(true);
@@ -171,18 +190,19 @@ function SalesMgt() {
       setIsLoading(false);
     }
   }
+
   const handleDateChange = (dates) => {
     if (dates && dates.length === 2) {
       const startDate = dates[0].toDate();
       const endDate = dates[1].toDate();
-  
+
       const generatedDates = [];
       let currentDate = new Date(startDate);
       while (currentDate <= endDate) {
         generatedDates.push(formatDate(currentDate));
         currentDate.setDate(currentDate.getDate() + 1);
       }
-  
+
       setSelectedDates(generatedDates);
     } else {
       // RangePicker가 선택된 상태가 아닌 경우, 모든 날짜를 선택한 것으로 간주합니다.
@@ -197,7 +217,7 @@ function SalesMgt() {
 
   return (
     <article className="sales-mgt">
-      <div className="sales-mgt-title">SALES CHART</div>
+      <div className="sales-mgt-title">매출 차트</div>
       <div className="sales-mgt-filters">
         <div className="sales-mgt-date-filter">
           <RangePicker
@@ -206,9 +226,16 @@ function SalesMgt() {
               selectedDates.length > 0 ? parseDate(selectedDates[0]) : null,
               selectedDates.length > 0 ? parseDate(selectedDates[selectedDates.length - 1]) : null,
             ]}
-            // format="YYYY-MM-DD"
           />
+
+          <select value={displayCount} onChange={(e) => setDisplayCount(Number(e.target.value))}>
+            <option value={10}>최근 10일</option>
+            <option value={20}>최근 20일</option>
+            <option value={30}>최근 30일</option>
+            <option value={730}>최근 2년</option>
+          </select>
         </div>
+
         <div className="sales-mgt-location-filter">
           <Checkbox.Group
             options={[...Array(9)].map((_, index) => ({
