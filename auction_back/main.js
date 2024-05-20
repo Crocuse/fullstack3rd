@@ -72,7 +72,7 @@ const sessionObj = {
     store: sessionStore,
     cookie: {
         maxAge: maxAge,
-        domain: 'bidbird.kro.kr',
+        ...(os.version().includes('Windows') ? {} : { domain: 'bidbird.kro.kr' }),
     },
 };
 
