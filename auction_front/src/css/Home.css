@@ -109,6 +109,7 @@
     width: 100%;
     padding: 0 50px;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 .home_wrap .current_bid_sec .preview_wrap {
