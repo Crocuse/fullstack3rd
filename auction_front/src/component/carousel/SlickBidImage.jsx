@@ -9,9 +9,11 @@ import { Link } from "react-router-dom";
 
 
 function SlickBidImage() {
+  const [bidImgList, setBidImgList] = useState([]);
+
   const settings = {
     dots: false,
-    infinite: true,
+    infinite: bidImgList.length > 1,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
@@ -21,7 +23,6 @@ function SlickBidImage() {
     draggable: true,
   };
 
-  const [bidImgList, setBidImgList] = useState([]);
 
   useEffect(() => {
     console.log('[SLICK BID IMAGE] useEffect');
