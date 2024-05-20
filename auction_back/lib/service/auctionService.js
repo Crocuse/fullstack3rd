@@ -13,7 +13,7 @@ const auctionService = {
                 if (error) {
                     console.log(error)
                     for (let i = 0; i < files.length; i++) {
-                        fs.unlink(`C:/acution/goodsImg/${req.file.filename}`, (error) => {
+                        fs.unlink(`C:/auction/goodsImg/${req.file.filename}`, (error) => {
                             console.log('UPLOADED FILE DELETE COMPLETED!!');
                         });
                     }
@@ -34,8 +34,8 @@ const auctionService = {
             });
     },
     currentList: (req, res) => {
-        DB.query(`SELECT * FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE = '2024-05-18' ORDER BY AS_LOCATION_NUM ASC`,
-            //DB.query(`SELECT * FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE = DATE_ADD(CURDATE())`,
+        DB.query(//`SELECT * FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE = '2024-05-18' ORDER BY AS_LOCATION_NUM ASC`,
+            `SELECT * FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE = DATE_ADD(CURDATE(), INTERVAL 1 DAY) ORDER BY AS_LOCATION_NUM ASC`,
             [],
             (error, list) => {
                 if (error) {
@@ -258,7 +258,7 @@ const auctionService = {
                     if (error) {
                         console.log(error)
                         for (let i = 0; i < files.length; i++) {
-                            fs.unlink(`C:/acution/goodsImg/${req.file.filename}`, (error) => {
+                            fs.unlink(`C:/auction/goodsImg/${req.file.filename}`, (error) => {
                                 console.log('UPLOADED FILE DELETE COMPLETED!!');
                             });
                         }
