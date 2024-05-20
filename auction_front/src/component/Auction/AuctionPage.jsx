@@ -44,7 +44,7 @@ function AuctionPage() {
 
     useEffect(() => {
         console.log('useEffect');
-        const socket = io(`${SERVER_URL.SERVER_URL_NOT_PORT()}`);
+        const socket = io(`${SERVER_URL.SOCKET_URL()}`);
         setLoaingModalShow(true);
         sessionCheck(sessionId, navigate);
         if (product !== undefined) {
@@ -94,7 +94,7 @@ function AuctionPage() {
     useEffect(() => {
         console.log('useEffect3');
         if (!product) return;
-        const socket = io(`${SERVER_URL.SERVER_URL_NOT_PORT()}`);
+        const socket = io(`${SERVER_URL.SOCKET_URL()}`);
         const socketData = {
             loginedId,
             nextBid,

@@ -10,7 +10,7 @@ import { setAlarmInfo } from '../../redux/action/setAlarmInfo';
 import { sessionCheck } from '../../util/sessionCheck';
 
 function AuctionAlarm() {
-    const socket = io(`${SERVER_URL.SERVER_URL_NOT_PORT()}`);
+    const socket = io(`${SERVER_URL.SOCKET_URL()}`);
     const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
     const loginedId = useSelector((state) => state.loginedInfos.loginedId.loginedId);
 
