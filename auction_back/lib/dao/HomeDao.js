@@ -7,18 +7,19 @@ module.exports = {
         return new Promise((resolve, reject) => {
 
             DB.query(`SELECT 
-            ac.GR_NO,
+            sch.GR_NO,
             MIN(gi.GI_NAME) AS GI_NAME
         FROM 
-            TBL_AUCTION_CURRENT ac
+            TBL_AUCTION_SCHEDULE sch
         JOIN 
-            TBL_GOODS_IMG gi ON ac.GR_NO = gi.GR_NO
+            TBL_GOODS_IMG gi ON sch.GR_NO = gi.GR_NO
         WHERE 
-            DATE(ac.AC_REG_DATE) = CURDATE()
+            sch.AS_START_DATE = DATE_ADD(CURDATE(), INTERVAL 1 DAY)
         GROUP BY 
-            ac.GR_NO;
-         `,
+            sch.GR_NO;
+        `,
                 (err, imgList) => {
+                    console.log('이미지 리스트---->', imgList)
                     if (err) {
                         reject(err);
                     }
