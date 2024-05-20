@@ -50,7 +50,7 @@ function AuctionResult() {
             {
                 field: 'GR_NAME',
                 headerName: '상품명',
-                width: 291,
+                width: 401,
                 filter: 'agTextColumnFilter',
             },
             {
@@ -103,24 +103,7 @@ function AuctionResult() {
                     },
                 },
             },
-            {
-                field: 'DG_STATUS',
-                headerName: '물품배송',
-                width: 110,
-                cellRenderer: (params) => {
-                    const { DG_STATUS, DG_ADDR, AR_IS_BID, GR_NO, AR_BUY_ID } = params.data;
-                    if (DG_STATUS === 0 && DG_ADDR !== null && AR_IS_BID === 1) {
-                        return <button onClick={() => deliveryGoods(GR_NO, AR_BUY_ID)}>물품배송</button>;
-                    } else if (DG_STATUS === 0 && DG_ADDR === null && AR_IS_BID === 1) {
-                        return "배송지 정보가 없습니다.";
-                    } else if (DG_STATUS === 1 && DG_ADDR !== null) {
-                        return "배송중";
-                    } else {
-                        return "";
-                    }
-                },
-                filter: false,
-            },
+            
             
         ]);
     }, []);

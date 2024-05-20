@@ -420,6 +420,20 @@ const AdminDao = {
             });
         });
     },
+    goodsImg:(gr_no)=>{
+        return new Promise((resolve, reject) => {
+            DB.query(`SELECT * FROM TBL_GOODS_IMG WHERE GR_NO =?`,[gr_no],(err,imgs)=>{
+                if(err){
+                    console.log(err);
+                    resolve(null);
+                } else {
+                    
+                    resolve(imgs);
+                }
+
+            });
+        });
+    },
 };
 
 module.exports = AdminDao;
