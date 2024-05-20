@@ -255,6 +255,7 @@ function AuctionGoodsReg() {
             } else if (response.data === "already") {
                 alert("한 날짜에 자리는 중복될 수 없습니다.");
             } else if (response.data === "success") {
+                alert("경매에 등록하였습니다.");
                 axios_goods_reg_list();
                 setEditModeRows({});
             }

@@ -203,6 +203,7 @@ const closeDetailModal = () => {
       if (response.data === 'success') {
         closeRejectModal();
         axios_goods_list();
+        alert('반려에 성공하였습니다.')
       } else {
         console.log('반려 사유 변경 실패');
       }
@@ -245,6 +246,7 @@ const closeDetailModal = () => {
         });
 
         if (response.data === 'success') {
+          alert('상품 등록수정에 성공하였습니다.')
           axios_goods_list();
         } else {
           console.log('상태 변경 실패');
