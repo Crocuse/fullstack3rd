@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import '../../css/carousel/SlickBidImage.css';
 import { axiosPreview } from "../../axios/home/axiosHome";
 import { SERVER_URL } from '../../config/server_url';
+import { Link } from "react-router-dom";
 
 
 function SlickBidImage() {
@@ -32,20 +33,16 @@ function SlickBidImage() {
       }
     }
     bidImageList();
-  }, [])
-  // const slickRef = useRef(null);
-
-  // const previous = useCallback(() => slickRef.current.slickPrev(), [slickRef]);
-  // const next = useCallback(() => slickRef.current.slickNext(), [slickRef]);
+  }, []);
 
   return (
     <div className="preview_wrap">
       <h2> 진행 중인 경매</h2>
       <Slider {...settings} >
         {bidImgList.map((image, index) => (
-          <div key={index}>
+          <Link to={`/auction/auction_page?grNo=${image.GR_NO}`} key={index}>
             <img src={`${SERVER_URL.SERVER_URL()}/goodsImg/${image.GI_NAME}`} />
-          </div>
+          </Link>
         ))}
       </Slider>
     </div>
