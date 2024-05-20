@@ -22,9 +22,9 @@ app.use(express.json());
 app.use(flash());
 
 if (os.version().includes('Windows')) {
-    app.use(express.static(`C:/acution`));
+    app.use(express.static(`C:/auction`));
 } else {
-    app.use(express.static(`/home/ubuntu/acution`));
+    app.use(express.static(`/home/ubuntu/auction`));
 }
 
 //SOCKET.IO -----------------------------------------------------------------------------------------------------------

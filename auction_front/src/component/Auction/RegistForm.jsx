@@ -29,7 +29,8 @@ function RegistForm(props) {
             setGrInfo(modifyGoods.goods.GR_INFO);
         }
         if (isModify && modifyGoods.images) {
-            const initialImages = modifyGoods.images.map((image) => `C:\\acution\\goodsImg\\${image.GI_NAME}`);
+            const initialImages = modifyGoods.images.map((image) => `${SERVER_URL.SERVER_URL()}/auction/goodsImg/${image.GI_NAME}`);
+            console.log(initialImages);
             setImg(initialImages);
         }
     }, [isModify, modifyGoods, sessionId, navigate]);
@@ -51,6 +52,8 @@ function RegistForm(props) {
 
     async function postTransferFile() {
         const formData = new FormData();
+
+        sessionCheck(sessionId, navigate);
 
         console.log(files);
         formData.append('grName', grName);

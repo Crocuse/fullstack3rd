@@ -43,8 +43,11 @@ function CurrentList() {
         try{
             const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/current_list`);
 
-            if(response.data == 'nolist')
+            if(response.data == 'nolist'){
                 alert('오늘의 경매는 없습니다.');
+                setLoaingModalShow(false);
+                navigate('/');
+            }
             else{
                 for(let i = 0; i < response.data.length; i++){
                     getTodayAuctionProduct(response.data[i].GR_NO, response.data[i].AS_LOCATION_NUM);
