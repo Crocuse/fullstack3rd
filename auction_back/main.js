@@ -10,8 +10,8 @@ const flash = require('express-flash');
 const os = require('os');
 const server = require('http').createServer(app);
 const https = require('https');
-const httpPort = 80;
-const httpsPort = 443;
+const httpPort = 3002;
+const httpsPort = 3001;
 const options = require('./lib/config/pem_config').options;
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -46,7 +46,7 @@ if (os.version().includes('Windows')) {
 } else {
     app.use(
         cors({
-            origin: 'http://3.37.1.14:3000',
+            origin: 'https://bidbird.kro.kr',
             credentials: true,
             optionsSuccessStatus: 200,
         })
@@ -72,6 +72,7 @@ const sessionObj = {
     store: sessionStore,
     cookie: {
         maxAge: maxAge,
+        domain: 'bidbird.kro.kr',
     },
 };
 

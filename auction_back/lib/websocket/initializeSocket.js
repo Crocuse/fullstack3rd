@@ -8,7 +8,7 @@ function initializeSocket(server) {
     if (os.version().includes('Windows')) {
         corsOrigin = 'http://localhost:3000';
     } else {
-        corsOrigin = 'http://3.37.1.14:3000';
+        corsOrigin = 'https://3.37.1.14:443';
     }
 
     const io = socketIO(server, {
