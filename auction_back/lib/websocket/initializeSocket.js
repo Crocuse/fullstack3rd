@@ -8,7 +8,7 @@ function initializeSocket(server) {
     if (os.version().includes('Windows')) {
         corsOrigin = 'http://localhost:3000';
     } else {
-        corsOrigin = 'https://3.37.1.14:443';
+        corsOrigin = 'https://bidbird.kro.kr';
     }
 
     const io = socketIO(server, {
