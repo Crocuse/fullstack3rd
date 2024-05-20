@@ -11,9 +11,9 @@ const uploads = {
                 destination(req, files, done) {
                     let fileDir = '';
                     if (os.version().includes('Windows')) {
-                        fileDir = 'C:/acution/goodsImg/';
+                        fileDir = 'C:/auction/goodsImg/';
                     } else {
-                        fileDir = '/home/ubuntu/acution/goodsImg';
+                        fileDir = '/home/ubuntu/auction/goodsImg';
                     }
 
                     if (!fs.existsSync(fileDir)) {
@@ -41,9 +41,9 @@ const uploads = {
                 destination(req, files, done) {
                     let fileDir = '';
                     if (os.version().includes('Windows')) {
-                        fileDir = 'C:/acution/qna';
+                        fileDir = 'C:/auction/qna';
                     } else {
-                        fileDir = '/home/ubuntu/acution/qna';
+                        fileDir = '/home/ubuntu/auction/qna';
                     }
 
                     if (!fs.existsSync(fileDir)) {
