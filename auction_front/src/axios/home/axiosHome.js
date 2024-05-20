@@ -6,7 +6,6 @@ export const axiosPreview = async () => {
 
     try {
         let response = await axios.get(`${SERVER_URL.SERVER_URL()}/home/bidImg`);
-        console.log("여기로 오는지 ------>", response);
         let result = response.data;
         return result;
 

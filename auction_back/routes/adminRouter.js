@@ -91,4 +91,8 @@ router.delete(`/qna`, (req, res) => {
     adminService.deleteQna(req, res);
 });
 
+router.get('/goods_img',(req,res)=>{
+    adminService.goodsImg(req,res);
+});
+
 module.exports = router;

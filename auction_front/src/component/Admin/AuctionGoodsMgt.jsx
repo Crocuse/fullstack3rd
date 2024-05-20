@@ -22,6 +22,8 @@ function AuctionGoodsMgt() {
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [rejectReason, setRejectReason] = useState('');
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [selectedProductImg,setSelectedProductImg] = useState([]);
 
   useEffect(() => {
     setLoadingModalShow(true);
@@ -31,8 +33,19 @@ function AuctionGoodsMgt() {
 
   useEffect(() => {
     setColumnDefs([
-      { headerName: '상품번호', field: 'GR_NO', width: 104 },
-      { headerName: '상품명', field: 'GR_NAME' },
+      { headerName: '상품번호', field: 'GR_NO', width: 104, 
+          cellRenderer: (params) => (
+          <div>
+            {params.value}
+            &nbsp;&nbsp;&nbsp;<button onClick={() => handleDetailClick(params.data)}>상세보기</button>
+          </div>
+        )
+      },
+      {
+        headerName: '상품명', 
+        field: 'GR_NAME',
+
+      },
       { headerName: '등록ID', field: 'M_ID', width: 120 },
       { headerName: '상품가격', 
         field: 'GR_PRICE', 
@@ -157,6 +170,18 @@ function AuctionGoodsMgt() {
     'row-yellow': params => params.data.GR_APPROVAL === '대기',
   }), []);
 
+const handleDetailClick = (product) => {
+  setSelectedProduct(product);
+  axios_goods_img(product.GR_NO);
+  setLoadingModalShow(true);
+  setShowDetailModal(true);
+};
+
+const closeDetailModal = () => {
+  setSelectedProduct(null);
+  setShowDetailModal(false);
+};
+
   const openRejectModal = (product) => {
     setSelectedProduct(product);
     setRejectModalOpen(true);
@@ -178,6 +203,7 @@ function AuctionGoodsMgt() {
       if (response.data === 'success') {
         closeRejectModal();
         axios_goods_list();
+        alert('반려에 성공하였습니다.')
       } else {
         console.log('반려 사유 변경 실패');
       }
@@ -220,6 +246,7 @@ function AuctionGoodsMgt() {
         });
 
         if (response.data === 'success') {
+          alert('상품 등록수정에 성공하였습니다.')
           axios_goods_list();
         } else {
           console.log('상태 변경 실패');
@@ -229,6 +256,18 @@ function AuctionGoodsMgt() {
       console.log(error);
     }
   };
+
+  const axios_goods_img = async (gr_no) =>{
+    try {
+      const response = await axios.get(`${SERVER_URL.SERVER_URL()}/admin/goods_img`, { params: { gr_no } });
+      console.log(response.data);
+      setSelectedProductImg(response.data);
+      setLoadingModalShow(false);
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <article className="auction-goods-mgt">
@@ -245,6 +284,7 @@ function AuctionGoodsMgt() {
         />
       </div>
       {loadingModalShow && <LoadingModal />}
+      
       {rejectModalOpen && (
         <div className="reject-modal">
           <div className="reject-modal-content">
@@ -260,6 +300,33 @@ function AuctionGoodsMgt() {
               <button onClick={handleRejectSubmit}>제출</button>
               <button onClick={closeRejectModal}>취소</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showDetailModal && (
+        <div className="detail-modal">
+          <div className="detail-modal-content">
+            <h2>상품 상세 정보</h2>
+            <p>상품명: {selectedProduct.GR_NAME}</p>
+            <p>상품 설명: {selectedProduct.GR_INFO}</p>
+            <p>상품 가격: {selectedProduct.GR_PRICE}</p>
+            <p>등록자: {selectedProduct.M_ID}</p>
+            <div className="product-images">
+              {selectedProductImg.length === 0 ? 
+              '등록된 이미지가 없습니다.'
+              :
+
+              selectedProductImg.map((img, index) => (
+                // <img key={index} src={`/img/customer_center/bid_bird_center.png`}/>
+                
+                <img key={index} src={`${SERVER_URL.SERVER_URL()}/goodsImg/${img.GI_NAME}`}/>
+              ))
+              }
+
+              
+            </div>
+            <button onClick={closeDetailModal}>닫기</button>
           </div>
         </div>
       )}
