@@ -9,6 +9,10 @@ const cors = require('cors');
 const flash = require('express-flash');
 const os = require('os');
 const server = require('http').createServer(app);
+const https = require('https');
+const httpPort = 3002;
+const httpsPort = 3001;
+const options = require('./lib/config/pem_config').options;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -42,7 +46,7 @@ if (os.version().includes('Windows')) {
 } else {
     app.use(
         cors({
-            origin: 'http://3.24.176.186:3000',
+            origin: 'https://bidbird.kro.kr',
             credentials: true,
             optionsSuccessStatus: 200,
         })
@@ -51,14 +55,14 @@ if (os.version().includes('Windows')) {
 // CORS END -----------------------------------------------------------------------------------------------------------
 
 // session setting START -----------------------------------------------------------------------------------------------------------
-const options = {
+const sessionOptions = {
     host: 'auctiondb.c5ekqsck8dcp.ap-southeast-2.rds.amazonaws.com',
     port: 3306,
     user: 'root',
     password: '12345678',
     database: 'DB_BIDBIRD',
 };
-const sessionStore = new MySQLStore(options);
+const sessionStore = new MySQLStore(sessionOptions);
 
 const maxAge = 1000 * 60 * 30;
 const sessionObj = {
@@ -68,6 +72,7 @@ const sessionObj = {
     store: sessionStore,
     cookie: {
         maxAge: maxAge,
+        domain: 'bidbird.kro.kr',
     },
 };
 
@@ -100,5 +105,11 @@ app.use('/alarm', require('./routes/alarmRouter'));
 app.use('/home', require('./routes/homeRouter'));
 // 라우터 설정 끗 -----------------------------------------------------------------------------------------------------------
 
-//app.listen(3001);
-server.listen(3001);
+https.createServer(options, app).listen(httpsPort, () => {
+    console.log(`HTTPS: Express listening on port ${httpsPort}`);
+});
+
+// HTTP 서버
+app.listen(httpPort, () => {
+    console.log(`HTTP: Express listening on port ${httpPort}`);
+});
