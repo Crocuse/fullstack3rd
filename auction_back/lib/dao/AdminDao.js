@@ -365,32 +365,42 @@ const AdminDao = {
         });
     },
 
-    getQnaList: (limit, offset) => {
+    getQnaList: (limit, offset, sortColumn, sortOrder) => {
         return new Promise((resolve, reject) => {
-            DB.query('SELECT COUNT(*) AS total FROM TBL_QNA', (err, countResult) => {
-                if (err) {
+          DB.query('SELECT COUNT(*) AS total FROM TBL_QNA', (err, countResult) => {
+            if (err) {
+              console.log(err);
+              resolve(false);
+            } else {
+              let total = countResult[0].total;
+              let totalPages = Math.ceil(total / limit);
+              let orderByClause = '';
+      
+              // 정렬 기준과 순서에 따라 ORDER BY 절 생성
+              if (sortColumn && sortOrder) {
+                orderByClause = `ORDER BY ${sortColumn} ${sortOrder.toUpperCase()}`;
+              } else {
+                orderByClause = 'ORDER BY Q_NO DESC'; // 기본 정렬 기준
+              }
+      
+              DB.query(
+                `SELECT * FROM TBL_QNA ${orderByClause} LIMIT ? OFFSET ?`,
+                [limit, offset],
+                (err, list) => {
+                  if (err) {
                     console.log(err);
-                    res.json(false);
-                } else {
-                    let total = countResult[0].total;
-                    let totalPages = Math.ceil(total / limit);
-
-                    DB.query(
-                        'SELECT * FROM TBL_QNA ORDER BY Q_NO DESC LIMIT ? OFFSET ?',
-                        [limit, offset],
-                        (err, list) => {
-                            if (err) {
-                                console.log(err);
-                                resolve(false);
-                            } else {
-                                resolve({ list, totalPages });
-                            }
-                        }
-                    );
+                    resolve(false);
+                  } else {
+                    resolve({ list, totalPages });
+                  }
                 }
-            });
+              );
+            }
+          });
         });
     },
+
+
 
     updateQna: (answer, q_no) => {
         return new Promise((resolve, reject) => {
