@@ -137,6 +137,12 @@ const adminService = {
         let rst = await AdminDao.deleteQna(q_no);
         res.json(rst);
     },
+
+    goodsImg: async (req,res)=>{
+        let gr_no = req.query.gr_no;
+        let goodsImg = await AdminDao.goodsImg(gr_no);
+        res.json(goodsImg);
+    }
 };
 
 module.exports = adminService;
