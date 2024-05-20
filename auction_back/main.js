@@ -101,6 +101,7 @@ app.use('/auction', require('./routes/auctionRouter'));
 app.use('/point', require('./routes/pointRouter'));
 app.use('/customer_center', require('./routes/customerCenterRouter'));
 app.use('/alarm', require('./routes/alarmRouter'));
+app.use('/home', require('./routes/homeRouter'));
 // 라우터 설정 끗 -----------------------------------------------------------------------------------------------------------
 
 https.createServer(options, app).listen(httpsPort, () => {

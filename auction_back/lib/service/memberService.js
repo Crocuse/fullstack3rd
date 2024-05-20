@@ -252,6 +252,12 @@ const memberService = {
         let result = await MemberDao.memberDelete(req);
         res.json(result);
     },
+
+    modifyGoodsSelect: async (req,res) =>{
+        let result = await MemberDao.modifyGoodsSelect(req);
+        res.json(result);
+    },
+
 };
 
 module.exports = memberService;

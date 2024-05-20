@@ -118,10 +118,16 @@ function AuctionPage() {
             setHour(23 - today.getHours());
             setMinutes(59 - today.getMinutes());
             setSeconds(59 - today.getSeconds());
-            isAuctionEndFunc();
+            setIsAuctionEnd(isAuctionEndFunc());
         }, 1000);
         return () => clearInterval(id);
     }, [today]);
+
+    useEffect(() => {
+        if (isAuctionEnd) {
+            endAuction();
+        }
+    }, [isAuctionEnd]);
 
     async function fetchProductData(grNo) {
         console.log('fetchProductData');
@@ -223,6 +229,32 @@ function AuctionPage() {
         } catch (error) {
             console.log(error);
             setLoaingModalShow(false);
+        }
+    }
+
+    async function endedAuction() {
+        console.log('endedAuction()');
+
+        if(product.M_ID === undefined) 
+            product.M_ID = null;
+        
+        const ended = {
+            grNo,
+            isBid : bidingLog.length > 0 ? 1 : 0,
+            sellId : product.M_ID,
+            buyId : highestBidder,
+            point : nowPrice
+        }
+
+        try {
+            const response = await axios.post(`${SERVER_URL.SERVER_URL()}/auction/endedAuction`, ended);
+            if (response.data == 'fail') {
+                console.log('fail');
+            } else {
+                console.log('success');
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
 
@@ -336,7 +368,6 @@ function AuctionPage() {
 
     const performBid = (level, isBidType) => {
         console.log('performBid()');
-        console.log('<<<<<<<<<<<<<<<<<<<<',level)
         if (isBidType) {
             asBid(level);
         } else {
@@ -348,24 +379,31 @@ function AuctionPage() {
         console.log('checkId()');
         sessionCheck(sessionId, navigate);
 
+        let rtn;
+
         if (hour === 0 && minutes <= 5 && extendLevel > 6) {
             console.log(maxLevelBidId.length);
             for(let i = 0; i<maxLevelBidId.length; i++){
                 console.log(maxLevelBidId[i]);
                 if(maxLevelBidId[i].M_ID === loginedId){
                     alert('이미 입찰 이력이 있습니다.');
-                    return false;
+                    rtn = false;
                 }
             }
             return true;    
+        } else if(loginedId === product.M_ID) {
+            alert('물품 등록자는 입찰할수 없습니다.')
+            rtn = false;
         } else {
             if (highestBidder === loginedId) {
                 alert('이미 최고 입찰자 입니다.');
-                return false;
+                rtn = false;
             } else {
-                return true; 
+                rtn = true; 
             }
         }
+
+        return rtn;
     }
 
     const checkAsBid = (price) => {
@@ -433,17 +471,26 @@ function AuctionPage() {
     }
 
     const isAuctionEndFunc = () => {
-        if (hour === 0 && seconds === 0) {
-            const endTimes = [30, 25, 20, 15, 10, 5];
-            const levels = [1, 2, 3, 4, 5, 6];
-            for (let i = 0; i < endTimes.length; i++) {
-                if (minutes <= endTimes[i] && extendLevel < levels[i]) {
-                    setIsAuctionEnd(true);
-                    break;
-                }
+        if (hour === 0 && minutes === 0 &&seconds === 0) {
+            return true;
+        }
+
+        const endTimes = [30, 25, 20, 15, 10, 5];
+        const levels = [1, 2, 3, 4, 5, 6];
+
+        for (let i = 0; i < endTimes.length; i++) {
+            if (hour === 0 && minutes <= endTimes[i] && extendLevel < levels[i]) {
+                return true;
             }
         }
-    }
+        return false;
+    };
+
+    const endAuction = () => {
+        alert('경매가 종료되었습니다.');
+        endedAuction();
+    };
+    
     return (
         <article>
             <div className="auction_page_wrap">
@@ -483,19 +530,41 @@ function AuctionPage() {
                     <div className="auction_bird">
                         <img id="bid_bird" src="/img/bid_bird_img.png" alt="" />
                             <img id="bubble" src="/img/bubble.png" alt="" />
-                            <span className="bubble_text">
-                                {
-                                    bidingLog.length === 0 ? <>
-                                         남은 경매 시간 {hour < 10 ? '0' + hour : hour}:{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}입니다.    
-                                    </> :
+                            <span className="bubble_text"> {
+                                extendLevel === 7 && minutes <= 5 ? (
+                                    <>비공개 경매 시간 입니다.</>
+                                ) : isAuctionEnd ? (
                                     <>
-                                         {bidingLog.length > 0 ? bidingLog[bidingLog.length - 1].M_ID : ''} 님 께서
-                                        {bidingLog.length > 0 ? bidingLog[bidingLog.length - 1].AC_POINT.toLocaleString('ko-KR') : ''} 원에
-                                        상회 입찰 하였습니다.<br />
-                                         남은 경매 시간 {hour < 10 ? '0' + hour : hour}:{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}입니다.    
+                                        {bidingLog.length > 0 ? (
+                                            <>
+                                                {bidingLog[bidingLog.length - 1].M_ID} 님 께서 상품을 낙찰 하였습니다.
+                                            </>
+                                        ) : (
+                                            <>
+                                                상품이 유찰 되었습니다.
+                                            </>
+                                        )}
                                     </>
-                                }
-                            </span>
+                                ) : (
+                                    <>
+                                        {
+                                            bidingLog.length === 0 ? (
+                                                <>
+                                                    남은 경매 시간 {hour < 10 ? '0' + hour : hour}:{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}입니다.
+                                                </>
+                                            ) : (
+                                                <>
+                                                    {bidingLog.length > 0 ? bidingLog[bidingLog.length - 1].M_ID : ''} 님 께서
+                                                    {bidingLog.length > 0 ? bidingLog[bidingLog.length - 1].AC_POINT.toLocaleString('ko-KR') : ''} 원에
+                                                    상회 입찰 하였습니다.<br />
+                                                    남은 경매 시간 {hour < 10 ? '0' + hour : hour}:{minutes < 10 ? '0' + minutes : minutes}:{seconds < 10 ? '0' + seconds : seconds}입니다.
+                                                </>
+                                            )
+                                        }
+                                    </>
+                                )
+                            }
+                        </span>
                     </div>
                     <div className="bubble_text">
 
@@ -510,16 +579,16 @@ function AuctionPage() {
                                         </div>
                                     ))
                                 }
-                            </div>
+                            </div> 
                         </div>
                         <div className="auction_btn">
-                            <button onClick={normalBidBtnHandler}>입찰({nextBid.toLocaleString('ko-KR')}₩)</button><br />
+                            <button onClick={normalBidBtnHandler} disabled={isAuctionEnd}>입찰({nextBid.toLocaleString('ko-KR')}₩)</button><br />
                             <div className="call_bid">
                                 <div>
-                                    <input type="text" name="as_price" value={asPrice} onChange={(e) => asPriceChangeHandler(e)} />
+                                    <input type="text" name="as_price" value={asPrice} disabled={isAuctionEnd} onChange={(e) => asPriceChangeHandler(e)} />
                                 </div>
                                 <div>
-                                    <button onClick={asBidBtnHandler}>호가 입찰</button>
+                                    <button onClick={asBidBtnHandler} disabled={isAuctionEnd}>호가 입찰</button>
                                 </div>
                             </div>
                         </div>

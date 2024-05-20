@@ -34,7 +34,7 @@ const auctionService = {
             });
     },
     currentList: (req, res) => {
-        DB.query(`SELECT * FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE = '2024-05-04' ORDER BY AS_LOCATION_NUM ASC`,
+        DB.query(`SELECT * FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE = '2024-05-18' ORDER BY AS_LOCATION_NUM ASC`,
             //DB.query(`SELECT * FROM TBL_AUCTION_SCHEDULE WHERE AS_START_DATE = DATE_ADD(CURDATE())`,
             [],
             (error, list) => {
@@ -127,28 +127,25 @@ const auctionService = {
         let extendLevel = req.query.extendLevel;
         asPrice = asPrice.replaceAll(',','');
 
-        console.log('>>>>>>>>>>>>>>>>',extendLevel);
-
-        console.log
-
          DB.query(`SELECT MAX(AC_POINT) AS max_price FROM TBL_AUCTION_CURRENT WHERE GR_NO = ?`,
        [grNo],
         (error, result) => {
             if (error) {
                 console.log(error);
             } else {
-                let maxPrice = result[0].max_price;
-                if (asPrice > maxPrice) {
+                let maxPrice = result[0].max_price;                
+                if (asPrice > maxPrice || extendLevel > 6) {
                     DB.query(`INSERT INTO TBL_AUCTION_CURRENT(M_ID, AC_POINT, GR_NO, AC_EXTENDLEVEL) VALUES(?, ?, ?, ?)`,
-                        [mId, asPrice, grNo, extendLevel],
-                        (error, result) => {
-                            if (error) {
-                                console.log(error);
-                            } else {
-                                res.json(result);
-                            }
-                        })
-                } else {
+                    [mId, asPrice, grNo, extendLevel],
+                    (error, result) => {
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            res.json(result);
+                        }
+                    })
+                } 
+                else {
                     res.json('fail');
                 }
             }
@@ -182,6 +179,35 @@ const auctionService = {
             }
         })
     },
+    endedAuction: (req, res) => {
+        let post = req.body;
+
+        if(post.isBid === 0)
+            post.buyId = null;
+
+        DB.query(`SELECT GR_NO FROM TBL_AUCTION_RESULT WHERE GR_NO = ?`,
+        [post.grNo],
+        (error, result) => {
+            if(error) {
+                console.log(error);
+            } else {
+                if(result.length < 1){
+                    DB.query(`INSERT INTO TBL_AUCTION_RESULT(GR_NO, AR_IS_BID, AR_SELL_ID, AR_BUY_ID, AR_POINT) VALUES(?, ?, ?, ?, ?)`,
+                    [post.grNo, post.isBid, post.sellId, post.buyId, post.point],
+                    (error, result) => {
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            console.log(result);
+                            res.json('success');
+                        }
+                    })
+                }
+            }
+        })
+
+        
+    },
     bidmsg: async (socketData, socket) => {
         let loglist = [];
         if (socketData.grNo !== '') {
@@ -211,7 +237,55 @@ const auctionService = {
             bidType : socketData.isBidType,
         });
     },
+    modifyGoodsConfirm:(req,res)=>{
+        
 
+            let post = req.body;
+            let files = req.files;
+           
+            DB.query(`UPDATE 
+                        TBL_GOODS_REGIST 
+                    SET 
+                        GR_NAME =?,
+                        GR_PRICE =?,
+                        GR_INFO =?,
+                        GR_MOD_DATE = NOW()
+                    WHERE 
+                        GR_NO = ?
+                        `,
+                [post.grName, post.grPrice, post.grInfo, post.grNo],
+                (error, result) => {
+                    if (error) {
+                        console.log(error)
+                        for (let i = 0; i < files.length; i++) {
+                            fs.unlink(`C:/acution/goodsImg/${req.file.filename}`, (error) => {
+                                console.log('UPLOADED FILE DELETE COMPLETED!!');
+                            });
+                        }
+                        res.json('fail');
+
+                    } else {
+
+                        DB.query(`DELETE FROM TBL_GOODS_IMG WHERE GR_NO = ?`,[post.grNo],(err,rst)=>{
+
+                            if(err){
+                                console.log(err);
+                            } else {
+                                for (let i = 0; i < files.length; i++) {
+                                    DB.query('INSERT INTO TBL_GOODS_IMG(GI_NAME, GR_NO) VALUES(?, ?)',
+                                        [files[i].filename, post.grNo],
+                                        (error, result) => {
+                                            if (error)
+                                                console.log(error);
+                                    });
+                                }
+                                res.json('success');
+                            }
+                        })
+                    }
+                });
+            
+    },
 }
 
 module.exports = auctionService;
