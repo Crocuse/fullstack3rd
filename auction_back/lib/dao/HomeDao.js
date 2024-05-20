@@ -13,9 +13,10 @@ module.exports = {
             TBL_AUCTION_CURRENT ac
         JOIN 
             TBL_GOODS_IMG gi ON ac.GR_NO = gi.GR_NO
+        WHERE 
+            DATE(ac.AC_REG_DATE) = CURDATE()
         GROUP BY 
             ac.GR_NO;
-        
          `,
                 (err, imgList) => {
                     if (err) {
