@@ -46,7 +46,7 @@ if (os.version().includes('Windows')) {
 } else {
     app.use(
         cors({
-            origin: 'http://3.24.176.186:3000',
+            origin: 'http://3.37.1.14:3000',
             credentials: true,
             optionsSuccessStatus: 200,
         })
