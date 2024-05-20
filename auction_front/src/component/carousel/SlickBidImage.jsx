@@ -21,6 +21,7 @@ function SlickBidImage() {
     autoplay: true,
     autoplaySpeed: 2000,
     draggable: true,
+    variableWidth: true
   };
 
 
