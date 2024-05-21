@@ -51,6 +51,7 @@ import TopArrow from './component/include/TopArrow';
 import QnaAwnser from './component/Admin/QnaAwnser';
 import KakaoLogin from './component/member/KakaoLogin';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import AlarmModal from './component/alarm/AlarmModal';
 
 function App() {
     // 폰트어썸 적용
@@ -124,6 +125,7 @@ function App() {
                                 {/* 잘못된 경로에 대해서는 / 경로로 리다이렉트 */}
                                 <Route path="*" element={<Navigate to="/" replace />} />
                             </Routes>
+                            <AlarmModal />
                         </BrowserRouter>
                     </PersistGate>
                 </Provider>
