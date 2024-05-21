@@ -46,8 +46,13 @@ router.get('/max_level_id_list', (req, res) => {
 });
 
 router.post('/endedAuction', (req, res) => {
-    console.log('/auction/endedAuction');
+    console.log('/auction/endedAuction'); 
     auctionService.endedAuction(req, res);
+});
+
+router.get('/get_user_point', (req, res) => {
+    console.log('/auction/get_user_point');
+    auctionService.getUserPoint(req, res);
 });
 
 router.post('/modify_goods_confirm',upload.UPLOAD_GOODS_MIDDLEWARE(),(req,res)=>{
