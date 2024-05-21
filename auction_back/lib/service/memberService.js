@@ -51,7 +51,7 @@ const memberService = {
 
     googleLogin: (req, res) => {
         const googleAuthURL = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&redirect_uri=${encodeURIComponent(
-            'http://localhost:3000/auth/google/callback'
+            'https://bidbird.kro.kr/auth/google/callback'
         )}&scope=https://www.googleapis.com/auth/plus.login email&client_id=${google.web.client_id}`;
         res.json({ url: googleAuthURL });
     },
@@ -253,11 +253,10 @@ const memberService = {
         res.json(result);
     },
 
-    modifyGoodsSelect: async (req,res) =>{
+    modifyGoodsSelect: async (req, res) => {
         let result = await MemberDao.modifyGoodsSelect(req);
         res.json(result);
     },
-
 };
 
 module.exports = memberService;

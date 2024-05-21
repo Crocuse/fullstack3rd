@@ -8,6 +8,7 @@ import { axiosSetReadState } from '../../axios/alarm/axiosAlarm';
 import { Link, useNavigate } from 'react-router-dom';
 import { setAlarmInfo } from '../../redux/action/setAlarmInfo';
 import { sessionCheck } from '../../util/sessionCheck';
+import AlarmModal from './AlarmModal';
 
 function AuctionAlarm() {
     const socket = io('https://bidbird.kro.kr:3001');
@@ -17,6 +18,7 @@ function AuctionAlarm() {
     const alarmInfo = useSelector((state) => state.alarmInfo);
 
     const [updateAlarm, setUpdateAlarm] = useState(false);
+    const [hasNewAlarm, setHasNewAlarm] = useState(false);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -66,14 +68,18 @@ function AuctionAlarm() {
         try {
             if (currentHour === 23 && currentMinute > 55) {
                 dispatch(setAlarmInfo('알림없음'));
+                setHasNewAlarm(false);
                 return;
             }
 
             let result = await axiosGetAlarmInfo(loginedId);
             if (result !== null) {
                 dispatch(setAlarmInfo(result));
+                const hasUnreadAlarm = result.some((alarm) => alarm.AOB_READ === 0);
+                setHasNewAlarm(hasUnreadAlarm);
             } else {
                 dispatch(setAlarmInfo('알림없음'));
+                setHasNewAlarm(false);
             }
         } catch (error) {
             console.log('[AuctionAlarm]', error);
@@ -96,40 +102,43 @@ function AuctionAlarm() {
     };
 
     return (
-        <div id="alarm_container">
-            <div className="alarm_title">
-                <p className="alarm_box">알람</p>
-            </div>
-            <div className="alram_description_wrap">
-                <div className="alarm_description">
-                    <div className="alarmInfoInDB">
-                        {Array.isArray(alarmInfo) ? (
-                            alarmInfo.map((alarm, index) => (
-                                <Link
-                                    className="alarm_a"
-                                    to={`/auction/auction_page?grNo=${alarm.GR_NO}`}
-                                    key={index}
-                                    onClick={(event) => alarmOldReminderClickHandler(event, alarm)}
-                                >
-                                    <p className="over_bid_group">
-                                        상품명: {alarm.GR_NAME} <br />
-                                        {alarm.AOB_TXT} <br />
-                                        {alarm.AOB_OCCUR_DATE}
-                                    </p>
-                                </Link>
-                            ))
-                        ) : alarmInfo === '알림없음' ? (
-                            <p>알림이 없습니다.</p>
-                        ) : alarmInfo === 'ERROR' ? (
-                            <p>
-                                ERROR 관리자에 문의하세요. <br />
-                                고객센터 : 031-1234-5678
-                            </p>
-                        ) : null}
+        <>
+            <div id="alarm_container">
+                <div className="alarm_title">
+                    <p className="alarm_box">알람</p>
+                </div>
+                <div className="alram_description_wrap">
+                    <div className="alarm_description">
+                        <div className="alarmInfoInDB">
+                            {Array.isArray(alarmInfo) ? (
+                                alarmInfo.map((alarm, index) => (
+                                    <Link
+                                        className="alarm_a"
+                                        to={`/auction/auction_page?grNo=${alarm.GR_NO}`}
+                                        key={index}
+                                        onClick={(event) => alarmOldReminderClickHandler(event, alarm)}
+                                    >
+                                        <p className="over_bid_group">
+                                            상품명: {alarm.GR_NAME} <br />
+                                            {alarm.AOB_TXT} <br />
+                                            {alarm.AOB_OCCUR_DATE}
+                                        </p>
+                                    </Link>
+                                ))
+                            ) : alarmInfo === '알림없음' ? (
+                                <p>알림이 없습니다.</p>
+                            ) : alarmInfo === 'ERROR' ? (
+                                <p>
+                                    ERROR 관리자에 문의하세요. <br />
+                                    고객센터 : 031-1234-5678
+                                </p>
+                            ) : null}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <AlarmModal hasNewAlarm={hasNewAlarm} />
+        </>
     );
 }
 

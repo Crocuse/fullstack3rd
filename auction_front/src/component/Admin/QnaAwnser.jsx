@@ -38,61 +38,61 @@ const QnaAwnser = () => {
     function pageChangeHandler(page) {
         setCurrentPage(page);
         axios_getQnalist(page);
-    };
+    }
 
     const sortQnaList = (list, sortColumn, sortOrder) => {
         const sortedList = [...list];
-      
-        if (sortColumn) {
-          sortedList.sort((a, b) => {
-            const valueA = a[sortColumn];
-            const valueB = b[sortColumn];
-      
-            if (valueA === null) return sortOrder === 'asc' ? 1 : -1;
-            if (valueB === null) return sortOrder === 'asc' ? -1 : 1;
-      
-            if (typeof valueA === 'string') {
-              return sortOrder === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
-            } else {
-              return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
-            }
-          });
-        }
-      
-        return sortedList;
-      };
 
-      const handleSort = (column) => {
+        if (sortColumn) {
+            sortedList.sort((a, b) => {
+                const valueA = a[sortColumn];
+                const valueB = b[sortColumn];
+
+                if (valueA === null) return sortOrder === 'asc' ? 1 : -1;
+                if (valueB === null) return sortOrder === 'asc' ? -1 : 1;
+
+                if (typeof valueA === 'string') {
+                    return sortOrder === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
+                } else {
+                    return sortOrder === 'asc' ? valueA - valueB : valueB - valueA;
+                }
+            });
+        }
+
+        return sortedList;
+    };
+
+    const handleSort = (column) => {
         if (sortColumn === column) {
-          setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
         } else {
-          setSortColumn(column);
-          setSortOrder('asc');
+            setSortColumn(column);
+            setSortOrder('asc');
         }
     };
 
     // Axios ------------------------------------------------------------------------------------------------------------------------
     async function axios_getQnalist(page) {
         try {
-          const response = await axios.get(`${SERVER_URL.SERVER_URL()}/admin/QnaList`, {
-            params: {
-              page: page,
-              limit: 10,
-            },
-          });
-      
-          if (response.data === false) {
-            return;
-          }
-          const sortedList = sortQnaList(response.data.list, sortColumn, sortOrder);
-          setQnaList(sortedList);
-          setTotalPages(response.data.totalPages);
+            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/admin/QnaList`, {
+                params: {
+                    page: page,
+                    limit: 10,
+                },
+            });
+
+            if (response.data === false) {
+                return;
+            }
+            const sortedList = sortQnaList(response.data.list, sortColumn, sortOrder);
+            setQnaList(sortedList);
+            setTotalPages(response.data.totalPages);
         } catch (error) {
-          console.log(error);
-          alert('통신 에러가 발생했습니다.');
-          return;
+            console.log(error);
+            alert('통신 에러가 발생했습니다.');
+            return;
         }
-    };
+    }
 
     // View ------------------------------------------------------------------------------------------------------------------------
     return (
@@ -100,17 +100,17 @@ const QnaAwnser = () => {
             <div className="qna_answer_wrap">
                 <h2>문의내역</h2>
                 <table className="qna_list">
-                <tr>
-                    <th onClick={() => handleSort('Q_NO')}>문의번호</th>
-                    <th onClick={() => handleSort('M_ID')}>아이디</th>
-                    <th onClick={() => handleSort('Q_REG_DATE')}>문의일시</th>
-                    <th>문의명</th>
-                    <th onClick={() => handleSort('Q_ANSWER')}>처리결과</th>
-                    <th onClick={() => handleSort('Q_ANSWER_DATE')}>답변일시</th>
-                </tr>
+                    <tr>
+                        <th onClick={() => handleSort('Q_NO')}>문의번호</th>
+                        <th onClick={() => handleSort('M_ID')}>아이디</th>
+                        <th onClick={() => handleSort('Q_REG_DATE')}>문의일시</th>
+                        <th>문의명</th>
+                        <th onClick={() => handleSort('Q_ANSWER')}>처리결과</th>
+                        <th onClick={() => handleSort('Q_ANSWER_DATE')}>답변일시</th>
+                    </tr>
                     {qnaList.length === 0 ? (
                         <tr>
-                            <td colSpan={5} className="no_qna">
+                            <td colSpan={6} className="no_qna">
                                 문의 내역이 없습니다.
                             </td>
                         </tr>
