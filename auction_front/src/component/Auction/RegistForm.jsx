@@ -30,7 +30,7 @@ function RegistForm(props) {
         }
         if (isModify && modifyGoods.images) {
             const initialImages = modifyGoods.images.map(
-                (image) => `${SERVER_URL.SERVER_URL()}/auction/goodsImg/${image.GI_NAME}`
+                (image) => `${SERVER_URL.SERVER_URL()}/goodsImg/${image.GI_NAME}`
             );
             console.log(initialImages);
             setImg(initialImages);
