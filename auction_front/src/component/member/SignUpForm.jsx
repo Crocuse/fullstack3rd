@@ -293,11 +293,10 @@ function SignUpForm() {
                         />
                         <input type="button" value={'아이디 중복 검사'} onClick={IdCheckbtnClick} />
                     </div>
-                </div>
-
-                <div className="id_check_wrap">
-                    <span id="id_check_false"></span>
-                    <span id="id_check_true"></span>
+                    <div className="id_check_wrap">
+                        <span id="id_check_false"></span>
+                        <span id="id_check_true"></span>
+                    </div>
                 </div>
 
                 <div className="input_wrap">
@@ -326,11 +325,10 @@ function SignUpForm() {
                             onChange={pwChangehandler}
                         />
                     </div>
-                </div>
-
-                <div className="pw_check_wrap">
-                    <span id="pw_check_false"></span>
-                    <span id="pw_check_true"></span>
+                    <div className="pw_check_wrap">
+                        <span id="pw_check_false"></span>
+                        <span id="pw_check_true"></span>
+                    </div>
                 </div>
 
                 <div className="input_wrap" id="input_mail">
@@ -343,11 +341,10 @@ function SignUpForm() {
                         <input type="text" name="mail2" onChange={mailChangehandler} />
                         <input type="button" value={'이메일 인증'} onClick={mailCheckClickHandler} />
                     </div>
-                </div>
-
-                <div className="mail_check_wrap">
-                    <span id="mail_check_false"></span>
-                    <span id="mail_check_true"></span>
+                    <div className="mail_check_wrap">
+                        <span id="mail_check_false"></span>
+                        <span id="mail_check_true"></span>
+                    </div>
                 </div>
 
                 {mailCheck === true ? (
