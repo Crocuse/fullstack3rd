@@ -2,7 +2,7 @@ const AlarmDao = require('../dao/AlarmDao');
 
 module.exports = {
     notificataionOverBid: async (socketData, socket, io) => {
-        console.log("[ALARMSERVICE] notificataionOverBid()");
+        console.log('[ALARMSERVICE] notificataionOverBid()');
 
         try {
             let grNo = socketData.grNo;
@@ -11,15 +11,14 @@ module.exports = {
                 io.emit('notificationOverBid');
                 socket.disconnect();
             }
-
         } catch (error) {
-            socket.emit("notificationOverBidErr");
+            socket.emit('notificationOverBidErr');
             socket.disconnect();
         }
     },
 
     alarmInfo: async (req, res) => {
-        console.log("[ALARMSERVICE] alarmInfo()");
+        console.log('[ALARMSERVICE] alarmInfo()');
 
         let id = req.body.loginedId;
         let result = await AlarmDao.getMyAlarm(id);
@@ -27,12 +26,11 @@ module.exports = {
     },
 
     putAlarmReadState: async (req, res) => {
-        console.log("[ALARMSERVICE] putAlarmReadState()");
+        console.log('[ALARMSERVICE] putAlarmReadState()');
 
         let date = req.body.date;
         let id = req.body.id;
         let result = await AlarmDao.updateReadState(date, id);
         res.json(result);
-    }
-
-}
+    },
+};

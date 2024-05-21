@@ -14,9 +14,9 @@ function AuctionAlarm() {
         window.location.hostname === 'localhost' ? 'http://localhost:3002' : 'https://bidbird.kro.kr:3001';
     const socket = io(socketServerUrl);
     const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
-    const loginedId = useSelector((state) => state.loginedInfos.loginedId.loginedId);
+    const loginedId = useSelector((state) => state['loginedInfos']['loginedId']['loginedId']);
 
-    const alarmInfo = useSelector((state) => state.alarmInfo.alarmInfo);
+    const alarmInfo = useSelector((state) => state['alarmInfo']['alarmInfo']);
 
     const [updateAlarm, setUpdateAlarm] = useState(false);
 
@@ -55,7 +55,7 @@ function AuctionAlarm() {
     }, [updateAlarm]);
 
     const unReadAlarm = () => {
-        if (alarmInfo !== '알림없음' && alarmInfo !== 'ERROR' && alarmInfo.length > 0) {
+        if (alarmInfo && alarmInfo !== '알림없음' && alarmInfo !== 'ERROR' && alarmInfo.length > 0) {
             const hasUnReadAlarm = alarmInfo.some((alarmInfo) => alarmInfo.AOB_READ === 0);
             setUpdateAlarm(hasUnReadAlarm);
             return hasUnReadAlarm;

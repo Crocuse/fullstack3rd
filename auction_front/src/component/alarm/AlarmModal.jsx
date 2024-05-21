@@ -4,13 +4,14 @@ import { setHasNewAlarm } from '../../redux/action/setAlarmInfo';
 
 const AlarmModal = () => {
     const dispatch = useDispatch();
-    const hasNewAlarm = useSelector((state) => state.alarmInfo.hasNewAlarm);
+    const hasNewAlarm = useSelector((state) => state['alarmInfo']['hasNewAlarm']);
 
     const modalClickHandler = () => {
         window.scrollTo({
             top: 0,
             behavior: 'smooth',
         });
+        dispatch(setHasNewAlarm(false)); // 알람을 확인했음을 표시
     };
 
     useEffect(() => {
