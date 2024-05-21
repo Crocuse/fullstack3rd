@@ -46,7 +46,7 @@ router.get('/max_level_id_list', (req, res) => {
 });
 
 router.post('/endedAuction', (req, res) => {
-    console.log('/auction/endedAuction');
+    console.log('/auction/endedAuction'); 
     auctionService.endedAuction(req, res);
 });
 
