@@ -26,6 +26,22 @@ function PayAPI({ chargeAmount, resetChargeAmount, chargeInputRef, axios_get_my_
             return;
         }
 
+        let tmpAmount = chargeAmount;
+        tmpAmount = Math.round(tmpAmount/100) * 100;
+
+        console.log(chargeAmount);
+        console.log(tmpAmount);
+
+        tmpAmount = chargeAmount - tmpAmount;
+
+        console.log(tmpAmount);
+
+        if(tmpAmount !== 0) {
+            alert('10원 단위 금액은 입력 할 수 없습니다.');
+            return;
+        }
+
+
         IMP.request_pay(
             {
                 pg: 'html5_inicis.INIpayTest',
