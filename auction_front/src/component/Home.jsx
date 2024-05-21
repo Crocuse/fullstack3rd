@@ -9,13 +9,12 @@ function Home() {
 
     useEffect(() => {
         bidImgList();
-
     }, []);
 
     const bidImgList = async () => {
         let result = await axiosPreview();
         console.log(result);
-    }
+    };
     return (
         <article>
             <div className="home_wrap">

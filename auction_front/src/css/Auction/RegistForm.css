@@ -38,6 +38,10 @@
     margin-top: 5px;
 }
 
+.regist_input_wrap input[name='gr_info'] {
+    height: 150px;
+}
+
 .regist_input:focus {
     border-color: #1565c0;
     box-shadow: 0 0 8px rgba(108, 99, 255, 0.5);
