@@ -251,14 +251,22 @@ const MemberDao = {
         return new Promise((resolve, reject) => {
             let gr_no = req.query.gr_no;
 
-            DB.query('DELETE FROM TBL_GOODS_REGIST WHERE GR_NO = ?', [gr_no], (err, rst) => {
+            DB.query('DELETE FROM TBL_GOODS_IMG WHERE GR_NO = ?', [gr_no], (err, rst) => {
                 if (err) {
                     console.log(err);
                     resolve('error');
                     return;
                 }
 
-                resolve('deleted');
+                DB.query('DELETE FROM TBL_GOODS_REGIST WHERE GR_NO = ?', [gr_no], (err, rst) => {
+                    if (err) {
+                        console.log(err);
+                        resolve('error');
+                        return;
+                    }
+
+                    resolve('deleted');
+                });
             });
         });
     },
@@ -425,34 +433,35 @@ const MemberDao = {
         });
     },
 
-    modifyGoodsSelect:(req)=>{
+    modifyGoodsSelect: (req) => {
         return new Promise((resolve, reject) => {
             let gr_no = req.query.gr_no;
 
-            DB.query(
-                `SELECT * FROM TBL_GOODS_REGIST WHERE GR_NO = ?`,[gr_no],(err,goods)=>{
-                    if(err){
-                        console.log(err);
-                        reject(err);
-                        return;
-                    } else {
-                        DB.query(`
+            DB.query(`SELECT * FROM TBL_GOODS_REGIST WHERE GR_NO = ?`, [gr_no], (err, goods) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                    return;
+                } else {
+                    DB.query(
+                        `
                             SELECT * FROM TBL_GOODS_IMG WHERE GR_NO = ?
-                        `,[gr_no],(err,images)=>{
-                            if(err){
+                        `,
+                        [gr_no],
+                        (err, images) => {
+                            if (err) {
                                 console.log(err);
                                 reject(err);
                                 return;
                             } else {
                                 resolve({ goods: goods[0], images });
                             }
-                        })
-                    }
-                });
-        })
+                        }
+                    );
+                }
+            });
+        });
     },
-
-    
 };
 
 module.exports = MemberDao;
