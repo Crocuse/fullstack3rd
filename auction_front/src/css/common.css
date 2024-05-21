@@ -259,3 +259,36 @@ footer {
 .drop_down_wrap:hover .drop_down_content {
     display: block;
 }
+
+#alarm_modal {
+    position: fixed;
+    top: 30px;
+    right: 50px;
+    background-color: #fff;
+    width: 280px;
+    height: 35px;
+    border: 2px solid #49a5f5;
+    border-radius: 7px;
+    text-align: center;
+    line-height: 35px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+#alarm_modal .flex {
+    display: flex;
+    justify-content: center;
+}
+
+#alarm_modal .img {
+    padding-top: 4px;
+    margin-right: 10px;
+}
+
+#alarm_modal .img img {
+    max-width: 23px;
+}
+
+#alarm_modal .txt {
+    font-size: 1.1em;
+}

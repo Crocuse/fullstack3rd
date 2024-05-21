@@ -6,19 +6,19 @@ import '../../css/Alarm/alarm.css';
 import { axiosGetAlarmInfo } from '../../axios/alarm/axiosAlarm';
 import { axiosSetReadState } from '../../axios/alarm/axiosAlarm';
 import { Link, useNavigate } from 'react-router-dom';
-import { setAlarmInfo } from '../../redux/action/setAlarmInfo';
+import { setAlarmInfo, setHasNewAlarm } from '../../redux/action/setAlarmInfo';
 import { sessionCheck } from '../../util/sessionCheck';
-import AlarmModal from './AlarmModal';
 
 function AuctionAlarm() {
-    const socket = io('https://bidbird.kro.kr:3001');
+    const socketServerUrl =
+        window.location.hostname === 'localhost' ? 'http://localhost:3002' : 'https://bidbird.kro.kr:3001';
+    const socket = io(socketServerUrl);
     const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
     const loginedId = useSelector((state) => state.loginedInfos.loginedId.loginedId);
 
-    const alarmInfo = useSelector((state) => state.alarmInfo);
+    const alarmInfo = useSelector((state) => state.alarmInfo.alarmInfo);
 
     const [updateAlarm, setUpdateAlarm] = useState(false);
-    const [hasNewAlarm, setHasNewAlarm] = useState(false);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -30,8 +30,8 @@ function AuctionAlarm() {
     useEffect(() => {
         socket.on('notificationOverBid', () => {
             console.log('Client NOTIFICATION OVER BID');
-
             getMyAlarm();
+            dispatch(setHasNewAlarm(true)); // 새로운 알람이 있음을 표시
         });
 
         socket.on('notificationOverBidErr', (data) => {
@@ -46,17 +46,22 @@ function AuctionAlarm() {
     }, [socket]);
 
     useEffect(() => {
-        if (unReadAlarm) {
+        if (unReadAlarm()) {
             getMyAlarm();
+            dispatch(setHasNewAlarm(true));
+        } else {
+            dispatch(setHasNewAlarm(false));
         }
     }, [updateAlarm]);
 
     const unReadAlarm = () => {
         if (alarmInfo !== '알림없음' && alarmInfo !== 'ERROR' && alarmInfo.length > 0) {
             const hasUnReadAlarm = alarmInfo.some((alarmInfo) => alarmInfo.AOB_READ === 0);
-            setUpdateAlarm(hasUnReadAlarm); // true
+            setUpdateAlarm(hasUnReadAlarm);
+            return hasUnReadAlarm;
         } else {
             setUpdateAlarm(false);
+            return false;
         }
     };
 
@@ -137,7 +142,6 @@ function AuctionAlarm() {
                     </div>
                 </div>
             </div>
-            <AlarmModal hasNewAlarm={hasNewAlarm} />
         </>
     );
 }

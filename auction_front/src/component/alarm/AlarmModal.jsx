@@ -1,12 +1,21 @@
 import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setHasNewAlarm } from '../../redux/action/setAlarmInfo';
 
-const AlarmModal = ({ hasNewAlarm }) => {
+const AlarmModal = () => {
+    const dispatch = useDispatch();
+    const hasNewAlarm = useSelector((state) => state.alarmInfo.hasNewAlarm);
+
     const modalClickHandler = () => {
         window.scrollTo({
             top: 0,
             behavior: 'smooth',
         });
     };
+
+    useEffect(() => {
+        console.log(hasNewAlarm);
+    }, [hasNewAlarm]);
 
     return (
         <>
@@ -20,8 +29,8 @@ const AlarmModal = ({ hasNewAlarm }) => {
                     </div>
                 </div>
             )}
-            ;
         </>
     );
 };
+
 export default AlarmModal;
