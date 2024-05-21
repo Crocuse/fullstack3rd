@@ -8,11 +8,7 @@ const MySQLStore = require('express-mysql-session')(session);
 const cors = require('cors');
 const flash = require('express-flash');
 const os = require('os');
-const http = require('http');
-const https = require('https');
-const httpPort = 3002;
-const httpsPort = 3001;
-const options = require('./lib/config/pem_config').options;
+const server = require('http').createServer(app);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -27,7 +23,14 @@ if (os.version().includes('Windows')) {
     app.use(express.static(`/home/ubuntu/auction`));
 }
 
-// CORS 설정 -----------------------------------------------------------------------------------------------------------
+//SOCKET.IO -----------------------------------------------------------------------------------------------------------
+
+const initializeSocket = require('./lib/websocket/initializeSocket');
+initializeSocket(server);
+
+//SOCKET.IO END -----------------------------------------------------------------------------------------------------------
+
+// CORS START -----------------------------------------------------------------------------------------------------------
 if (os.version().includes('Windows')) {
     app.use(
         cors({
@@ -39,23 +42,23 @@ if (os.version().includes('Windows')) {
 } else {
     app.use(
         cors({
-            origin: 'https://bidbird.kro.kr',
+            origin: 'http://54.180.200.131:3000',
             credentials: true,
             optionsSuccessStatus: 200,
         })
     );
 }
-// CORS 설정 끝 -----------------------------------------------------------------------------------------------------------
+// CORS END -----------------------------------------------------------------------------------------------------------
 
-// 세션 설정 -----------------------------------------------------------------------------------------------------------
-const sessionOptions = {
+// session setting START -----------------------------------------------------------------------------------------------------------
+const options = {
     host: 'auctiondb.c5ekqsck8dcp.ap-southeast-2.rds.amazonaws.com',
     port: 3306,
     user: 'root',
     password: '12345678',
     database: 'DB_BIDBIRD',
 };
-const sessionStore = new MySQLStore(sessionOptions);
+const sessionStore = new MySQLStore(options);
 
 const maxAge = 1000 * 60 * 30;
 const sessionObj = {
@@ -65,14 +68,13 @@ const sessionObj = {
     store: sessionStore,
     cookie: {
         maxAge: maxAge,
-        ...(os.version().includes('Windows') ? {} : { domain: 'bidbird.kro.kr' }),
     },
 };
 
 app.use(session(sessionObj));
-// 세션 설정 끝 -----------------------------------------------------------------------------------------------------------
+// session setting END -----------------------------------------------------------------------------------------------------------
 
-// Passport 설정 -----------------------------------------------------------------------------------------------------------
+// passport setting START -----------------------------------------------------------------------------------------------------------
 let pp = require('./lib/passport/passport');
 let passport = pp.passport(app);
 
@@ -85,7 +87,8 @@ app.post(
         failureFlash: true,
     })
 );
-// Passport 설정 끝 -----------------------------------------------------------------------------------------------------------
+
+// passport setting END -----------------------------------------------------------------------------------------------------------
 
 // 라우터 설정 -----------------------------------------------------------------------------------------------------------
 app.use('/member', require('./routes/memberRouter'));
@@ -95,22 +98,7 @@ app.use('/point', require('./routes/pointRouter'));
 app.use('/customer_center', require('./routes/customerCenterRouter'));
 app.use('/alarm', require('./routes/alarmRouter'));
 app.use('/home', require('./routes/homeRouter'));
-// 라우터 설정 끝 -----------------------------------------------------------------------------------------------------------
+// 라우터 설정 끗 -----------------------------------------------------------------------------------------------------------
 
-// 서버 설정 -----------------------------------------------------------------------------------------------------------
-if (os.version().includes('Windows')) {
-    const server = http.createServer(app);
-    const initializeSocket = require('./lib/websocket/initializeSocket');
-    initializeSocket(server, 'http://localhost:3000');
-    server.listen(httpPort, () => {
-        console.log(`HTTP: Express listening on port ${httpPort}`);
-    });
-} else {
-    const server = https.createServer(options, app);
-    const initializeSocket = require('./lib/websocket/initializeSocket');
-    initializeSocket(server, 'https://bidbird.kro.kr');
-    server.listen(httpsPort, () => {
-        console.log(`HTTPS: Express listening on port ${httpsPort}`);
-    });
-}
-// 서버 설정 끝 -----------------------------------------------------------------------------------------------------------
+//app.listen(3001);
+server.listen(3001);
