@@ -36,9 +36,9 @@ function AuctionAlarm() {
   useEffect(() => {
     socket.on("notificationOverBid", (data) => {
       console.log("Client NOTIFICATION OVER BID", data);
+      getMyAlarm();
       if (data && data.highestBidderId == loginedId) {
         // 이전 최고 입찰자인 경우에만 알람 처리
-        getMyAlarm();
         dispatch(setHasNewAlarm(true));
       }
     });
