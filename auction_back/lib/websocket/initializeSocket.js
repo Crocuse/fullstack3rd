@@ -1,21 +1,15 @@
 const socketIO = require('socket.io');
 const webSocketHandler = require('./webSocketHandler');
-const os = require('os');
 
-function initializeSocket(server) {
-    let corsOrigin;
-
-    if (os.version().includes('Windows')) {
-        corsOrigin = 'http://localhost:3000';
-    } else {
-        corsOrigin = 'http://54.180.200.131:3000';
-    }
-
+function initializeSocket(server, corsOrigin, options) {
     const io = socketIO(server, {
         cors: {
             origin: corsOrigin,
             credentials: true,
         },
+        key: options.key,
+        cert: options.cert,
+        ca: options.ca,
     });
 
     io.on('connection', (socket) => {
