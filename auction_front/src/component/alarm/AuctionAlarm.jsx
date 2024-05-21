@@ -10,7 +10,7 @@ import { setAlarmInfo } from '../../redux/action/setAlarmInfo';
 import { sessionCheck } from '../../util/sessionCheck';
 
 function AuctionAlarm() {
-    const socket = io('https://bidbird.kro.kr');
+    const socket = io('https://bidbird.kro.kr:3001');
     const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
     const loginedId = useSelector((state) => state.loginedInfos.loginedId.loginedId);
 

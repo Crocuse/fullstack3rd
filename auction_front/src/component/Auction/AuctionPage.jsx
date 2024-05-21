@@ -46,7 +46,7 @@ function AuctionPage() {
 
     useEffect(() => {
         console.log('useEffect');
-        const socket = io(`${SERVER_URL.SERVER_URL()}`);
+        const socket = io('https://bidbird.kro.kr:3001');
         setLoaingModalShow(true);
         sessionCheck(sessionId, navigate);
         if (product !== undefined) {
@@ -96,7 +96,7 @@ function AuctionPage() {
     useEffect(() => {
         console.log('useEffect3');
         if (!product) return;
-        const socket = io(`${SERVER_URL.SERVER_URL()}`);
+        const socket = io('https://bidbird.kro.kr:3001');
         const socketData = {
             loginedId,
             nextBid,

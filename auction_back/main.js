@@ -10,8 +10,8 @@ const flash = require('express-flash');
 const os = require('os');
 const http = require('http');
 const https = require('https');
-const httpPort = 80;
-const httpsPort = 443;
+const httpPort = 3002;
+const httpsPort = 3001;
 const options = require('./lib/config/pem_config').options;
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -20,10 +20,6 @@ app.use(compression());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(flash());
-
-app.get('/', (res, req) => {
-    res.redirect('https://bidbird.kro.kr:3000');
-});
 
 if (os.version().includes('Windows')) {
     app.use(express.static(`C:/auction`));
