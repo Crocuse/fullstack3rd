@@ -9,9 +9,9 @@ const alarmInfoInDBReducer = (state = initialState, action) => {
 
     switch (action.type) {
         case 'SET_ALARM_INFO':
-            return { ...state, alarmInfo: action.payload };
+            return { ...state, alarmInfo: action.alarmInfo };
         case 'SET_HAS_NEW_ALARM':
-            return { ...state, hasNewAlarm: action.payload };
+            return { ...state, hasNewAlarm: action.hasNewAlarm };
         default:
             return state;
     }
