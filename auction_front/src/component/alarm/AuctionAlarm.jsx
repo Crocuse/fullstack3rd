@@ -59,36 +59,40 @@ function AuctionAlarm() {
     };
 
     const getMyAlarm = async () => {
+        const now = new Date();
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+
         try {
+            if (currentHour === 23 && currentMinute > 55) {
+                dispatch(setAlarmInfo('알림없음'));
+                return;
+            }
+
             let result = await axiosGetAlarmInfo(loginedId);
             if (result !== null) {
                 dispatch(setAlarmInfo(result));
             } else {
                 dispatch(setAlarmInfo('알림없음'));
             }
-        } catch (error) {}
+        } catch (error) {
+            console.log('[AuctionAlarm]', error);
+        }
     };
 
     const alarmOldReminderClickHandler = async (event, data) => {
         console.log('ALARMCLICKHANDLER()');
 
-        console.log('알람 내용-->', data);
         if (data !== null) {
             let date = data.AOB_OCCUR_DATE;
             let id = data.M_ID;
             let result = await axiosSetReadState(date, id);
-            getMyAlarm();
+            if (result === 'success') {
+                getMyAlarm();
+            }
         } else {
             event.preventDefault();
         }
-    };
-
-    const alarmOverBidClickHandler = async (notification) => {
-        console.log('ALARMOVERBIDCLICKHANDLER()');
-        let date = notification.date;
-        let id = notification.id;
-        let result = await axiosSetReadState(date, id);
-        getMyAlarm();
     };
 
     return (

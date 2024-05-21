@@ -205,8 +205,19 @@ const auctionService = {
                 }
             }
         })
+    },
+    getUserPoint : (req, res) => {
+        let mId = req.user;
 
-        
+        DB.query(`SELECT P_CURRENT FROM TBL_POINT WHERE M_ID = ?`,
+        [mId],
+        (error, result) => {
+            if(error) {
+                console.log(error);
+            } else {
+                res.json(result);
+            }
+        })
     },
     bidmsg: async (socketData, socket) => {
         let loglist = [];
