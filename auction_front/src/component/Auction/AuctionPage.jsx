@@ -26,6 +26,7 @@ function AuctionPage() {
     const [highestBidder, setHighestBidder] = useState('');
     const [isAuctionEnd, setIsAuctionEnd] = useState(false);
     const [maxLevelBidId, setMaxLevelBidId] = useState([]);
+    const [userPoint, setUserPoint] = useState(0);
 
     const sessionId = useSelector(state => state['loginedInfos']['loginedId']['sessionId']);
     const loginedId = useSelector(state => state['loginedInfos']['loginedId']['loginedId']);
@@ -39,6 +40,7 @@ function AuctionPage() {
         if (grNo) {
             fetchProductData(grNo);
             fetchExtendLevel(grNo);
+            fetchUserPoint(loginedId);
         }
     }, [grNo]);
     
@@ -156,6 +158,17 @@ function AuctionPage() {
                 setExtendLevel(level);
                 getMaxLevelBidId();
             }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function fetchUserPoint() {
+        console.log('fetchUserPoint');
+        try {
+            const response = await axios.get(`${SERVER_URL.SERVER_URL()}/auction/get_user_point`);
+            if (response.data.length > 0)
+                setUserPoint(response.data[0].P_CURRENT);
         } catch (error) {
             console.error(error);
         }
@@ -394,7 +407,10 @@ function AuctionPage() {
         } else if(loginedId === product.M_ID) {
             alert('물품 등록자는 입찰할수 없습니다.')
             rtn = false;
-        } else {
+        } else if(nextBid > userPoint) {
+            alert('가지고 있는 포인트가 적습니다.')
+            rtn = false;
+        }else {
             if (highestBidder === loginedId) {
                 alert('이미 최고 입찰자 입니다.');
                 rtn = false;
@@ -490,7 +506,7 @@ function AuctionPage() {
         alert('경매가 종료되었습니다.');
         endedAuction();
     };
-    
+
     return (
         <article>
             <div className="auction_page_wrap">
