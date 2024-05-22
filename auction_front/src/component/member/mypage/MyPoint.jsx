@@ -9,7 +9,7 @@ import '../../../css/member/mypage/MyPoint.css';
 import LoadingModal from '../../include/LoadingModal';
 
 function MyPoint() {
-    // Hook -----------------------------------------------------------------------------------------------------------
+    // Hook ----------------------------------------------------------------------------------------------------------
     const sessionId = useSelector((state) => state['loginedInfos']['loginedId']['sessionId']);
     const loginedId = useSelector((state) => state['loginedInfos']['loginedId']['loginedId']);
     const navigate = useNavigate();
