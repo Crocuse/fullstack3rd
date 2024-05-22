@@ -97,12 +97,23 @@
 
 .qna_wrap .select_qna tr td:nth-child(2) {
     text-align: left;
-    padding-left: 20px;
+    padding: 0 20px;
 }
 
 .qna_wrap .select_qna td:first-child {
     font-weight: bold;
     width: 120px;
+}
+
+.qna_wrap .select_qna #padding {
+    padding: 20px;
+}
+
+.qna_wrap figure.image {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .qna_wrap .image img {

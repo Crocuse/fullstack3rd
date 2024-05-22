@@ -149,7 +149,10 @@ const QnaAwnser = () => {
                                 </tr>
                                 <tr>
                                     <td>문의내용</td>
-                                    <td dangerouslySetInnerHTML={{ __html: qnaList[selectQna].Q_HTML }}></td>
+                                    <td
+                                        id="padding"
+                                        dangerouslySetInnerHTML={{ __html: qnaList[selectQna].Q_HTML }}
+                                    ></td>
                                 </tr>
                                 {qnaList[selectQna].Q_ANSWER === null ? null : (
                                     <>
@@ -162,7 +165,10 @@ const QnaAwnser = () => {
                                         </tr>
                                         <tr>
                                             <td>답변내용</td>
-                                            <td dangerouslySetInnerHTML={{ __html: qnaList[selectQna].Q_ANSWER }}></td>
+                                            <td
+                                                id="padding"
+                                                dangerouslySetInnerHTML={{ __html: qnaList[selectQna].Q_ANSWER }}
+                                            ></td>
                                         </tr>
                                     </>
                                 )}

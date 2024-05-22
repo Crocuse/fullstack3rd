@@ -3,6 +3,11 @@
     padding: 50px 0;
 }
 
+.qna_answer_wrap p {
+    padding: 0 5px 0 0 !important;
+    margin: 0 !important;
+}
+
 .qna_answer_wrap table {
     margin: 0 auto;
     margin-top: 30px;
@@ -150,4 +155,15 @@
     border: none;
     color: #fff;
     cursor: default;
+}
+
+.qna_answer_wrap figure.image {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.qna_answer_wrap .select_qna #padding {
+    padding: 20px;
 }
