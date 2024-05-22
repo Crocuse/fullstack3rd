@@ -1,3 +1,8 @@
+.qna_wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 .qna_wrap h2 {
     margin-top: 60px;
     padding-top: 40px;

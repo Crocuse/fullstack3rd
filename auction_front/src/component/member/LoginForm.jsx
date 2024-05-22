@@ -87,7 +87,7 @@ function LoginForm() {
 
             dispatch(setLoginedId(response.data.sessionID, response.data.loginedAdmin, response.data.loginedId));
             if (response.data.loginedAdmin === 'super' || response.data.loginedAdmin === 'admin')
-                navigate('/amdin/home');
+                navigate('/admin/home');
             else navigate('/');
         } catch (error) {
             console.log(error);
