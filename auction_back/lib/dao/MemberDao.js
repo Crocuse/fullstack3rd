@@ -191,12 +191,24 @@ const MemberDao = {
             let offset = (page - 1) * limit;
 
             DB.query(
-                `SELECT GR.GR_NO, GR_NAME, GR_PRICE, GR_INFO, GR_APPROVAL, GR_RECEIPT, AS_START_DATE, GR_REJECTED_REASON  
-                    FROM TBL_GOODS_REGIST AS GR 
-                    LEFT JOIN TBL_AUCTION_SCHEDULE AS A ON GR.GR_NO = A.GR_NO 
-                    WHERE GR.M_ID = ? 
-                    ORDER BY GR.GR_NO DESC
-                    LIMIT ? OFFSET ?`,
+                `SELECT 
+                    GR.GR_NO, 
+                    GR_NAME, 
+                    GR_PRICE, 
+                    GR_INFO, 
+                    GR_APPROVAL, 
+                    GR_RECEIPT, 
+                    AS_START_DATE, 
+                    GR_REJECTED_REASON,
+                        (SELECT GI_NAME 
+                        FROM TBL_GOODS_IMG 
+                        WHERE GR_NO = GR.GR_NO
+                        LIMIT 1) AS GI_NAME
+                FROM TBL_GOODS_REGIST AS GR 
+                LEFT JOIN TBL_AUCTION_SCHEDULE AS A ON GR.GR_NO = A.GR_NO
+                WHERE GR.M_ID = ? 
+                ORDER BY GR.GR_NO DESC
+                LIMIT ? OFFSET ?`,
                 [id, limit, offset],
                 (err, list) => {
                     if (err) {

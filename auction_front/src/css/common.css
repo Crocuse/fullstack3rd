@@ -13,7 +13,6 @@ body {
     -webkit-text-stroke: 1px rgba(0, 0, 0, 0.1);
     margin: 0;
     color: #242424;
-    overflow-x: hidden;
 }
 
 body {
@@ -25,7 +24,7 @@ body {
 }
 
 article {
-    width: 1200px;
+    width: 75%;
     margin: 0 auto;
 }
 
@@ -104,7 +103,7 @@ nav {
 }
 
 .nav_wrap {
-    width: 1200px;
+    width: 80%;
     margin: 0 auto;
 }
 
