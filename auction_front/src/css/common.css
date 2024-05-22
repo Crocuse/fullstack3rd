@@ -200,6 +200,10 @@ nav img {
     margin: auto;
 }
 
+nav #bell_bubble {
+    margin-right: 8px;
+}
+
 main {
     flex: 1 0 auto;
     max-width: 1200px;
