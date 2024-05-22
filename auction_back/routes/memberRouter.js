@@ -80,6 +80,10 @@ router.post('/get_my_sells', (req, res) => {
     memberService.getMySells(req, res);
 });
 
+router.put('/reRegist', (req, res) => {
+    memberService.updateReRegist(req, res);
+});
+
 router.post('/get_my_winnigs', (req, res) => {
     memberService.getMyWinnigs(req, res);
 });
@@ -104,10 +108,8 @@ router.get('/delete', (req, res) => {
     memberService.memberDelete(req, res);
 });
 
-router.get('/modify_goods_select',(req,res)=>{
-    memberService.modifyGoodsSelect(req,res);
+router.get('/modify_goods_select', (req, res) => {
+    memberService.modifyGoodsSelect(req, res);
 });
-
-
 
 module.exports = router;

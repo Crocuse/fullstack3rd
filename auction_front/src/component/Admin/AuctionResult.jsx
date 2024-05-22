@@ -1,10 +1,10 @@
-import axios from "axios";
-import React, { useEffect, useState, useMemo, useRef } from "react";
-import { SERVER_URL } from "../../config/server_url";
+import axios from 'axios';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
+import { SERVER_URL } from '../../config/server_url';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { sessionCheck } from "../../util/sessionCheck";
-import "../../css/Admin/AuctionResult.css";
+import { sessionCheck } from '../../util/sessionCheck';
+import '../../css/Admin/AuctionResult.css';
 import LoadingModal from '../include/LoadingModal';
 
 import { AgGridReact } from 'ag-grid-react';
@@ -57,11 +57,11 @@ function AuctionResult() {
                 field: 'AR_IS_BID',
                 headerName: '경매결과',
                 width: 105,
-                valueFormatter: (params) => params.value === 0 ? "유찰" : "낙찰",
+                valueFormatter: (params) => (params.value === 0 ? '유찰' : '낙찰'),
                 filter: 'agSetColumnFilter',
                 filterParams: {
                     values: [0, 1],
-                    valueFormatter: (params) => params.value === 0 ? "유찰" : "낙찰",
+                    valueFormatter: (params) => (params.value === 0 ? '유찰' : '낙찰'),
                 },
             },
             {
@@ -81,7 +81,7 @@ function AuctionResult() {
                 headerName: '낙찰 포인트',
                 width: 130,
                 filter: 'agNumberColumnFilter',
-                valueFormatter: p =>  p.value.toLocaleString()
+                valueFormatter: (p) => (p.value ? p.value.toLocaleString() : ''),
             },
             {
                 field: 'AR_REG_DATE',
@@ -103,24 +103,26 @@ function AuctionResult() {
                     },
                 },
             },
-            
-            
         ]);
     }, []);
 
-    const rowClassRules = useMemo(() => ({
-      'row-green': (params) => params.data.AR_IS_BID === 1,
-      'row-red': (params) => params.data.AR_IS_BID === 0,
-      'row-yellow': (params) => params.data.AR_IS_BID === 1 && params.data.DG_STATUS === 0,
-    }), []);
+    const rowClassRules = useMemo(
+        () => ({
+            'row-green': (params) => params.data.AR_IS_BID === 1,
+            'row-red': (params) => params.data.AR_IS_BID === 0,
+            'row-yellow': (params) => params.data.AR_IS_BID === 1 && params.data.DG_STATUS === 0,
+        }),
+        []
+    );
 
-
-    const defaultColDef = useMemo(() => ({
-        filter: true,
-        floatingFilter: true,
-        resizable: true,
-    }), []);
-
+    const defaultColDef = useMemo(
+        () => ({
+            filter: true,
+            floatingFilter: true,
+            resizable: true,
+        }),
+        []
+    );
 
     const deliveryGoods = (no, id) => {
         let confirm = window.confirm(`구매자 ${id} 에게 물품을 배송하시겠습니까?`);

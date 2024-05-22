@@ -10,7 +10,7 @@ function RegistForm(props) {
     const [grName, setGrName] = useState('');
     const [grPrice, setGrPrice] = useState('');
     const [grInfo, setGrInfo] = useState('');
-    const [isActive, setIsActive] = useState(false);
+    const [isActive, setIsActive] = useState();
     const [img, setImg] = useState([]);
     const [files, setFiles] = useState([]);
 
@@ -34,6 +34,11 @@ function RegistForm(props) {
             );
             console.log(initialImages);
             setImg(initialImages);
+        }
+        if (props.reRegistInfo) {
+            setGrName(props.reRegistInfo.GR_NAME);
+            setGrPrice(props.reRegistInfo.GR_PRICE.toLocaleString());
+            setGrInfo(props.reRegistInfo.GR_INFO);
         }
     }, [isModify, modifyGoods, sessionId, navigate]);
 
@@ -90,6 +95,13 @@ function RegistForm(props) {
                 });
 
                 if (response.data == 'success') {
+                    if (props.reRegistInfo) {
+                        alert('재등록이 완료 되었습니다.');
+
+                        props.setReRegistNo(props.reRegistInfo.GR_NO);
+                        props.setShowReRegist(false);
+                        return;
+                    }
                     alert('등록이 완료 되었습니다.');
                     navigate('/');
                 } else {
