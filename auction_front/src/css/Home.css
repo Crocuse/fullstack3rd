@@ -72,7 +72,7 @@
     grid-area: 'button';
 }
 
-.home_wrap .bid_btn > div button {
+.home_wrap .bid_btn>div button {
     width: 100px;
     font-weight: bold;
     font-size: 1.1em;
@@ -88,7 +88,7 @@
     background-color: #3791e0;
 }
 
-.home_wrap .bid_btn > div button:hover {
+.home_wrap .bid_btn>div button:hover {
     cursor: pointer;
 }
 
@@ -109,6 +109,7 @@
     width: 100%;
     padding: 0 50px;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 .home_wrap .current_bid_sec .preview_wrap {
