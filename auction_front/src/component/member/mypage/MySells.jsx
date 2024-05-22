@@ -7,6 +7,7 @@ import { SERVER_URL } from '../../../config/server_url';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../../css/member/mypage/MySells.css';
 import LoadingModal from '../../include/LoadingModal';
+import RegistForm from '../../Auction/RegistForm';
 
 function MySells() {
     // Hook -----------------------------------------------------------------------------------------------------------
@@ -17,6 +18,8 @@ function MySells() {
     const [sellsList, setSellsList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    const [showReRegist, setShowReRegist] = useState(false);
+    const [reRegistInfo, setReRegistInfo] = useState(false);
     const [loadingModalShow, setLoaingModalShow] = useState(false);
 
     useEffect(() => {
@@ -29,6 +32,11 @@ function MySells() {
     function pageChangeHandler(page) {
         setCurrentPage(page);
         axios_getMySells(page);
+    }
+
+    function reRegistBtnClick(registDefault) {
+        setShowReRegist(true);
+        setReRegistInfo(registDefault);
     }
 
     // Axios -----------------------------------------------------------------------------------------------------------
@@ -75,7 +83,6 @@ function MySells() {
                             <thead>
                                 <tr>
                                     <th>상품명</th>
-                                    <th>이미지</th>
                                     <th>등록 금액</th>
                                     <th>경매일</th>
                                     <th>경매 결과</th>
@@ -91,7 +98,6 @@ function MySells() {
                                                 ? `${list.GR_NAME.slice(0, 20)}...`
                                                 : list.GR_NAME}
                                         </td>
-                                        <td>이미지들어갈거임</td>
                                         <td>{`${list.GR_PRICE.toLocaleString()}원`}</td>
                                         <td>{list.AR_REG_DATE.slice(0, 10)}</td>
                                         <td>{list.AR_IS_BID === 0 ? `유찰` : `낙찰`}</td>
@@ -103,7 +109,9 @@ function MySells() {
                                         <td>
                                             {list.AR_IS_BID === 0 ? (
                                                 <>
-                                                    <a href="#none">재등록</a>
+                                                    <a href="#none" onClick={() => reRegistBtnClick(list)}>
+                                                        재등록
+                                                    </a>
                                                 </>
                                             ) : null}
                                         </td>
@@ -141,7 +149,16 @@ function MySells() {
                 </>
             )}
 
-            {loadingModalShow === true ? <LoadingModal /> : null}
+            {showReRegist === true ? (
+                <div className="regist_modal_wrap">
+                    <div className="regist_modal">
+                        <div className="close_btn" onClick={() => setShowReRegist(false)}>
+                            <FontAwesomeIcon icon="fa-solid fa-times" />
+                        </div>
+                        <RegistForm reRegistInfo={reRegistInfo} />
+                    </div>
+                </div>
+            ) : null}
         </article>
     );
 }

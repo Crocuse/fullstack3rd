@@ -223,17 +223,21 @@ const auctionService = {
     getUserPoint: (req, res) => {
         let mId = req.user;
 
-        DB.query(`SELECT P_CURRENT
+        DB.query(
+            `SELECT P_CURRENT
         FROM TBL_POINT
         WHERE M_ID = ?
         ORDER BY P_REG_DATE DESC
-        LIMIT 1;`, [mId], (error, result) => {
-            if (error) {
-                console.log(error);
-            } else {
-                res.json(result);
+        LIMIT 1;`,
+            [mId],
+            (error, result) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    res.json(result);
+                }
             }
-        });
+        );
     },
     bidmsg: async (socketData, socket) => {
         let loglist = [];

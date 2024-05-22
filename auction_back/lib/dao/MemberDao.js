@@ -291,10 +291,9 @@ const MemberDao = {
             let offset = (page - 1) * limit;
 
             DB.query(
-                `SELECT AR.AR_IS_BID, AR.AR_POINT, AR.AR_REG_DATE, GR.GR_NAME, GR.GR_PRICE, GI.GI_NAME
+                `SELECT AR.AR_IS_BID, AR.AR_POINT, AR.AR_REG_DATE, GR.GR_NAME, GR.GR_PRICE, GR.GR_INFO
                     FROM TBL_AUCTION_RESULT AS AR 
                     LEFT JOIN TBL_GOODS_REGIST AS GR ON AR.GR_NO = GR.GR_NO 
-                    LEFT JOIN TBL_GOODS_IMG AS GI ON AR.GR_NO = GI.GR_NO
                     WHERE AR.AR_SELL_ID = ?
                     ORDER BY AR.AR_REG_DATE DESC 
                     LIMIT ? OFFSET ?`,
@@ -309,7 +308,6 @@ const MemberDao = {
                     DB.query(
                         `SELECT COUNT(*) AS total FROM TBL_AUCTION_RESULT AS AR 
                     LEFT JOIN TBL_GOODS_REGIST AS GR ON AR.GR_NO = GR.GR_NO 
-                    LEFT JOIN TBL_GOODS_IMG AS GI ON AR.GR_NO = GI.GR_NO
                     WHERE AR.AR_SELL_ID = ?`,
                         [id],
                         (err, rst) => {
