@@ -24,8 +24,7 @@ function MyRegist() {
     const [showRjReason, setShowRjReason] = useState(false);
     const [selectedIdx, setSelectedIdx] = useState(0);
     const [modifyGoods, setModifyGoods] = useState([]);
-    const [showModifyModal,setShowModifyModal] = useState(false);
-    
+    const [showModifyModal, setShowModifyModal] = useState(false);
 
     useEffect(() => {
         setLoaingModalShow(true);
@@ -76,6 +75,9 @@ function MyRegist() {
         $('.info_table td.GR_PRICE').html(registList[idx].GR_PRICE.toLocaleString());
         $('.info_table td.GR_INFO').html(registList[idx].GR_INFO);
         $('.info_table td.GR_REGGR_REJECTED_REASON').html(registList[idx].GR_REJECTED_REASON);
+        $('.info_table .img').html(`<img src="${SERVER_URL.SERVER_URL()}/goodsImg/${registList[idx].GI_NAME}">`);
+
+        console.log('🚀 ~ reasonModalPutInfo ~ registList[idx].GI_NAME:', registList[idx].GI_NAME);
     }
 
     // Axios -----------------------------------------------------------------------------------------------------------
@@ -128,7 +130,7 @@ function MyRegist() {
         }
     }
 
-    async function axios_modifyGoods(GR_NO){
+    async function axios_modifyGoods(GR_NO) {
         try {
             const response = await axios.get(`${SERVER_URL.SERVER_URL()}/member/modify_goods_select`, {
                 params: {
@@ -141,7 +143,6 @@ function MyRegist() {
         } catch (error) {
             console.log(error);
             alert('통신 오류가 발생했습니다.');
-
         } finally {
             setLoaingModalShow(false);
         }
@@ -157,7 +158,7 @@ function MyRegist() {
             <div className="regist_list_wrap">
                 {registList.length === 0 ? (
                     <div className="not_wrap">
-                        <div>낙찰 내역이 없습니다.</div>
+                        <div>등록 신청 내역이 없습니다.</div>
                         <img src="/img/bid_bird_x.png" id="bidBirdX" />
                     </div>
                 ) : (
@@ -200,20 +201,16 @@ function MyRegist() {
                                             </td>
                                             <td>{list.GR_RECEIPT === 0 ? '발송 대기중' : '물품 수령'}</td>
                                             <td>{list.AS_START_DATE === null ? '-' : list.AS_START_DATE}</td>
-                                            <td>{list.GR_RECEIPT === 0 && list.GR_APPROVAL === 0 
-                                                    ? 
-                                                    <a
-                                                        href="#none"
-                                                        onClick={() => registModifyClick(list.GR_NO)}
-                                                    >
+                                            <td>
+                                                {list.GR_RECEIPT === 0 && list.GR_APPROVAL === 0 ? (
+                                                    <a href="#none" onClick={() => registModifyClick(list.GR_NO)}>
                                                         수정
-                                                    </a> : null}</td>
+                                                    </a>
+                                                ) : null}
+                                            </td>
                                             <td>
                                                 {list.GR_APPROVAL === 0 || list.GR_RECEIPT === 0 ? (
-                                                    <a
-                                                        href="#none"
-                                                        onClick={() => registCancelClick(list.GR_NO)}
-                                                    >
+                                                    <a href="#none" onClick={() => registCancelClick(list.GR_NO)}>
                                                         취소
                                                     </a>
                                                 ) : null}
@@ -280,9 +277,7 @@ function MyRegist() {
                             </div>
                         </div>
                         <div className="goods_info">
-                            <div className="img">
-                                <img src="/img/bid_bird_img.png" />
-                            </div>
+                            <div className="img"></div>
                             <div className="info_table">
                                 <table>
                                     <tr>
@@ -307,17 +302,21 @@ function MyRegist() {
                     </div>
                 </div>
             ) : null}
-            {showModifyModal === true ? 
-                <div className='regist_modal_wrap'>
-                    <div className='regist_modal'>
-                        <div className='close_btn' onClick={() => setShowModifyModal(false)}>
+            {showModifyModal === true ? (
+                <div className="regist_modal_wrap">
+                    <div className="regist_modal">
+                        <div className="close_btn" onClick={() => setShowModifyModal(false)}>
                             <FontAwesomeIcon icon="fa-solid fa-times" />
                         </div>
-                            <RegistForm modifyGoods={modifyGoods} setShowModifyModal={setShowModifyModal} isModify={true} setTemp={setTemp}/>
+                        <RegistForm
+                            modifyGoods={modifyGoods}
+                            setShowModifyModal={setShowModifyModal}
+                            isModify={true}
+                            setTemp={setTemp}
+                        />
                     </div>
-                </div> 
-                : 
-                null}
+                </div>
+            ) : null}
             {loadingModalShow === true ? <LoadingModal /> : null}
         </article>
     );

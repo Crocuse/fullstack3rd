@@ -155,8 +155,8 @@
 
 .my-regist .reason_modal td:nth-child(2) {
     text-align: left;
+    width: 330px;
 }
-
 
 .regist_modal_wrap {
     position: fixed;
@@ -180,7 +180,6 @@
     height: 80%;
 }
 
-
 .regist_modal .close_btn {
     position: absolute;
     top: 10%;
@@ -190,8 +189,8 @@
     cursor: pointer;
     transition: color 0.3s ease;
     z-index: 1;
-  }
-  
+}
+
 .regist_modal .close_btn:hover {
     color: #000;
 }
