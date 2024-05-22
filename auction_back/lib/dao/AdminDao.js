@@ -280,7 +280,7 @@ const AdminDao = {
                     AR.AR_POINT,
                     AR.AR_REG_DATE,
                     AR.AR_MOD_DATE,
-                    GR.GR_NAME,
+                    GR.GR_NAME
                     FROM 
                     TBL_AUCTION_RESULT AS AR
                     JOIN TBL_GOODS_REGIST AS GR ON AR.GR_NO = GR.GR_NO
