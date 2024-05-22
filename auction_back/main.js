@@ -13,6 +13,9 @@ const https = require('https');
 const httpPort = 3002;
 const httpsPort = 3001;
 const options = require('./lib/config/pem_config').options;
+const cron = require('node-cron');
+const endAuction = require('./lib/util/endScheduler')
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -114,3 +117,14 @@ if (os.version().includes('Windows')) {
     });
 }
 // 서버 설정 끝 -----------------------------------------------------------------------------------------------------------
+
+// 스케쥴러 설정 -----------------------------------------------------------------------------------------------------------
+cron.schedule('0 0 * * *', async () =>{
+    try {
+        await endAuction.endAuction();
+        console.log('경매종료');
+    } catch (error) {
+        console.error('경매 종료중 에러', error);
+    }
+})
+// 스케쥴러 설정 끝 -----------------------------------------------------------------------------------------------------------

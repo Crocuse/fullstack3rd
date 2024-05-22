@@ -202,6 +202,7 @@ const auctionService = {
             if (error) {
                 console.log(error);
             } else {
+                console.log(result.length);
                 if (result.length < 1) {
                     DB.query(
                         `INSERT INTO TBL_AUCTION_RESULT(GR_NO, AR_IS_BID, AR_SELL_ID, AR_BUY_ID, AR_POINT) VALUES(?, ?, ?, ?, ?)`,
