@@ -79,7 +79,7 @@ const Qna = () => {
                                         <td>{qna.Q_NO}</td>
                                         <td>{qna.Q_REG_DATE.slice(0, 10)}</td>
                                         <td>
-                                            {qna.Q_TITLE.length > 20 ? `${qna.Q_TITLE.slice(0, 20)}...` : qna.Q_TITLE}
+                                            {qna.Q_TITLE.length > 30 ? `${qna.Q_TITLE.slice(0, 30)}...` : qna.Q_TITLE}
                                         </td>
                                         <td>{qna.Q_ANSWER === null ? '답변대기중' : '답변완료'}</td>
                                         <td>{qna.Q_ANSWER_DATE === null ? '답변대기중' : qna.Q_ANSWER_DATE}</td>
