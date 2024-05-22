@@ -161,6 +161,13 @@ const memberService = {
         res.json(result);
     },
 
+    updateReRegist: async (req, res) => {
+        let gr_no = req.body.GR_NO;
+
+        let result = await MemberDao.updateReRegist(gr_no);
+        res.json(result);
+    },
+
     getMyWinnigs: async (req, res) => {
         let result = await MemberDao.getMyWinnigs(req);
         res.json(result);

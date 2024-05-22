@@ -291,7 +291,7 @@ const MemberDao = {
             let offset = (page - 1) * limit;
 
             DB.query(
-                `SELECT AR.AR_IS_BID, AR.AR_POINT, AR.AR_REG_DATE, GR.GR_NAME, GR.GR_PRICE, GR.GR_INFO
+                `SELECT AR.AR_IS_BID, AR.AR_POINT, AR.AR_REG_DATE, AR.AR_RE_REGIST, GR.GR_NO, GR.GR_NAME, GR.GR_PRICE, GR.GR_INFO
                     FROM TBL_AUCTION_RESULT AS AR 
                     LEFT JOIN TBL_GOODS_REGIST AS GR ON AR.GR_NO = GR.GR_NO 
                     WHERE AR.AR_SELL_ID = ?
@@ -322,6 +322,25 @@ const MemberDao = {
                             resolve({ list, totalPages });
                         }
                     );
+                }
+            );
+        });
+    },
+
+    updateReRegist: (gr_no) => {
+        console.log('🚀 ~ gr_no:', gr_no);
+        return new Promise((resolve, reject) => {
+            DB.query(
+                'UPDATE TBL_AUCTION_RESULT SET AR_RE_REGIST = 1, AR_MOD_DATE = NOW() WHERE GR_NO = ?',
+                [gr_no],
+                (err, rst) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(false);
+                        return;
+                    }
+
+                    resolve(true);
                 }
             );
         });

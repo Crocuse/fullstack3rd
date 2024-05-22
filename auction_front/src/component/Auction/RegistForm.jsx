@@ -95,6 +95,13 @@ function RegistForm(props) {
                 });
 
                 if (response.data == 'success') {
+                    if (props.reRegistInfo) {
+                        alert('재등록이 완료 되었습니다.');
+
+                        props.setReRegistNo(props.reRegistInfo.GR_NO);
+                        props.setShowReRegist(false);
+                        return;
+                    }
                     alert('등록이 완료 되었습니다.');
                     navigate('/');
                 } else {

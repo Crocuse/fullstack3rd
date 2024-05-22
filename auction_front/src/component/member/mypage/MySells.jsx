@@ -19,7 +19,8 @@ function MySells() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [showReRegist, setShowReRegist] = useState(false);
-    const [reRegistInfo, setReRegistInfo] = useState(false);
+    const [reRegistInfo, setReRegistInfo] = useState();
+    const [reRegistNo, setReRegistNo] = useState(0);
     const [loadingModalShow, setLoaingModalShow] = useState(false);
 
     useEffect(() => {
@@ -27,6 +28,13 @@ function MySells() {
         sessionCheck(sessionId, navigate);
         axios_getMySells(currentPage);
     }, [sessionId, currentPage]);
+
+    useEffect(() => {
+        if (reRegistNo > 0) {
+            axios_reRegist();
+            axios_getMySells(currentPage);
+        }
+    }, [reRegistNo]);
 
     // Handler -----------------------------------------------------------------------------------------------------------
     function pageChangeHandler(page) {
@@ -61,6 +69,21 @@ function MySells() {
             console.log(error);
             alert('통신 오류가 발생했습니다.');
             setLoaingModalShow(false);
+        }
+    }
+
+    async function axios_reRegist() {
+        try {
+            const response = await axios.put(`${SERVER_URL.SERVER_URL()}/member/reRegist`, {
+                GR_NO: reRegistNo,
+            });
+
+            if (response.data === false) {
+                alert('서버 오류로 재등록에 실패했습니다.');
+                return;
+            }
+        } catch (error) {
+            alert('서버 오류로 재등록에 실패했습니다.');
         }
     }
 
@@ -107,7 +130,9 @@ function MySells() {
                                                 : `${list.AR_POINT.toLocaleString()}원`}
                                         </td>
                                         <td>
-                                            {list.AR_IS_BID === 0 ? (
+                                            {list.AR_RE_REGIST === 1 ? (
+                                                `재등록 완료`
+                                            ) : list.AR_IS_BID === 0 ? (
                                                 <>
                                                     <a href="#none" onClick={() => reRegistBtnClick(list)}>
                                                         재등록
@@ -155,10 +180,16 @@ function MySells() {
                         <div className="close_btn" onClick={() => setShowReRegist(false)}>
                             <FontAwesomeIcon icon="fa-solid fa-times" />
                         </div>
-                        <RegistForm reRegistInfo={reRegistInfo} />
+                        <RegistForm
+                            reRegistInfo={reRegistInfo}
+                            setReRegistNo={setReRegistNo}
+                            setShowReRegist={setShowReRegist}
+                        />
                     </div>
                 </div>
             ) : null}
+
+            {loadingModalShow === true ? <LoadingModal /> : null}
         </article>
     );
 }
