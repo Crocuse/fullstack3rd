@@ -328,7 +328,6 @@ const MemberDao = {
     },
 
     updateReRegist: (gr_no) => {
-        console.log('🚀 ~ gr_no:', gr_no);
         return new Promise((resolve, reject) => {
             DB.query(
                 'UPDATE TBL_AUCTION_RESULT SET AR_RE_REGIST = 1, AR_MOD_DATE = NOW() WHERE GR_NO = ?',

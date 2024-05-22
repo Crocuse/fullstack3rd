@@ -1,9 +1,9 @@
-import axios from "axios";
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
-import { SERVER_URL } from "../../config/server_url";
-import { setLoginedId } from "../../redux/action/setLoginedId";
+import axios from 'axios';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { SERVER_URL } from '../../config/server_url';
+import { setLoginedId } from '../../redux/action/setLoginedId';
 import LoadingModal from '../include/LoadingModal';
 
 function GoogleLogin() {
@@ -22,10 +22,15 @@ function GoogleLogin() {
     async function sendCodeToBackend(code) {
         try {
             const response = await axios.post(`${SERVER_URL.SERVER_URL()}/auth/google/callback`, {
-                code: code
+                code: code,
             });
             if (response.data.success) {
-                
+                if (response.data.loginedId === 'super') {
+                    dispatch(setLoginedId(response.data.sessionID, 'super', response.data.loginedId));
+                    navigate('/admin/home');
+                    return;
+                }
+
                 dispatch(setLoginedId(response.data.sessionID, '', response.data.loginedId));
                 navigate('/');
             } else {
@@ -39,9 +44,7 @@ function GoogleLogin() {
         }
     }
 
-    return (
-        <LoadingModal />
-    )
+    return <LoadingModal />;
 }
 
 export default GoogleLogin;
