@@ -75,9 +75,7 @@ function MyRegist() {
         $('.info_table td.GR_PRICE').html(registList[idx].GR_PRICE.toLocaleString());
         $('.info_table td.GR_INFO').html(registList[idx].GR_INFO);
         $('.info_table td.GR_REGGR_REJECTED_REASON').html(registList[idx].GR_REJECTED_REASON);
-        $('.info_table .img').html(`<img src="${SERVER_URL.SERVER_URL()}/goodsImg/${registList[idx].GI_NAME}">`);
-
-        console.log('🚀 ~ reasonModalPutInfo ~ registList[idx].GI_NAME:', registList[idx].GI_NAME);
+        $('.goods_info .img').html(`<img src="${SERVER_URL.SERVER_URL()}/goodsImg/${registList[idx].GI_NAME}">`);
     }
 
     // Axios -----------------------------------------------------------------------------------------------------------

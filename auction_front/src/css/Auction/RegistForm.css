@@ -156,3 +156,49 @@
 .regist_btn:hover {
     background-color: #1565c0;
 }
+
+article.my-regist .regist_modal {
+    top: 50%;
+    min-width: 600px;
+    max-width: 600px;
+    max-height: 800px;
+    max-height: 800px;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+article.my-regist .regist_form {
+    padding: 30px;
+    min-width: 580px;
+    max-width: 580px;
+    max-height: 780px;
+    max-height: 780px;
+    box-sizing: border-box;
+    margin: 10px;
+}
+
+article.my-regist .regist_form h1 {
+    margin-bottom: 20px;
+    font-size: 1.1em;
+}
+
+article.my-regist .regist_form .regist_input_wrap {
+    text-align: left;
+}
+
+article.my-regist .regist_form .regist_input_wrap input.regist_input {
+    height: 30px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+article.my-regist .regist_form .upload_area {
+    margin-bottom: 0px;
+}
+
+article.my-regist .regist_modal .close_btn {
+    top: 50px;
+    right: 40px;
+}
