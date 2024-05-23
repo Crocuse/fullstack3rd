@@ -14,7 +14,7 @@ module.exports = {
         JOIN 
             TBL_GOODS_IMG gi ON sch.GR_NO = gi.GR_NO
         WHERE 
-            sch.AS_START_DATE = DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+            sch.AS_START_DATE = CURDATE()
         GROUP BY 
             sch.GR_NO;
         `,
