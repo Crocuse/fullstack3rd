@@ -64,7 +64,6 @@ function MyWinnigBids() {
                             <thead>
                                 <tr>
                                     <th>상품명</th>
-                                    <th>이미지</th>
                                     <th>시작 금액</th>
                                     <th>낙찰 금액</th>
                                     <th>낙찰일</th>
@@ -78,7 +77,6 @@ function MyWinnigBids() {
                                                 ? `${winnig.GR_NAME.slice(0, 20)}...`
                                                 : winnig.GR_NAME}
                                         </td>
-                                        <td>이미지들어갈거임</td>
                                         <td>{winnig.GR_PRICE.toLocaleString()}원</td>
                                         <td>{winnig.AR_POINT.toLocaleString()}원</td>
                                         <td>{winnig.AR_REG_DATE.slice(0, 10)}</td>
