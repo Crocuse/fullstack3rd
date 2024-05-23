@@ -46,9 +46,7 @@ function AuctionPage() {
 
     useEffect(() => {
         console.log('useEffect');
-        const socketServerUrl =
-            window.location.hostname === 'localhost' ? 'http://localhost:3002' : 'https://bidbird.kro.kr:3001';
-        const socket = io(socketServerUrl);
+        const socket = io('https://bidbird.kro.kr:3001');
         setLoaingModalShow(true);
         sessionCheck(sessionId, navigate);
         if (product !== undefined) {
@@ -98,9 +96,7 @@ function AuctionPage() {
     useEffect(() => {
         console.log('useEffect3');
         if (!product) return;
-        const socketServerUrl =
-            window.location.hostname === 'localhost' ? 'http://localhost:3002' : 'https://bidbird.kro.kr:3001';
-        const socket = io(socketServerUrl);
+        const socket = io('https://bidbird.kro.kr:3001');
         const socketData = {
             loginedId,
             nextBid,
